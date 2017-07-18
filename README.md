@@ -17,7 +17,7 @@ Apache Spark™ 是一个快速的，用于海量数据处理的通用引擎。
 
 我这里使用的是 `VSCode` 编辑器。
 
-简易的使用指南请参考: [VSCode Windows 平台入门使用指南](help\vscode-windows-usage.md)，介绍了 `VSCode` 与 `github` 一起搭配的简易使用的方法。
+简易的使用指南请参考: [VSCode Windows 平台入门使用指南](help/vscode-windows-usage.md)，介绍了 `VSCode` 与 `github` 一起搭配的简易使用的方法。
 
 ## 历史版本
 [Apache Spark 2.0.2 官方文档中文版](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2883613)
