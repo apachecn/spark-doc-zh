@@ -43,6 +43,12 @@ git 算是成功安装了。
 
 ![](img/vscode-console-usage-1.png)
 
+初始化 git 配置
+    
+    git config --global user.name "username"    # 你的用户名
+    git config --global user.email "email"    # 你的邮箱
+    git config --global core.autocrlf  false    # linux 平台换行为 lf，window 平台换行为 crlf，禁止 window 平台自动转换换行为 crlf
+
 初始化 git 仓库
 
     git init
