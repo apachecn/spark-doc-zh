@@ -3,30 +3,20 @@ layout: global
 title: Submitting Applications
 ---
 
-The `spark-submit` script in Spark's `bin` directory is used to launch applications on a cluster.
-It can use all of Spark's supported [cluster managers](cluster-overview.html#cluster-manager-types)
-through a uniform interface so you don't have to configure your application specially for each one.
+在  script in Spark的 `bin` 目录中的`spark-submit` 脚本用与在集群上启动应用程序。它可以通过一个统一的接口使用所有 Spark 支持的 [cluster managers](cluster-overview.html#cluster-manager-types)，所以您不需要专门的为每个[cluster managers](cluster-overview.html#cluster-manager-types)配置您的应用程序。
 
-# Bundling Your Application's Dependencies
-If your code depends on other projects, you will need to package them alongside
-your application in order to distribute the code to a Spark cluster. To do this,
-create an assembly jar (or "uber" jar) containing your code and its dependencies. Both
-[sbt](https://github.com/sbt/sbt-assembly) and
+# 打包应用依赖
+如果您的代码依赖了其它的项目，为了分发代码到 Spark 集群中您将需要将它们和您的应用程序一起打包。为此，创建一个包含您的代码以及依赖的 assembly jar（或者 “uber” jar）。无论是
+[sbt](https://github.com/sbt/sbt-assembly) 还是
 [Maven](http://maven.apache.org/plugins/maven-shade-plugin/)
-have assembly plugins. When creating assembly jars, list Spark and Hadoop
-as `provided` dependencies; these need not be bundled since they are provided by
-the cluster manager at runtime. Once you have an assembled jar you can call the `bin/spark-submit`
-script as shown here while passing your jar.
+都有 assembly 插件。在创建 assembly jar 时，列出 Spark 和 Hadoop的依赖为`provided`。它们不需要被打包，因为在运行时它们已经被 Cluster Manager 提供了。如果您有一个 assembled jar 您就可以调用 `bin/spark-submit` 脚本（如下所示）来传递您的 jar。
 
-For Python, you can use the `--py-files` argument of `spark-submit` to add `.py`, `.zip` or `.egg`
-files to be distributed with your application. If you depend on multiple Python files we recommend
-packaging them into a `.zip` or `.egg`.
+对于 Python 来说，您可以使用 `spark-submit` 的 `--py-files` 参数来添加 `.py`, `.zip` 和 `.egg` 文件以与您的应用程序一起分发。如果您依赖了多个 Python 文件我们推荐将它们打包成一个 `.zip` 或者 `.egg` 文件。
 
-# Launching Applications with spark-submit
 
-Once a user application is bundled, it can be launched using the `bin/spark-submit` script.
-This script takes care of setting up the classpath with Spark and its
-dependencies, and can support different cluster managers and deploy modes that Spark supports:
+# 用 spark-submit 启动应用
+
+如果用户的应用程序被打包好了，它可以使用 `bin/spark-submit` 脚本来启动。这个脚本负责设置 Spark 和它的依赖的 classpath，并且可以支持 Spark 所支持的不同的 Cluster Manager 以及 deploy mode（部署模式）: 
 
 {% highlight bash %}
 ./bin/spark-submit \
@@ -39,14 +29,14 @@ dependencies, and can support different cluster managers and deploy modes that S
   [application-arguments]
 {% endhighlight %}
 
-Some of the commonly used options are:
+一些常用的 options（选项）有 :
 
-* `--class`: The entry point for your application (e.g. `org.apache.spark.examples.SparkPi`)
-* `--master`: The [master URL](#master-urls) for the cluster (e.g. `spark://23.195.26.187:7077`)
-* `--deploy-mode`: Whether to deploy your driver on the worker nodes (`cluster`) or locally as an external client (`client`) (default: `client`) <b> &#8224; </b>
-* `--conf`: Arbitrary Spark configuration property in key=value format. For values that contain spaces wrap "key=value" in quotes (as shown).
-* `application-jar`: Path to a bundled jar including your application and all dependencies. The URL must be globally visible inside of your cluster, for instance, an `hdfs://` path or a `file://` path that is present on all nodes.
-* `application-arguments`: Arguments passed to the main method of your main class, if any
+* `--class`: 您的应用程序的入口点（例如。 `org.apache.spark.examples.SparkPi`)
+* `--master`: 集群的 [master URL](#master-urls)  (例如 `spark://23.195.26.187:7077`)
+* `--deploy-mode`: 是在 worker 节点(`cluster`) 上还是在本地作为一个外部的客户端(`client`) 部署您的 driver(默认: `client`) <b> &#8224; </b>
+* `--conf`: 按照 key=value 格式任意的 Spark 配置属性。对于包含空格的 value（值）使用引号包 “key=value” 起来。
+* `application-jar`: 包括您的应用以及所有依赖的一个打包的 Jar 的路径。该 URL 在您的集群上必须是全局可见的，例如，一个 `hdfs://` path 或者一个 `file://` 在所有节点是可见的。
+* `application-arguments`: 传递到您的 main class 的 main 方法的参数，如果有的话。
 
 <b>&#8224;</b> A common deployment strategy is to submit your application from a gateway machine
 that is
