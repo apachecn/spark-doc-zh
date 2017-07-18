@@ -9,7 +9,7 @@ Apache Spark 是一个快速的，多用途的集群计算系统。
 它在 Java，Scala，Python 和 R 语言以及一个支持常见的图计算的经过优化的引擎中提供了高级 API
 它还支持一组丰富的高级工具，包括用于 SQL 和结构化数据处理的 [Spark SQL](sql-programming-guide.html), 用于机器学习的 [MLlib](ml-guide.html), 用于图形处理的 [GraphX](graphx-programming-guide.html), 以及 [Spark Streaming](streaming-programming-guide.html).
 
-# Downloading（下载）
+# 下载
 
 从该项目官网的 [下载页面](http://spark.apache.org/downloads.html) 获取 Spark. 该文档用于 Spark {{site.SPARK_VERSION}} 版本. Spark 使用了针对 HDFS 和 YARN 的 Hadoop 的 client libraries（客户端库）. 为了适用于主流的 Hadoop 版本可以下载先前的 package.
 用户还可以下载 "Hadoop free" binary，并且可以 [通过增加 Spark 的 classpath](hadoop-provided.html) Spark 来与任何的 Hadoop 版本一起运行 Spark.
@@ -29,7 +29,7 @@ Spark 可运行在 Java 8+，Python 2.7+/3.4+ 和 R 3.1+ 的环境上。针对 S
 
 请注意，Scala 2.10 的支持已经不再适用于 Spark 2.1.0，可能会在 Spark 2.3.0 中删除。
 
-# Running the Examples and Shell（运行示例以及 Shell）
+# 运行示例和 Shell
 
 Spark 自带了几个示例程序.  Scala, Java, Python 和 R 示例在
 `examples/src/main` 目录中. 要运行 Java 或 Scala 中的某个示例程序, 在最顶层的 Spark 目录中使用
@@ -63,7 +63,7 @@ R 中也提供了应用示例。例如，
 
     ./bin/spark-submit examples/src/main/r/dataframe.R
 
-# Launching on a Cluster（在集群上运行）
+# 在集群上运行
 
 该 Spark [集群模式概述](cluster-overview.html) 说明了在集群上运行的主要的概念。
 Spark 既可以独立运行，也可以在一些现有的 Cluster Manager（集群管理器）上运行。它当前提供了几种用于部署的选项: 
@@ -72,7 +72,7 @@ Spark 既可以独立运行，也可以在一些现有的 Cluster Manager（集�
 * [Apache Mesos](running-on-mesos.html)
 * [Hadoop YARN](running-on-yarn.html)
 
-# Where to Go from Here（快速跳转）
+# 快速跳转
 
 **编程指南:**
 
