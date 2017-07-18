@@ -38,28 +38,16 @@ title: Submitting Applications
 * `application-jar`: 包括您的应用以及所有依赖的一个打包的 Jar 的路径。该 URL 在您的集群上必须是全局可见的，例如，一个 `hdfs://` path 或者一个 `file://` 在所有节点是可见的。
 * `application-arguments`: 传递到您的 main class 的 main 方法的参数，如果有的话。
 
-<b>&#8224;</b> A common deployment strategy is to submit your application from a gateway machine
-that is
-physically co-located with your worker machines (e.g. Master node in a standalone EC2 cluster).
-In this setup, `client` mode is appropriate. In `client` mode, the driver is launched directly
-within the `spark-submit` process which acts as a *client* to the cluster. The input and
-output of the application is attached to the console. Thus, this mode is especially suitable
-for applications that involve the REPL (e.g. Spark shell).
+<b>&#8224;</b> 常见的部署策略是从一台 gateway 机器物理位置与您 worker 在一起的机器（比如，在 standalone EC2 集群中的 Master 节点上）来提交您的应用。在这种设置中， `client` 模式是合适的。在 `client` 模式中，driver 直接运行在一个充当集群 client 的 `spark-submit` 进程内。应用程序的输入和输出直接连到控制台。因此，这个模式特别适合那些设计 REPL（例如，Spark shell）的应用程序。
 
-Alternatively, if your application is submitted from a machine far from the worker machines (e.g.
-locally on your laptop), it is common to use `cluster` mode to minimize network latency between
-the drivers and the executors. Currently, standalone mode does not support cluster mode for Python
-applications.
+另外，如果您从一台远离 worker 机器的机器（例如，本地的笔记本电脑上）提交应用程序，通常使用 `cluster` 模式来降低 driver 和 executor 之间的延迟。目前，Standalone 模式不支持 Cluster 模式的 Python 应用。
 
-For Python applications, simply pass a `.py` file in the place of `<application-jar>` instead of a JAR,
-and add Python `.zip`, `.egg` or `.py` files to the search path with `--py-files`.
+对于 Python 应用，在 `<application-jar>` 的位置简单的传递一个 `.py` 文件而不是一个 JAR，并且可以用 `--py-files` 添加 Python `.zip`，`.egg` 或者 `.py` 文件到 search path（搜索路径）。
 
-There are a few options available that are specific to the
-[cluster manager](cluster-overview.html#cluster-manager-types) that is being used.
-For example, with a [Spark standalone cluster](spark-standalone.html) with `cluster` deploy mode,
-you can also specify `--supervise` to make sure that the driver is automatically restarted if it
-fails with non-zero exit code. To enumerate all such options available to `spark-submit`,
-run it with `--help`. Here are a few examples of common options:
+这里有一些选项可用于特定的
+[cluster manager](cluster-overview.html#cluster-manager-types) 中。例如， [Spark standalone cluster](spark-standalone.html) 用 `cluster` 部署模式,
+您也可以指定 `--supervise` 来确保 driver 在 non-zero exit code 失败时可以自动重启。为了列出所有  `spark-submit`,
+可用的选项，用 `--help`. 来运行它。这里是一些常见选项的例子 :
 
 {% highlight bash %}
 # Run application locally on 8 cores
@@ -121,34 +109,33 @@ export HADOOP_CONF_DIR=XXX
 
 # Master URLs
 
-The master URL passed to Spark can be in one of the following formats:
+传递给 Spark 的 master URL 可以使用下列格式中的一种 : 
 
 <table class="table">
 <tr><th>Master URL</th><th>Meaning</th></tr>
-<tr><td> <code>local</code> </td><td> Run Spark locally with one worker thread (i.e. no parallelism at all). </td></tr>
-<tr><td> <code>local[K]</code> </td><td> Run Spark locally with K worker threads (ideally, set this to the number of cores on your machine). </td></tr>
-<tr><td> <code>local[K,F]</code> </td><td> Run Spark locally with K worker threads and F maxFailures (see <a href="configuration.html#scheduling">spark.task.maxFailures</a> for an explanation of this variable) </td></tr>
-<tr><td> <code>local[*]</code> </td><td> Run Spark locally with as many worker threads as logical cores on your machine.</td></tr>
-<tr><td> <code>local[*,F]</code> </td><td> Run Spark locally with as many worker threads as logical cores on your machine and F maxFailures.</td></tr>
-<tr><td> <code>spark://HOST:PORT</code> </td><td> Connect to the given <a href="spark-standalone.html">Spark standalone
-        cluster</a> master. The port must be whichever one your master is configured to use, which is 7077 by default.
+<tr><td> <code>local</code> </td><td> 使用一个线程本地运行 Spark（即，没有并行性）。 </td></tr>
+<tr><td> <code>local[K]</code> </td><td> 使用 K 个 worker 线程本地运行 Spark（理想情况下，设置这个值的数量为您机器的 core 数量）。 </td></tr>
+<tr><td> <code>local[K,F]</code> </td><td> 使用 K 个 worker 线程本地运行 Spark并允许最多失败 F次  (查阅 <a href="configuration.html#scheduling">spark.task.maxFailures</a> 以获取对该变量的解释) </td></tr>
+<tr><td> <code>local[*]</code> </td><td> 使用更多的 worker 线程作为逻辑的 core 在您的机器上来本地的运行 Spark。</td></tr>
+<tr><td> <code>local[*,F]</code> </td><td> 使用更多的 worker 线程作为逻辑的 core 在您的机器上来本地的运行 Spark并允许最多失败 F次。</td></tr>
+<tr><td> <code>spark://HOST:PORT</code> </td><td> 连接至给定的 <a href="spark-standalone.html">Spark standalone
+        cluster</a> master. master。该 port（端口）必须有一个作为您的 master 配置来使用，默认是 7077。
 </td></tr>
-<tr><td> <code>spark://HOST1:PORT1,HOST2:PORT2</code> </td><td> Connect to the given <a href="spark-standalone.html#standby-masters-with-zookeeper">Spark standalone
-        cluster with standby masters with Zookeeper</a>. The list must have all the master hosts in the high availability cluster set up with Zookeeper. The port must be whichever each master is configured to use, which is 7077 by default.
+<tr><td> <code>spark://HOST1:PORT1,HOST2:PORT2</code> </td><td> 连接至给定的 <a href="spark-standalone.html#standby-masters-with-zookeeper">Spark standalone
+        cluster with standby masters with Zookeeper</a>. 该列表必须包含由zookeeper设置的高可用集群中的所有master主机。该 port（端口）必须有一个作为您的 master 配置来使用，默认是 7077。
 </td></tr>
-<tr><td> <code>mesos://HOST:PORT</code> </td><td> Connect to the given <a href="running-on-mesos.html">Mesos</a> cluster.
-        The port must be whichever one your is configured to use, which is 5050 by default.
-        Or, for a Mesos cluster using ZooKeeper, use <code>mesos://zk://...</code>.
-        To submit with <code>--deploy-mode cluster</code>, the HOST:PORT should be configured to connect to the <a href="running-on-mesos.html#cluster-mode">MesosClusterDispatcher</a>.
+<tr><td> <code>mesos://HOST:PORT</code> </td><td> 连接至给定的 <a href="running-on-mesos.html">Mesos</a> 集群.
+        该 port（端口）必须有一个作为您的配置来使用，默认是 5050。或者，对于使用了 ZooKeeper 的 Mesos cluster 来说，使用 <code>mesos://zk://...</code>.
+        。使用 <code>--deploy-mode cluster</code>, 来提交，该 HOST:PORT 应该被配置以连接到 <a href="running-on-mesos.html#cluster-mode">MesosClusterDispatcher</a>.
 </td></tr>
-<tr><td> <code>yarn</code> </td><td> Connect to a <a href="running-on-yarn.html"> YARN </a> cluster in
-        <code>client</code> or <code>cluster</code> mode depending on the value of <code>--deploy-mode</code>.
-        The cluster location will be found based on the <code>HADOOP_CONF_DIR</code> or <code>YARN_CONF_DIR</code> variable.
+<tr><td> <code>yarn</code> </td><td> 连接至一个 <a href="running-on-yarn.html"> YARN </a> cluster in
+        <code>client</code> or <code>cluster</code> mode 取决于 <code>--deploy-mode</code>.
+        的值在 client 或者 cluster 模式中。该 cluster 的位置将根据 <code>HADOOP_CONF_DIR</code>  或者 <code>YARN_CONF_DIR</code> 变量来找到。
 </td></tr>
 </table>
 
 
-# Loading Configuration from a File
+# 从文件中加载配置
 
 The `spark-submit` script can load default [Spark configuration values](configuration.html) from a
 properties file and pass them on to your application. By default it will read options
