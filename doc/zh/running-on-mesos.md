@@ -1,131 +1,108 @@
 ---
 layout: global
-title: Running Spark on Mesos
+title: 在 Mesos 上运行 Spark
 ---
 * This will become a table of contents (this text will be scraped).
 {:toc}
 
-Spark can run on hardware clusters managed by [Apache Mesos](http://mesos.apache.org/).
+Spark 可以运行在 [Apache Mesos](http://mesos.apache.org/) 管理的硬件集群上。
 
-The advantages of deploying Spark with Mesos include:
+使用 Mesos 部署 Spark 的优点包括：
 
-- dynamic partitioning between Spark and other
-  [frameworks](https://mesos.apache.org/documentation/latest/mesos-frameworks/)
-- scalable partitioning between multiple instances of Spark
+- Spark 与其他的 [frameworks（框架）](https://mesos.apache.org/documentation/latest/mesos-frameworks/) 之间的 dynamic partitioning （动态分区）
+- 在 Spark 的多个实例之间的 scalable partitioning （可扩展分区）
 
-# How it Works
+# 运行原理
 
-In a standalone cluster deployment, the cluster manager in the below diagram is a Spark master
-instance.  When using Mesos, the Mesos master replaces the Spark master as the cluster manager.
+在一个 standalone 集群部署中，下图中的集群的 manager 是一个 Spark master 实例。当使用 Mesos 时，Mesos master 会将 Spark master 替换掉，成为集群 manager 。
 
 <p style="text-align: center;">
-  <img src="img/cluster-overview.png" title="Spark cluster components" alt="Spark cluster components" />
+  <img src="img/cluster-overview.png" title="Spark 集群组件" alt="Spark 集群组件" />
 </p>
 
-Now when a driver creates a job and starts issuing tasks for scheduling, Mesos determines what
-machines handle what tasks.  Because it takes into account other frameworks when scheduling these
-many short-lived tasks, multiple frameworks can coexist on the same cluster without resorting to a
-static partitioning of resources.
+现在当 driver 创建一个作业并开始执行调度任务时， Mesos 会决定什么机器处理什么任务。因为 Mesos 调度这些短期任务时会将其他的框架考虑在内，多个框架可以共存在同一个集群上，而不需要求助于一个 static partitioning of resources （资源的静态分区）。
 
-To get started, follow the steps below to install Mesos and deploy Spark jobs via Mesos.
+要开始，请按照以下步骤安装 Mesos 并通过 Mesos 部署 Spark 作业。
 
 
-# Installing Mesos
+# 安装 Mesos
 
-Spark {{site.SPARK_VERSION}} is designed for use with Mesos {{site.MESOS_VERSION}} or newer and does not
-require any special patches of Mesos.
+Spark {{site.SPARK_VERSION}} 专门为 Mesos {{site.MESOS_VERSION}} 或更新的版本并且不需要 Mesos 的任何特殊补丁。
 
-If you already have a Mesos cluster running, you can skip this Mesos installation step.
+如果您已经有一个 Mesos 集群正在运行着，您可以跳过这个 Mesos 安装的步骤。
 
-Otherwise, installing Mesos for Spark is no different than installing Mesos for use by other
-frameworks.  You can install Mesos either from source or using prebuilt packages.
+否则，安装 Mesos for Spark 与安装 Mesos for 其他框架是没有区别的。您可以通过源码或者 prebuilt packages （预构建软件安装包）来安装 Mesos 。
 
-## From Source
+## 从源码安装
 
-To install Apache Mesos from source, follow these steps:
+通过源码安装 Apache Mesos ，请按照以下步骤：
 
-1. Download a Mesos release from a
-   [mirror](http://www.apache.org/dyn/closer.lua/mesos/{{site.MESOS_VERSION}}/)
-2. Follow the Mesos [Getting Started](http://mesos.apache.org/gettingstarted) page for compiling and
-   installing Mesos
+1. 从镜像网站 [mirror](http://www.apache.org/dyn/closer.lua/mesos/{{site.MESOS_VERSION}}/) 下载一个 Mesos 发行版。
+2. 按照 Mesos 的 [快速开始](http://mesos.apache.org/gettingstarted) 页面来编译和安装 Mesos 。
 
-**Note:** If you want to run Mesos without installing it into the default paths on your system
-(e.g., if you lack administrative privileges to install it), pass the
-`--prefix` option to `configure` to tell it where to install. For example, pass
-`--prefix=/home/me/mesos`. By default the prefix is `/usr/local`.
+**注意:** 如果您希望运行 Mesos 并且又不希望将其安装在您的系统的默认路径（例如，如果您没有安装它的管理权限），将 `--prefix` 选项传入 `configure` 来告知它安装在什么地方。例如，将 `--prefix=/home/me/mesos` 传入。默认情况下，前缀是 `/usr/local` 。
 
-## Third-Party Packages
+## 第三方软件包
 
-The Apache Mesos project only publishes source releases, not binary packages.  But other
-third party projects publish binary releases that may be helpful in setting Mesos up.
+Apache Mesos 只发布了源码的发行版本，而不是 binary packages （二进制包）。但是其他的第三方项目发布了 binary releases （二进制发行版本），可能对设置 Mesos 有帮助。
 
-One of those is Mesosphere.  To install Mesos using the binary releases provided by Mesosphere:
+其中之一是 Mesosphere 。使用 Mesosphere 提供的 binary releases （二进制发行版本）安装 Mesos ：
 
-1. Download Mesos installation package from [downloads page](http://mesosphere.io/downloads/)
-2. Follow their instructions for installation and configuration
+1. 从 [下载页面](http://mesosphere.io/downloads/) 下载 Mesos 安装包
+2. 按照他们的说明进行安装和配置
 
-The Mesosphere installation documents suggest setting up ZooKeeper to handle Mesos master failover,
-but Mesos can be run without ZooKeeper using a single master as well.
+Mesosphere 安装文档建议安装 ZooKeeper 来处理 Mesos master 故障切换，但是 Mesos 可以在没有 ZooKeeper 的情况下使用 single master 。
 
-## Verification
+## 验证
 
-To verify that the Mesos cluster is ready for Spark, navigate to the Mesos master webui at port
-`:5050`  Confirm that all expected machines are present in the slaves tab.
+要验证 Mesos 集群是否已经准备好用于 Spark ，请导航到 Mesos master 的 webui 界面，端口是： `:5050` 来确认所有预期的机器都在 slaves 选项卡中。
 
 
-# Connecting Spark to Mesos
+# 连接 Spark 到 Mesos
 
-To use Mesos from Spark, you need a Spark binary package available in a place accessible by Mesos, and
-a Spark driver program configured to connect to Mesos.
+要使用 Spark 中的 Mesos ，您需要一个 Spark 的二进制包放到 Mesos 可以访问的地方，然后一个 Spark driver 程序配置来连接 Mesos 。
 
-Alternatively, you can also install Spark in the same location in all the Mesos slaves, and configure
-`spark.mesos.executor.home` (defaults to SPARK_HOME) to point to that location.
+或者，您也可以将 Spark 安装在所有 Mesos slaves 中的相同位置，并且配置 `spark.mesos.executor.home` （默认是 SPARK_HOME）来指向该位置。
 
-## Uploading Spark Package
+## 上传 Spark 包
 
-When Mesos runs a task on a Mesos slave for the first time, that slave must have a Spark binary
-package for running the Spark Mesos executor backend.
-The Spark package can be hosted at any Hadoop-accessible URI, including HTTP via `http://`,
-[Amazon Simple Storage Service](http://aws.amazon.com/s3) via `s3n://`, or HDFS via `hdfs://`.
+当 Mesos 第一次在 Mesos slave 上运行任务的时候，这个 slave 必须有一个 Spark binary
+package （Spark 二进制包）用于执行 Spark Mesos executor backend （执行器后端）。
+Spark 软件包可以在任何 Hadoop 可访问的 URI 上托管，包括 HTTP 通过 `http://`  ，[Amazon Simple Storage Service](http://aws.amazon.com/s3) 通过 `s3n://` ，或者 HDFS 通过 `hdfs://` 。
 
-To use a precompiled package:
+要使用预编译的包：
 
-1. Download a Spark binary package from the Spark [download page](https://spark.apache.org/downloads.html)
-2. Upload to hdfs/http/s3
+1. 从 Spark 的  [下载页面](https://spark.apache.org/downloads.html) 下载一个 Spark binary package （Spark 二进制包）
+2. 上传到 hdfs/http/s3
 
-To host on HDFS, use the Hadoop fs put command: `hadoop fs -put spark-{{site.SPARK_VERSION}}.tar.gz
+要托管在 HDFS 上，使用 Hadoop fs put 命令：`hadoop fs -put spark-{{site.SPARK_VERSION}}.tar.gz
 /path/to/spark-{{site.SPARK_VERSION}}.tar.gz`
 
 
-Or if you are using a custom-compiled version of Spark, you will need to create a package using
-the `dev/make-distribution.sh` script included in a Spark source tarball/checkout.
+或者如果您正在使用着一个自定义编译的 Spark 版本，您将需要使用 在 Spark 源码中的 tarball/checkout 的 `dev/make-distribution.sh` 脚本创建一个包。
 
-1. Download and build Spark using the instructions [here](index.html)
-2. Create a binary package using `./dev/make-distribution.sh --tgz`.
-3. Upload archive to http/s3/hdfs
+1. 按照说明 [这里](index.html) 来下载并构建 Spark 。
+2. 使用 `./dev/make-distribution.sh --tgz` 创建一个 binary package （二进制包）
+3. 将归档文件上传到 http/s3/hdfs
 
 
-## Using a Mesos Master URL
+## 使用 Mesos Master URL
 
-The Master URLs for Mesos are in the form `mesos://host:5050` for a single-master Mesos
-cluster, or `mesos://zk://host1:2181,host2:2181,host3:2181/mesos` for a multi-master Mesos cluster using ZooKeeper.
+对于一个 single-master Mesos 集群，Mesos 的 Master URLs 是以 `mesos://host:5050` 的形式表示的，或者对于 使用 ZooKeeper 的 multi-master Mesos 是以 `mesos://zk://host1:2181,host2:2181,host3:2181/mesos` 的形式表示。
 
-## Client Mode
+## Client Mode（客户端模式）
 
-In client mode, a Spark Mesos framework is launched directly on the client machine and waits for the driver output.
+在客户端模式下，Spark Mesos 框架直接在客户端机器上启动，并等待 driver 输出。
 
-The driver needs some configuration in `spark-env.sh` to interact properly with Mesos:
+driver 需要在 `spark-env.sh` 中进行一些配置才能与 Mesos 进行交互：
 
-1. In `spark-env.sh` set some environment variables:
- * `export MESOS_NATIVE_JAVA_LIBRARY=<path to libmesos.so>`. This path is typically
-   `<prefix>/lib/libmesos.so` where the prefix is `/usr/local` by default. See Mesos installation
-   instructions above. On Mac OS X, the library is called `libmesos.dylib` instead of
-   `libmesos.so`.
- * `export SPARK_EXECUTOR_URI=<URL of spark-{{site.SPARK_VERSION}}.tar.gz uploaded above>`.
-2. Also set `spark.executor.uri` to `<URL of spark-{{site.SPARK_VERSION}}.tar.gz>`.
+1. 在 `spark-env.sh` 中设置一些环境变量：
+ * `export MESOS_NATIVE_JAVA_LIBRARY=<path to libmesos.so>`. 这个路径通常是
+   `<prefix>/lib/libmesos.so` 默认情况下前缀是 `/usr/local` 。请参阅上边的 Mesos 安装说明。在 Mac OS X 上，这个 library 叫做 `libmesos.dylib` 而不是 `libmesos.so` 。
+ * `export SPARK_EXECUTOR_URI=<URL of spark-{{site.SPARK_VERSION}}.tar.gz uploaded above>`。
+2. 还需要设置 `spark.executor.uri` 为 `<URL of spark-{{site.SPARK_VERSION}}.tar.gz>`。
 
-Now when starting a Spark application against the cluster, pass a `mesos://`
-URL as the master when creating a `SparkContext`. For example:
+现在，当针对集群启动一个 Spark 应用程序时，在创建 `SparkContext` 时传递一个 `mesos://` URL 作为 master 。例如：
 
 {% highlight scala %}
 val conf = new SparkConf()
@@ -135,34 +112,28 @@ val conf = new SparkConf()
 val sc = new SparkContext(conf)
 {% endhighlight %}
 
-(You can also use [`spark-submit`](submitting-applications.html) and configure `spark.executor.uri`
-in the [conf/spark-defaults.conf](configuration.html#loading-default-configurations) file.)
+(您还可以在 [conf/spark-defaults.conf](configuration.html#loading-default-configurations) 文件中使用 [`spark-submit`](submitting-applications.html) 并且配置 `spark.executor.uri` )
 
-When running a shell, the `spark.executor.uri` parameter is inherited from `SPARK_EXECUTOR_URI`, so
-it does not need to be redundantly passed in as a system property.
+运行 shell 的时候，`spark.executor.uri` 参数从 `SPARK_EXECUTOR_URI` 继承，所以它不需要作为系统属性冗余地传入。
 
 {% highlight bash %}
 ./bin/spark-shell --master mesos://host:5050
 {% endhighlight %}
 
-## Cluster mode
+## Cluster mode（集群模式）
 
-Spark on Mesos also supports cluster mode, where the driver is launched in the cluster and the client
-can find the results of the driver from the Mesos Web UI.
+Spark on Mesos 还支持 cluster mode （集群模式），其中 driver 在集群中启动并且 client（客户端）可以在 Mesos Web UI 中找到 driver 的 results 。
 
-To use cluster mode, you must start the `MesosClusterDispatcher` in your cluster via the `sbin/start-mesos-dispatcher.sh` script,
-passing in the Mesos master URL (e.g: mesos://host:5050). This starts the `MesosClusterDispatcher` as a daemon running on the host.
+要使用集群模式，你必须在您的集群中通过 `sbin/start-mesos-dispatcher.sh` 脚本启动 `MesosClusterDispatcher` ，传入 Mesos master URL （例如：mesos://host:5050）。这将启动 `MesosClusterDispatcher` 作为在主机上运行的守护程序。
 
-If you like to run the `MesosClusterDispatcher` with Marathon, you need to run the `MesosClusterDispatcher` in the foreground (i.e: `bin/spark-class org.apache.spark.deploy.mesos.MesosClusterDispatcher`). Note that the `MesosClusterDispatcher` not yet supports multiple instances for HA.
+如果您喜欢使用 Marathon 来运行 `MesosClusterDispatcher` ，您需要在 foreground （前台）运行 `MesosClusterDispatcher` （即 `bin/spark-class org.apache.spark.deploy.mesos.MesosClusterDispatcher`）。注意，`MesosClusterDispatcher` 尚不支持 HA 的多个实例。
 
-The `MesosClusterDispatcher` also supports writing recovery state into Zookeeper. This will allow the `MesosClusterDispatcher` to be able to recover all submitted and running containers on relaunch.   In order to enable this recovery mode, you can set SPARK_DAEMON_JAVA_OPTS in spark-env by configuring `spark.deploy.recoveryMode` and related spark.deploy.zookeeper.* configurations.
-For more information about these configurations please refer to the configurations [doc](configurations.html#deploy).
+`MesosClusterDispatcher` 还支持将 recovery state （恢复状态）写入 Zookeeper 。这将允许 `MesosClusterDispatcher` 能够在重新启动时恢复所有提交和运行的 containers （容器）。为了启用这个恢复模式，您可以在 spark-env 中通过配置 `spark.deploy.recoveryMode` 来设置 SPARK_DAEMON_JAVA_OPTS 和相关的 spark.deploy.zookeeper.* 配置。
+有关这些配置的更多信息，请参阅配置 [doc](configurations.html#deploy) 。
 
-From the client, you can submit a job to Mesos cluster by running `spark-submit` and specifying the master URL
-to the URL of the `MesosClusterDispatcher` (e.g: mesos://dispatcher:7077). You can view driver statuses on the
-Spark cluster Web UI.
+从客户端，您可以提交一个作业到 Mesos 集群，通过执行 `spark-submit` 并指定 `MesosClusterDispatcher` 的 master URL （例如：mesos://dispatcher:7077）。您可以在 Spark cluster Web UI 查看 driver 的状态。
 
-For example:
+例如：
 {% highlight bash %}
 ./bin/spark-submit \
   --class org.apache.spark.examples.SparkPi \
@@ -176,193 +147,133 @@ For example:
 {% endhighlight %}
 
 
-Note that jars or python files that are passed to spark-submit should be URIs reachable by Mesos slaves, as the Spark driver doesn't automatically upload local jars.
+请注意，传入到 spark-submit 的 jars 或者 python 文件应该是 Mesos slaves 可访问的 URIs ，因为 Spark driver 不会自动上传本地 jars 。
 
-# Mesos Run Modes
+# Mesos 运行模式
 
-Spark can run over Mesos in two modes: "coarse-grained" (default) and
-"fine-grained" (deprecated).
+Spark 可以以两种模式运行 Mesos ： "coarse-grained（粗粒度）"（默认） 和 "fine-grained（细粒度）"（不推荐）。
 
-## Coarse-Grained
+## Coarse-Grained（粗粒度）
 
-In "coarse-grained" mode, each Spark executor runs as a single Mesos
-task.  Spark executors are sized according to the following
-configuration variables:
+在 "coarse-grained（粗粒度） 模式下，每个 Spark 执行器都作为单个 Mesos 任务运行。 Spark 执行器的大小是根据下面的配置变量确定的：
 
-* Executor memory: `spark.executor.memory`
-* Executor cores: `spark.executor.cores`
-* Number of executors: `spark.cores.max`/`spark.executor.cores`
+* Executor memory（执行器内存）: `spark.executor.memory`
+* Executor cores（执行器核）: `spark.executor.cores`
+* Number of executors（执行器数量）: `spark.cores.max`/`spark.executor.cores`
 
-Please see the [Spark Configuration](configuration.html) page for
-details and default values.
+请参阅 [Spark 配置](configuration.html) 页面来了解细节和默认值。
 
-Executors are brought up eagerly when the application starts, until
-`spark.cores.max` is reached.  If you don't set `spark.cores.max`, the
-Spark application will reserve all resources offered to it by Mesos,
-so we of course urge you to set this variable in any sort of
-multi-tenant cluster, including one which runs multiple concurrent
-Spark applications.
+当应用程序启动时，执行器就会高涨，直到达到 `spark.cores.max` 。如果您没有设置 `spark.cores.max` ，Spark 应用程序将会保留 Mesos 提供的所有的资源，因此我们当然会敦促您在任何类型的多租户集群上设置此变量，包括运行多个并发 Spark 应用程序的集群。
 
-The scheduler will start executors round-robin on the offers Mesos
-gives it, but there are no spread guarantees, as Mesos does not
-provide such guarantees on the offer stream.
+调度程序将会在提供的 Mesos 上启动执行器循环给它，但是没有 spread guarantees （传播保证），因为 Mesos 不提供这样的保证在提供流上。
 
-In this mode spark executors will honor port allocation if such is
-provided from the user. Specifically if the user defines
-`spark.executor.port` or `spark.blockManager.port` in Spark configuration,
-the mesos scheduler will check the available offers for a valid port
-range containing the port numbers. If no such range is available it will
-not launch any task. If no restriction is imposed on port numbers by the
-user, ephemeral ports are used as usual. This port honouring implementation
-implies one task per host if the user defines a port. In the future network
-isolation shall be supported.
+在这个模式下 spark 执行器将遵守 port （端口）分配如果这些事由用户提供的。特别是如果用户在 Spark 配置中定义了 `spark.executor.port` 或者 `spark.blockManager.port` ，mesos 调度器将检查有效端口的可用 offers 包含端口号。如果没有这样的 range 可用，它会不启动任何任务。如果用户提供的端口号不受限制，临时端口像往常一样使用。如果用户定义了一个端口，这个端口实现意味着 one task per host （每个主机一个任务）。在未来网络中，isolation 将被支持。
 
-The benefit of coarse-grained mode is much lower startup overhead, but
-at the cost of reserving Mesos resources for the complete duration of
-the application.  To configure your job to dynamically adjust to its
-resource requirements, look into
-[Dynamic Allocation](#dynamic-resource-allocation-with-mesos).
+粗粒度模式的好处是开销要低得多，但是在应用程序的整个持续时间内保留 Mesos 资源的代价。要配置您的作业以动态调整资源需求，请参阅 [动态分配](#dynamic-resource-allocation-with-mesos) 。
 
-## Fine-Grained (deprecated)
+## Fine-Grained (deprecated)（细粒度，不推荐）
 
-**NOTE:** Fine-grained mode is deprecated as of Spark 2.0.0.  Consider
- using [Dynamic Allocation](#dynamic-resource-allocation-with-mesos)
- for some of the benefits.  For a full explanation see
- [SPARK-11857](https://issues.apache.org/jira/browse/SPARK-11857)
+**注意:** Spark 2.0.0 中的细粒度模式已弃用。为了一些优点，请考虑使用 [动态分配](#dynamic-resource-allocation-with-mesos) 有关完整的解释，请参阅 [SPARK-11857](https://issues.apache.org/jira/browse/SPARK-11857) 。
 
-In "fine-grained" mode, each Spark task inside the Spark executor runs
-as a separate Mesos task. This allows multiple instances of Spark (and
-other frameworks) to share cores at a very fine granularity, where
-each application gets more or fewer cores as it ramps up and down, but
-it comes with an additional overhead in launching each task. This mode
-may be inappropriate for low-latency requirements like interactive
-queries or serving web requests.
+在细粒度模式下，Spark 执行器中的每个 Spark 任务作为单独的 Mesos 任务运行。这允许 Spark 的多个实例（和其他框架）以非常细的粒度来共享 cores （内核），其中每个应用程序在其上升和下降时获得更多或更少的核。但是它在启动每个任务时增加额外的开销。这种模式可能不适合低延迟要求，如交互式查询或者提供 web 请求。
 
-Note that while Spark tasks in fine-grained will relinquish cores as
-they terminate, they will not relinquish memory, as the JVM does not
-give memory back to the Operating System.  Neither will executors
-terminate when they're idle.
+请注意，尽管细粒度的 Spark 任务在它们终止时将放弃内核，但是他们不会放弃内存，因为 JVM 不会将内存回馈给操作系统。执行器在空闲时也不会终止。
 
-To run in fine-grained mode, set the `spark.mesos.coarse` property to false in your
-[SparkConf](configuration.html#spark-properties):
+要以细粒度模式运行，请在您的 [SparkConf](configuration.html#spark-properties) 中设置 `spark.mesos.coarse` 属性为 false 。:
 
 {% highlight scala %}
 conf.set("spark.mesos.coarse", "false")
 {% endhighlight %}
 
-You may also make use of `spark.mesos.constraints` to set
-attribute-based constraints on Mesos resource offers. By default, all
-resource offers will be accepted.
+您还可以使用 `spark.mesos.constraints` 在 Mesos 资源提供上设置基于属性的约束。默认情况下，所有资源 offers 都将被接受。
 
 {% highlight scala %}
 conf.set("spark.mesos.constraints", "os:centos7;us-east-1:false")
 {% endhighlight %}
 
-For example, Let's say `spark.mesos.constraints` is set to `os:centos7;us-east-1:false`, then the resource offers will be checked to see if they meet both these constraints and only then will be accepted to start new executors.
+例如，假设将 `spark.mesos.constraints` 设置为 `os:centos7;us-east-1:false` ，然后将检查资源 offers 以查看它们是否满足这两个约束，然后才会被接受以启动新的执行器。
 
-# Mesos Docker Support
+# Mesos Docker 支持
 
-Spark can make use of a Mesos Docker containerizer by setting the property `spark.mesos.executor.docker.image`
-in your [SparkConf](configuration.html#spark-properties).
+Spark 可以通过在您的 [SparkConf](configuration.html#spark-properties) 中设置属性 `spark.mesos.executor.docker.image` 来使用 Mesos Docker 容器。
 
-The Docker image used must have an appropriate version of Spark already part of the image, or you can
-have Mesos download Spark via the usual methods.
+所使用的 Docker 图像必须有一个适合的版本的 Spark 已经是图像的一部分，也可以通过通常的方法让 Mesos 下载 Spark 。
 
-Requires Mesos version 0.20.1 or later.
+需要 Mesos 的 0.20.1 版本或者更高版本。
 
-Note that by default Mesos agents will not pull the image if it already exists on the agent. If you use mutable image
-tags you can set `spark.mesos.executor.docker.forcePullImage` to `true` in order to force the agent to always pull the
-image before running the executor. Force pulling images is only available in Mesos version 0.22 and above.
+请注意，默认情况下，如果 agent （代理程序中）的 Mesos 代理已经存在，则 Mesos agents 将不会 pull 图像。如果您使用 mutable image tags （可变图像标签）可以将 `spark.mesos.executor.docker.forcePullImage` 设置为 `true` ，以强制 agent 总是在运行执行器之前拉取 image 。Force pulling images （强制拉取图像）仅在 Mesos 0.22 版本及以上版本中可用。
 
-# Running Alongside Hadoop
+# 集成 Hadoop 运行
 
-You can run Spark and Mesos alongside your existing Hadoop cluster by just launching them as a
-separate service on the machines. To access Hadoop data from Spark, a full `hdfs://` URL is required
-(typically `hdfs://<namenode>:9000/path`, but you can find the right URL on your Hadoop Namenode web
-UI).
+您可以在现有的 Hadoop 集群集成运行 Spark 和 Mesos ，只需要在机器上启动他们作为分开的服务即可。要从 Spark 访问 Hadoop 数据，需要一个完整的 `hdfs://` URL （通常为 `hdfs://<namenode>:9000/path`），但是您可以在 Hadoop Namenode web UI 上找到正确的 URL 。
 
-In addition, it is possible to also run Hadoop MapReduce on Mesos for better resource isolation and
-sharing between the two. In this case, Mesos will act as a unified scheduler that assigns cores to
-either Hadoop or Spark, as opposed to having them share resources via the Linux scheduler on each
-node. Please refer to [Hadoop on Mesos](https://github.com/mesos/hadoop).
+此外，还可以在 Mesos 上运行 Hadoop MapReduce，以便在两者之间实现更好的资源隔离和共享。 在这种情况下，Mesos 将作为统一的调度程序，将 Core 核心分配给 Hadoop 或 Spark，而不是通过每个节点上的 Linux 调度程序共享资源。 请参考 [Hadoop on Mesos](https://github.com/mesos/hadoop) 。
 
-In either case, HDFS runs separately from Hadoop MapReduce, without being scheduled through Mesos.
+# 使用 Mesos 动态分配资源
 
-# Dynamic Resource Allocation with Mesos
+Mesos 仅支持使用粗粒度模式的动态分配，这可以基于应用程序的统计信息调整执行器的数量。 有关一般信息，请参阅 [Dynamic Resource Allocation](job-scheduling.html#dynamic-resource-allocation) 。
 
-Mesos supports dynamic allocation only with coarse-grained mode, which can resize the number of
-executors based on statistics of the application. For general information,
-see [Dynamic Resource Allocation](job-scheduling.html#dynamic-resource-allocation).
+要使用的外部 Shuffle 服务是 Mesos Shuffle 服务。 它在 Shuffle 服务之上提供 shuffle 数据清理功能，因为 Mesos 尚不支持通知另一个框架的终止。 要启动它，在所有从节点上运 `$SPARK_HOME/sbin/start-mesos-shuffle-service.sh` ，并将 `spark.shuffle.service.enabled` 设置为`true`。
 
-The External Shuffle Service to use is the Mesos Shuffle Service. It provides shuffle data cleanup functionality
-on top of the Shuffle Service since Mesos doesn't yet support notifying another framework's
-termination. To launch it, run `$SPARK_HOME/sbin/start-mesos-shuffle-service.sh` on all slave nodes, with `spark.shuffle.service.enabled` set to `true`.
+这也可以通过 Marathon，使用唯一的主机约束和以下命令实现 : `bin/spark-class org.apache.spark.deploy.mesos.MesosExternalShuffleService`。
 
-This can also be achieved through Marathon, using a unique host constraint, and the following command: `bin/spark-class org.apache.spark.deploy.mesos.MesosExternalShuffleService`.
+# 配置
 
-# Configuration
+有关 Spark 配置的信息，请参阅 [配置页面](configuration.html) 。以下配置特定于 Mesos 上的 Spark。
 
-See the [configuration page](configuration.html) for information on Spark configurations.  The following configs are specific for Spark on Mesos.
-
-#### Spark Properties
+#### Spark 属性
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name（属性名称）</th><th>Default（默认）</th><th>Meaning（含义）</th></tr>
 <tr>
   <td><code>spark.mesos.coarse</code></td>
   <td>true</td>
   <td>
-    If set to <code>true</code>, runs over Mesos clusters in "coarse-grained" sharing mode, where Spark acquires one long-lived Mesos task on each machine.
-    If set to <code>false</code>, runs over Mesos cluster in "fine-grained" sharing mode, where one Mesos task is created per Spark task.
-    Detailed information in <a href="running-on-mesos.html#mesos-run-modes">'Mesos Run Modes'</a>.
+  如果设置为<code>true</code>，则以 “粗粒度” 共享模式在 Mesos 集群上运行，其中 Spark 在每台计算机上获取一个长期存在的 Mesos 任务。
+如果设置为<code>false</code>，则以 “细粒度” 共享模式在 Mesos 集群上运行，其中每个 Spark 任务创建一个 Mesos 任务。
+<a href="running-on-mesos.html#mesos-run-modes">'Mesos Run Modes'</a> 中的详细信息。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.extra.cores</code></td>
   <td><code>0</code></td>
   <td>
-    Set the extra number of cores for an executor to advertise. This
-    does not result in more cores allocated.  It instead means that an
-    executor will "pretend" it has more cores, so that the driver will
-    send it more tasks.  Use this to increase parallelism.  This
-    setting is only used for Mesos coarse-grained mode.
+    设置执行程序公布的额外核心数。 这不会导致分配更多的内核。
+它代替意味着执行器将“假装”它有更多的核心，以便驱动程序将发送更多的任务。
+使用此来增加并行度。 此设置仅用于 Mesos 粗粒度模式。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.mesosExecutor.cores</code></td>
   <td><code>1.0</code></td>
   <td>
-    (Fine-grained mode only) Number of cores to give each Mesos executor. This does not
-    include the cores used to run the Spark tasks. In other words, even if no Spark task
-    is being run, each Mesos executor will occupy the number of cores configured here.
-    The value can be a floating point number.
+    （仅限细粒度模式）给每个 Mesos 执行器的内核数。 这不包括用于运行 Spark 任务的核心。
+换句话说，即使没有运行 Spark 任务，每个 Mesos 执行器将占用这里配置的内核数。 该值可以是浮点数。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.executor.docker.image</code></td>
   <td>(none)</td>
   <td>
-    Set the name of the docker image that the Spark executors will run in. The selected
-    image must have Spark installed, as well as a compatible version of the Mesos library.
-    The installed path of Spark in the image can be specified with <code>spark.mesos.executor.home</code>;
-    the installed path of the Mesos library can be specified with <code>spark.executorEnv.MESOS_NATIVE_JAVA_LIBRARY</code>.
+    设置 Spark 执行器将运行的 docker 映像的名称。所选映像必须安装 Spark，以及兼容版本的 Mesos 库。
+Spark 在图像中的安装路径可以通过 <code>spark.mesos.executor.home</code> 来指定;
+可以使用 <code>spark.executorEnv.MESOS_NATIVE_JAVA_LIBRARY</code> 指定 Mesos 库的安装路径。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.executor.docker.forcePullImage</code></td>
   <td>false</td>
   <td>
-    Force Mesos agents to pull the image specified in <code>spark.mesos.executor.docker.image</code>.
-    By default Mesos agents will not pull images they already have cached.
+   强制 Mesos 代理拉取 <code> spark.mesos.executor.docker.image </code> 中指定的图像。
+     默认情况下，Mesos 代理将不会拉取已经缓存的图像。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.executor.docker.parameters</code></td>
   <td>(none)</td>
   <td>
-    Set the list of custom parameters which will be passed into the <code>docker run</code> command when launching the Spark executor on Mesos using the docker containerizer. The format of this property is a comma-separated list of
-    key/value pairs. Example:
-
+    在使用 docker 容器化器在 Mesos 上启动 Spark 执行器时，设置将被传递到<code> docker run </code>命令的自定义参数的列表。 此属性的格式是逗号分隔的列表
+     键/值对。 例：
     <pre>key1=val1,key2=val2,key3=val3</pre>
   </td>
 </tr>
@@ -370,10 +281,7 @@ See the [configuration page](configuration.html) for information on Spark config
   <td><code>spark.mesos.executor.docker.volumes</code></td>
   <td>(none)</td>
   <td>
-    Set the list of volumes which will be mounted into the Docker image, which was set using
-    <code>spark.mesos.executor.docker.image</code>. The format of this property is a comma-separated list of
-    mappings following the form passed to <code>docker run -v</code>. That is they take the form:
-
+  设置要装入到 Docker 镜像中的卷列表，这是使用 <code>spark.mesos.executor.docker.image</code> 设置的。 此属性的格式是以逗号分隔的映射列表，后面的形式传递到 <code>docker run -v</code> 。 这是他们采取的形式 :
     <pre>[host_path:]container_path[:ro|:rw]</pre>
   </td>
 </tr>
@@ -381,8 +289,8 @@ See the [configuration page](configuration.html) for information on Spark config
   <td><code>spark.mesos.task.labels</code></td>
   <td>(none)</td>
   <td>
-    Set the Mesos labels to add to each task. Labels are free-form key-value pairs.
-    Key-value pairs should be separated by a colon, and commas used to list more than one.
+  设置 Mesos 标签以添加到每个任务。 标签是自由格式的键值对。
+     键值对应以冒号分隔，并用逗号分隔多个。
     Ex. key:value,key2:value2.
   </td>
 </tr>
@@ -390,63 +298,62 @@ See the [configuration page](configuration.html) for information on Spark config
   <td><code>spark.mesos.executor.home</code></td>
   <td>driver side <code>SPARK_HOME</code></td>
   <td>
-    Set the directory in which Spark is installed on the executors in Mesos. By default, the
-    executors will simply use the driver's Spark home directory, which may not be visible to
-    them. Note that this is only relevant if a Spark binary package is not specified through
-    <code>spark.executor.uri</code>.
+  在 Mesos 中的执行器上设置 Spark 安装目录。
+默认情况下，执行器将只使用驱动程序的 Spark 主目录，它们可能不可见。
+请注意，这只有当 Spark 二进制包没有通过 <code>spark.executor.uri</code> 指定时才是有意义的。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.executor.memoryOverhead</code></td>
   <td>executor memory * 0.10, with minimum of 384</td>
   <td>
-    The amount of additional memory, specified in MB, to be allocated per executor. By default,
-    the overhead will be larger of either 384 or 10% of <code>spark.executor.memory</code>. If set,
-    the final overhead will be this value.
+    以每个执行程序分配的额外内存量（以 MB 为单位）。
+默认情况下，开销将大于 <code>spark.executor.memory</code> 的 384 或 10%。
+如果设置，最终开销将是此值。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.uris</code></td>
   <td>(none)</td>
   <td>
-    A comma-separated list of URIs to be downloaded to the sandbox
-    when driver or executor is launched by Mesos.  This applies to
-    both coarse-grained and fine-grained mode.
+    当驱动程序或执行程序由 Mesos 启动时，要下载到沙箱的 URI 的逗号分隔列表。
+这适用于粗粒度和细粒度模式。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.principal</code></td>
   <td>(none)</td>
   <td>
-    Set the principal with which Spark framework will use to authenticate with Mesos.
+    设置 Spark 框架将用来与 Mesos 进行身份验证的主体。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.secret</code></td>
   <td>(none)</td>
   <td>
-    Set the secret with which Spark framework will use to authenticate with Mesos.
+    设置 Spark 框架将用来与 Mesos 进行身份验证的机密。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.role</code></td>
   <td><code>*</code></td>
   <td>
-    Set the role of this Spark framework for Mesos. Roles are used in Mesos for reservations
-    and resource weight sharing.
+    设置这个 Spark 框架对 Mesos 的作用。
+角色在 Mesos 中用于预留和资源权重共享。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.constraints</code></td>
   <td>(none)</td>
   <td>
-    Attribute based constraints on mesos resource offers. By default, all resource offers will be accepted. Refer to <a href="http://mesos.apache.org/documentation/attributes-resources/">Mesos Attributes & Resources</a> for more information on attributes.
+    基于属性的约束对 mesos 资源提供。 默认情况下，所有资源优惠都将被接受。
+有关属性的更多信息，请参阅 <a href="http://mesos.apache.org/documentation/attributes-resources/">Mesos Attributes & Resources</a>
     <ul>
-      <li>Scalar constraints are matched with "less than equal" semantics i.e. value in the constraint must be less than or equal to the value in the resource offer.</li>
-      <li>Range constraints are matched with "contains" semantics i.e. value in the constraint must be within the resource offer's value.</li>
-      <li>Set constraints are matched with "subset of" semantics i.e. value in the constraint must be a subset of the resource offer's value.</li>
-      <li>Text constraints are matched with "equality" semantics i.e. value in the constraint must be exactly equal to the resource offer's value.</li>
-      <li>In case there is no value present as a part of the constraint any offer with the corresponding attribute will be accepted (without value check).</li>
+      <li>标量约束与 “小于等于” 语义匹配，即约束中的值必须小于或等于资源提议中的值。</li>
+      <li>范围约束与 “包含” 语义匹配，即约束中的值必须在资源提议的值内。</li>
+      <li>集合约束与语义的 “子集” 匹配，即约束中的值必须是资源提供的值的子集。</li>
+      <li>文本约束与 “相等” 语义匹配，即约束中的值必须完全等于资源提议的值。</li>
+      <li>如果没有作为约束的一部分存在的值，则将接受具有相应属性的任何报价（没有值检查）。</li>
     </ul>
   </td>
 </tr>
@@ -454,105 +361,89 @@ See the [configuration page](configuration.html) for information on Spark config
   <td><code>spark.mesos.containerizer</code></td>
   <td><code>docker</code></td>
   <td>
-    This only affects docker containers, and must be one of "docker"
-    or "mesos".  Mesos supports two types of
-    containerizers for docker: the "docker" containerizer, and the preferred
-    "mesos" containerizer.  Read more here: http://mesos.apache.org/documentation/latest/container-image/
+  这只影响 docker containers ，而且必须是 "docker" 或 "mesos"。 Mesos 支持两种类型 docker 的 containerizer："docker" containerizer，和首选 "mesos" containerizer。 在这里阅读更多：http://mesos.apache.org/documentation/latest/container-image/
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.driver.webui.url</code></td>
   <td><code>(none)</code></td>
   <td>
-    Set the Spark Mesos driver webui_url for interacting with the framework.
-    If unset it will point to Spark's internal web UI.
+    设置 Spark Mesos 驱动程序 Web UI URL 以与框架交互。
+如果取消设置，它将指向 Spark 的内部 Web UI。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.driverEnv.[EnvironmentVariableName]</code></td>
   <td><code>(none)</code></td>
   <td>
-    This only affects drivers submitted in cluster mode.  Add the
-    environment variable specified by EnvironmentVariableName to the
-    driver process. The user can specify multiple of these to set
-    multiple environment variables.
+    这仅影响以群集模式提交的驱动程序。 添加由EnvironmentVariableName指定的环境变量驱动程序进程。 用户可以指定多个这些设置多个环境变量。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.dispatcher.webui.url</code></td>
   <td><code>(none)</code></td>
   <td>
-    Set the Spark Mesos dispatcher webui_url for interacting with the framework.
-    If unset it will point to Spark's internal web UI.
+    设置 Spark Mesos 分派器 Web UI URL 以与框架交互。
+如果取消设置，它将指向 Spark 的内部 Web UI。
   </td>
   </tr>
 <tr>
   <td><code>spark.mesos.dispatcher.driverDefault.[PropertyName]</code></td>
   <td><code>(none)</code></td>
   <td>
-    Set default properties for drivers submitted through the
-    dispatcher.  For example,
-    spark.mesos.dispatcher.driverProperty.spark.executor.memory=32g
-    results in the executors for all drivers submitted in cluster mode
-    to run in 32g containers.
+  设置驱动程序提供的默认属性通过 dispatcher。 例如，spark.mesos.dispatcher.driverProperty.spark.executor.memory=32g 导致在群集模式下提交的所有驱动程序的执行程序运行在 32g 容器中。
 </td>
 </tr>
 <tr>
   <td><code>spark.mesos.dispatcher.historyServer.url</code></td>
   <td><code>(none)</code></td>
   <td>
-    Set the URL of the <a href="http://spark.apache.org/docs/latest/monitoring.html#viewing-after-the-fact">history
-    server</a>.  The dispatcher will then link each driver to its entry
-    in the history server.
+    设置<a href="http://spark.apache.org/docs/latest/monitoring.html#viewing-after-the-fact">history
+    server</a>。 然后，dispatcher 将链接每个驱动程序到其条目在历史服务器中。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.gpus.max</code></td>
   <td><code>0</code></td>
   <td>
-    Set the maximum number GPU resources to acquire for this job. Note that executors will still launch when no GPU resources are found
-    since this configuration is just a upper limit and not a guaranteed amount.
+  设置要为此作业获取的 GPU 资源的最大数量。 请注意，当没有找到 GPU 资源时，执行器仍然会启动因为这个配置只是一个上限，而不是保证数额。
   </td>
   </tr>
 <tr>
   <td><code>spark.mesos.network.name</code></td>
   <td><code>(none)</code></td>
   <td>
-    Attach containers to the given named network.  If this job is
-    launched in cluster mode, also launch the driver in the given named
-    network.  See
-    <a href="http://mesos.apache.org/documentation/latest/cni/">the Mesos CNI docs</a>
-    for more details.
+  将 containers 附加到给定的命名网络。 如果这个作业是在集群模式下启动，同时在给定的命令中启动驱动程序网络。 查看 <a href="http://mesos.apache.org/documentation/latest/cni/"> Mesos CNI 文档</a>了解更多细节。
   </td>
 </tr>
 <tr>
   <td><code>spark.mesos.fetcherCache.enable</code></td>
   <td><code>false</code></td>
   <td>
-    If set to `true`, all URIs (example: `spark.executor.uri`,
-    `spark.mesos.uris`) will be cached by the <a
-    href="http://mesos.apache.org/documentation/latest/fetcher/">Mesos
-    Fetcher Cache</a>
+  如果设置为 `true`，则所有 URI （例如：`spark.executor.uri`，
+     `spark.mesos.uris`）将被<a
+    HREF = "http://mesos.apache.org/documentation/latest/fetcher/"> Mesos
+     Fetcher Cache</a>
   </td>
 </tr>
 </table>
 
-# Troubleshooting and Debugging
+# 故障排查和调试
 
-A few places to look during debugging:
+在调试中可以看的地方：
 
-- Mesos master on port `:5050`
-  - Slaves should appear in the slaves tab
-  - Spark applications should appear in the frameworks tab
-  - Tasks should appear in the details of a framework
-  - Check the stdout and stderr of the sandbox of failed tasks
-- Mesos logs
-  - Master and slave logs are both in `/var/log/mesos` by default
+- Mesos Master 的端口 : 5050
+  - Slaves 应该出现在 Slaves 那一栏
+  - Spark 应用应该出现在框架那一栏
+  - 任务应该出现在在一个框架的详情
+  - 检查失败任务的 sandbox 的 stdout 和 stderr
+- Mesos 的日志
+  - Master 和 Slave 的日志默认在 : `/var/log/mesos`  目录
 
-And common pitfalls:
+常见的陷阱:
 
-- Spark assembly not reachable/accessible
-  - Slaves must be able to download the Spark binary package from the `http://`, `hdfs://` or `s3n://` URL you gave
-- Firewall blocking communications
-  - Check for messages about failed connections
-  - Temporarily disable firewalls for debugging and then poke appropriate holes
+- Spark assembly 不可达/不可访问
+  - Slave 必须可以从你给的 `http://`，`hdfs://` 或者 `s3n://` URL 地址下载的到 Spark 的二进制包
+- 防火墙拦截通讯
+  - 检查信息是否是连接失败
+  - 临时禁用防火墙来调试，然后戳出适当的漏洞
