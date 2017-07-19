@@ -1,6 +1,6 @@
 ---
 layout: global
-title: Spark Standalone Mode
+title: Spark Standalone 模式
 ---
 
 * This will become a table of contents (this text will be scraped).
