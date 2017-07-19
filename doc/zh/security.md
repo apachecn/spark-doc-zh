@@ -15,7 +15,7 @@ Spark UI 可以通过 `spark.ui.filters` 设置使用 [javax servlet filters](ht
 
 ### 认证
 
-当 UI 中有一些不允许其他用户看到的数据时，用户可能想对 UI 进行安全防护。用户指定的 javax servlet filter 可以对用户进行身份认证，用户一旦登入，Spark 可以比较与这个用户相对应的视图 ACLs 来确认是否授权用户访问 UI。配置项 `spark.acls,enable`,`spark.ui.view.acls` 和 `spark.ui.view.acls.groups` 控制 ACLs 的行为。注意，启动 application 的用户具有使用 UI 视图的访问权限。在 YARN 上，Spark UI 使用标准的 YARN web application 代理机制可以通过任何已安装的 Hadoop filters 进行认证。
+当 UI 中有一些不允许其他用户看到的数据时，用户可能想对 UI 进行安全防护。用户指定的 javax servlet filter 可以对用户进行身份认证，用户一旦登入，Spark 可以比较与这个用户相对应的视图 ACLs 来确认是否授权用户访问 UI。配置项 `spark.acls.enable`,`spark.ui.view.acls` 和 `spark.ui.view.acls.groups` 控制 ACLs 的行为。注意，启动 application 的用户具有使用 UI 视图的访问权限。在 YARN 上，Spark UI 使用标准的 YARN web application 代理机制可以通过任何已安装的 Hadoop filters 进行认证。
 
 Spark 也支持修改 ACLs 来控制谁具有修改一个正在运行的 Spark application 的权限。这些权限包括 kill 这个 application 或者一个 task。以上功能通过配置 `spark.acls.enable`，`spark.modify.acls` 和 `spark.modify.acls.groups` 来控制。注意如果你已经认证登入 UI，为了使用 UI 上的 kill 按钮，必须先添加这个用户到 modify acls 和 view acls。在 YARN 上，modify acls 通过 YARN 接口传入并控制谁具有 modify 权限。Spark 允许在 acls 中指定多个对所有的 application 都具有 view 和 modify 权限的管理员，通过选项 `spark.admin.acls` 和 `spark.admin.acls.groups` 来控制。这样做对于一个有帮助用户调试 applications 的管理员或者支持人员的共享集群，非常有帮助。
 
