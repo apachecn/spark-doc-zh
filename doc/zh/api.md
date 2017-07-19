@@ -1,9 +1,9 @@
 ---
 layout: global
-title: Spark API Documentation
+title: Spark API 文档
 ---
 
-Here you can read API docs for Spark and its submodules.
+在这里，您可以阅读 Spark 及其子模块的 API 文档。
 
 - [Spark Scala API (Scaladoc)](api/scala/index.html)
 - [Spark Java API (Javadoc)](api/java/index.html)
