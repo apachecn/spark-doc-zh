@@ -7,7 +7,6 @@ title: 集群模式概述
 
 # 组件
 
-Spark 应用程序作为独立的进程在集群上运行，由主程序中的 `SparkContext` 对象（称为 _driver program_）来协调。
 
 Spark 应用在集群上作为独立的进程组来运行，在您的 main 程序中通过 SparkContext 来协调（称之为 driver 程序）。
 
