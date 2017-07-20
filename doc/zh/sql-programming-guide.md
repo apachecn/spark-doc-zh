@@ -15,12 +15,7 @@ Spark SQL 是 Spark 处理结构化数据的一个模块。与基础的 Spark RD
 
 ## SQL
 
-One use of Spark SQL is to execute SQL queries.
-Spark SQL can also be used to read data from an existing Hive installation. For more on how to
-configure this feature, please refer to the [Hive Tables](#hive-tables) section. When running
-SQL from within another programming language the results will be returned as a [Dataset/DataFrame](#datasets-and-dataframes).
-You can also interact with the SQL interface using the [command-line](#running-the-spark-sql-cli)
-or over [JDBC/ODBC](#running-the-thrift-jdbcodbc-server).
+Spark SQL 的功能之一是执行 SQL 查询。Spark SQL 也能够被用于从已存在的 Hive 环境中读取数据。更多关于如何配置这个特性的信息，请参考 [Hive 表](#hive-tables) 这部分. 当以另外的编程语言运行SQL  时，查询结果将以 [Dataset/DataFrame](#datasets-and-dataframes)的形式返回。您也可以使用 [命令行](#running-the-spark-sql-cli)或者通过 [JDBC/ODBC](#running-the-thrift-jdbcodbc-server)与 SQL 接口交互。
 
 ## Datasets and DataFrames
 
@@ -1056,7 +1051,7 @@ SELECT * FROM jsonTable
 
 </div>
 
-## Hive Tables
+## Hive 表
 
 Spark SQL also supports reading and writing data stored in [Apache Hive](http://hive.apache.org/).
 However, since Hive has a large number of dependencies, these dependencies are not included in the
