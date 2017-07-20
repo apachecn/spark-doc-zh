@@ -6,11 +6,11 @@ displayTitle: "机器学习库 (MLlib) 指南"
 
 MLib 是 Spark 的机器学习（ML）库。其目标是使实用的机器学习具有可扩展性并且变得容易。在较高的水平上，它提供了以下工具：
 
-* ML Algorithms（ML 算法）: 常用的学习算法，如分类，回归，聚类和协同过滤
-* Featurization（特征）: 特征提取，变换，降维和选择
-* Pipelines（管道）: 用于构建，评估和调整 ML Pipelines 的工具
-* Persistence（持久性）: 保存和加载算法，模型和 Pipelines
-* Utilities（实用）: 线性代数，统计学，数据处理等
+* ML Algorithms （ML 算法）: 常用的学习算法，如分类，回归，聚类和协同过滤
+* Featurization （特征）: 特征提取，变换，降维和选择
+* Pipelines （管道）: 用于构建，评估和调整 ML Pipelines 的工具
+* Persistence （持久性）: 保存和加载算法，模型和 Pipelines
+* Utilities （实用）: 线性代数，统计学，数据处理等
 
 # 公告: 基于 DataFrame 的 API 是主要的 API
 
@@ -26,13 +26,13 @@ MLib 是 Spark 的机器学习（ML）库。其目标是使实用的机器学习
 * 在达到功能奇偶校验（大概估计为 Spark 2.3 ）之后，基于 RDD 的 API 将被弃用。
 * 预计将在 Spark 3.0 中删除基于 RDD 的 API 。
 
-*为什么MLlib切换到基于DataFrame的API？*
+*为什么 MLlib 切换到基于 DataFrame 的 API ？*
 
 * DataFrames 提供比 RDD 更加用户友好的 API 。 DataFrames 的许多好处包括 Spark Datasources，SQL/DataFrame 查询，Tungsten 和 Catalyst 优化以及跨语言的统一 API 。
 * 用于 MLlib 的基于 DataFrame 的 API 为 ML algorithms （ML 算法）和跨多种语言提供了统一的 API 。
 * DataFrames 便于实际的 ML Pipelines （ML 管道），特别是 feature transformations （特征转换）。有关详细信息，请参阅 [Pipelines 指南](ml-pipeline.html) 。
 
-*什么是 "Spark ML"?*
+*什么是 "Spark ML" ?*
 
 * "Spark ML" 不是官方名称，但偶尔用于引用基于 MLlib DataFrame 的 API 。这主要是由于基于 DataFrame 的 API 使用的 `org.apache.spark.ml` Scala 包名称，以及我们最初使用的 "Spark ML Pipelines" 术语来强调 pipeline （管道）概念。
   
