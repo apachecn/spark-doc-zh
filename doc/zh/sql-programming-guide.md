@@ -9,16 +9,9 @@ title: Spark SQL and DataFrames
 
 # Overview
 
-Spark SQL is a Spark module for structured data processing. Unlike the basic Spark RDD API, the interfaces provided
-by Spark SQL provide Spark with more information about the structure of both the data and the computation being performed. Internally,
-Spark SQL uses this extra information to perform extra optimizations. There are several ways to
-interact with Spark SQL including SQL and the Dataset API. When computing a result
-the same execution engine is used, independent of which API/language you are using to express the
-computation. This unification means that developers can easily switch back and forth between
-different APIs based on which provides the most natural way to express a given transformation.
+Spark SQL 是 Spark 处理结构化数据的一个模块。与基础的 Spark RDD API 不同，Spark SQL 提供了查询结构化数据及计算结果等信息的接口。在内部，Spark SQL 使用这个额外的信息去执行额外的优化。有几种方式可以跟 Spark SQL 进行交互，包括 SQL 和 Dataset API。当使用相同执行引擎进行计算时，无论使用哪种 API / 语言都可以快速的计算。这种统一意味着开发人员能够在基于提供最自然的方式来表达一个给定的 transformation API 之间实现轻松的来回切换不同的 。
 
-All of the examples on this page use sample data included in the Spark distribution and can be run in
-the `spark-shell`, `pyspark` shell, or `sparkR` shell.
+该页面所有例子使用的示例数据都包含在 Spark 的发布中，并且可以使用 `spark-shell`, `pyspark` shell, 或者 `sparkR` shell来运行.
 
 ## SQL
 
