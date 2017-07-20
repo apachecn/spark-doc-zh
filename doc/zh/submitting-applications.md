@@ -137,49 +137,35 @@ export HADOOP_CONF_DIR=XXX
 
 # 从文件中加载配置
 
-The `spark-submit` script can load default [Spark configuration values](configuration.html) from a
-properties file and pass them on to your application. By default it will read options
-from `conf/spark-defaults.conf` in the Spark directory. For more detail, see the section on
-[loading default configurations](configuration.html#loading-default-configurations).
+ `spark-submit` 脚本可以从一个 properties 文件加载默认的 [Spark configuration values](configuration.html) 并且传递它们到您的应用中去。默认情况下，它将从 Spark 目录下的 `conf/spark-defaults.conf` 读取配置。更多详细信息，请看
+[ 加载默认配置](configuration.html#loading-default-configurations).
 
-Loading default Spark configurations this way can obviate the need for certain flags to
-`spark-submit`. For instance, if the `spark.master` property is set, you can safely omit the
-`--master` flag from `spark-submit`. In general, configuration values explicitly set on a
-`SparkConf` take the highest precedence, then flags passed to `spark-submit`, then values in the
-defaults file.
+加载默认的 Spark 配置，这种方式可以消除某些标记到
+`spark-submit`. 的必要性。例如，如果 `spark.master` 属性被设置了，您可以在`spark-submit`中安全的省略
+`--master` 配置 . 一般情况下，明确设置在
+`SparkConf` 上的配置值的优先级最高，然后是传递给 `spark-submit`的值, 最后才是 default value（默认文件）中的值。
 
-If you are ever unclear where configuration options are coming from, you can print out fine-grained
-debugging information by running `spark-submit` with the `--verbose` option.
+如果您不是很清楚其中的配置设置来自哪里，您可以通过使用 `--verbose` 选项来运行 `spark-submit` 打印出细粒度的调试信息。
 
-# Advanced Dependency Management
-When using `spark-submit`, the application jar along with any jars included with the `--jars` option
-will be automatically transferred to the cluster. URLs supplied after `--jars` must be separated by commas. That list is included on the driver and executor classpaths. Directory expansion does not work with `--jars`.
+# 高级的依赖管理
+在使用 `spark-submit` 时，使用 `--jars` 选项包括的应用程序的 jar 和任何其它的 jar 都将被自动的传输到集群。在 `--jars` 后面提供的 URL 必须用逗号分隔。该列表会被包含到 driver 和 executor 的 classpath 中。 `--jars` 不支持目录的形式。
 
-Spark uses the following URL scheme to allow different strategies for disseminating jars:
+Spark 使用下面的 URL 格式以允许传播 jar 时使用不同的策略 :
 
-- **file:** - Absolute paths and `file:/` URIs are served by the driver's HTTP file server, and
-  every executor pulls the file from the driver HTTP server.
-- **hdfs:**, **http:**, **https:**, **ftp:** - these pull down files and JARs from the URI as expected
-- **local:** - a URI starting with local:/ is expected to exist as a local file on each worker node.  This
-  means that no network IO will be incurred, and works well for large files/JARs that are pushed to each worker,
-  or shared via NFS, GlusterFS, etc.
+- **file:** - 绝对路径和 `file:/` URI 通过 driver 的 HTTP file server 提供服务，并且每个 executor 会从 driver 的 HTTP server 拉取这些文件。
+- **hdfs:**, **http:**, **https:**, **ftp:** - 如预期的一样拉取下载文件和 JAR
+- **local:** - 
+  一个用 local:/ 开头的 URL 预期作在每个 worker 节点上作为一个本地文件存在。这样意味着没有网络 IO 发生，并且非常适用于那些已经被推送到每个 worker 或通过 NFS，GlusterFS等共享的大型的 file/JAR。
 
-Note that JARs and files are copied to the working directory for each SparkContext on the executor nodes.
-This can use up a significant amount of space over time and will need to be cleaned up. With YARN, cleanup
-is handled automatically, and with Spark standalone, automatic cleanup can be configured with the
-`spark.worker.cleanup.appDataTtl` property.
+N注意，那些 JAR 和文件被复制到 working directory（工作目录）用于在 executor 节点上的每个 SparkContext。这可以使用最多的空间显著量随着时间的推移，将需要清理。在 Spark On YARN 模式中，自动执行清理操作。在 Spark standalone 模式中，可以通过配置
+`spark.worker.cleanup.appDataTtl` 属性来执行自动清理。
 
-Users may also include any other dependencies by supplying a comma-delimited list of Maven coordinates
-with `--packages`. All transitive dependencies will be handled when using this command. Additional
-repositories (or resolvers in SBT) can be added in a comma-delimited fashion with the flag `--repositories`.
-(Note that credentials for password-protected repositories can be supplied in some cases in the repository URI,
-such as in `https://user:password@host/...`. Be careful when supplying credentials this way.)
-These commands can be used with `pyspark`, `spark-shell`, and `spark-submit` to include Spark Packages.
+用户也可以通过使用 `--packages`来提供一个逗号分隔的 maven coordinates（maven 坐标）以包含任何其它的依赖。在使用这个命令时所有可传递的依赖将被处理。其它的 repository（或者在 SBT 中被解析的）可以使用 `--repositories`该标记添加到一个逗号分隔的样式中。
+(注意，对于那些设置了密码保护的库，在一些情况下可以在库URL中提供验证信息，例如 `https://user:password@host/...`.以这种方式提供验证信息需要小心。)
+这些命令可以与 `pyspark`, `spark-shell` 和 `spark-submit` 配置会使用以包含 Spark Packages（Spark 包）。
+对于 Python 来说，也可以使用 `--py-files` 选项用于分发 `.egg`, `.zip` 和 `.py` libraries 到 executor 中。
 
-For Python, the equivalent `--py-files` option can be used to distribute `.egg`, `.zip` and `.py` libraries
-to executors.
+# 
+更多信息
 
-# More Information
-
-Once you have deployed your application, the [cluster mode overview](cluster-overview.html) describes
-the components involved in distributed execution, and how to monitor and debug applications.
+如果您已经部署了您的应用程序，[集群模式概述](cluster-overview.html) 描述了在分布式执行中涉及到的组件，以及如何去监控和调试应用程序。
