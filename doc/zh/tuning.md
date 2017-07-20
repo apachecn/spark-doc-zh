@@ -5,7 +5,7 @@ title: Tuning
 description: Tuning and performance optimization guide for Spark SPARK_VERSION_SHORT
 ---
 
-* 这将成为一个目录（本文将被删除）。
+* This will become a table of contents (this text will be scraped).
 {:toc}
 
 由于大多数Spark计算的内存性质，Spark程序可能由集群中的任何资源（CPU，网络带宽或内存）导致瓶颈。
