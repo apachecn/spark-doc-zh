@@ -19,30 +19,22 @@ Spark SQL 的功能之一是执行 SQL 查询。Spark SQL 也能够被用于从�
 
 ## Datasets and DataFrames
 
-A Dataset is a distributed collection of data.
-Dataset is a new interface added in Spark 1.6 that provides the benefits of RDDs (strong
-typing, ability to use powerful lambda functions) with the benefits of Spark SQL's optimized
-execution engine. A Dataset can be [constructed](#creating-datasets) from JVM objects and then
-manipulated using functional transformations (`map`, `flatMap`, `filter`, etc.).
-The Dataset API is available in [Scala][scala-datasets] and
-[Java][java-datasets]. Python does not have the support for the Dataset API. But due to Python's dynamic nature,
-many of the benefits of the Dataset API are already available (i.e. you can access the field of a row by name naturally
-`row.columnName`). The case for R is similar.
+一个 Dataset 是一个分布式的数据集合
+Dataset 是在 Spark 1.6 中被添加的新接口，它提供了 RDD 的优点（强类型化，能够使用强大的 lambda 函数）与Spark SQL执行引擎的优点。一个 Dataset 可以从 JVM 对象来 [构造](#creating-datasets) 并且使用转换功能（map，flatMap，filter，等等）。
+Dataset API 在[Scala][scala-datasets] 和
+[Java][java-datasets]是可用的。Python 不支持 Dataset API。但是由于 Python 的动态特性，许多 Dataset API 的优点已经可用了 (也就是说，你可能通过 name 天生的`row.columnName`属性访问一行中的字段)。这种情况和 R 相似。
 
-A DataFrame is a *Dataset* organized into named columns. It is conceptually
-equivalent to a table in a relational database or a data frame in R/Python, but with richer
-optimizations under the hood. DataFrames can be constructed from a wide array of [sources](#data-sources) such
-as: structured data files, tables in Hive, external databases, or existing RDDs.
-The DataFrame API is available in Scala,
-Java, [Python](api/python/pyspark.sql.html#pyspark.sql.DataFrame), and [R](api/R/index.html).
-In Scala and Java, a DataFrame is represented by a Dataset of `Row`s.
-In [the Scala API][scala-datasets], `DataFrame` is simply a type alias of `Dataset[Row]`.
-While, in [Java API][java-datasets], users need to use `Dataset<Row>` to represent a `DataFrame`.
+一个 DataFrame 是一个 *Dataset* 组成的指定列。它的概念与一个在关系型数据库或者在 R/Python 中的表是相等的， 但是有很多优化. DataFrames 可以从大量的 [sources](#data-sources) 中构造出来，比如: 结构化的文本文件, Hive中的表, 外部数据库, 或者已经存在的 RDDs。
+DataFrame API 可以在 Scala,
+Java, [Python](api/python/pyspark.sql.html#pyspark.sql.DataFrame), 和 [R](api/R/index.html)中实现.
+在 Scala 和 Java中, 一个 DataFrame 所代表的是一个多个 `Row`（行）的的 Dataset（数据集合）.
+在 [the Scala API][scala-datasets]中, `DataFrame` 仅仅是一个 `Dataset[Row]`类型的别名.
+然而, 在 [Java API][java-datasets]中, 用户需要去使用 `Dataset<Row>` 去代表一个 `DataFrame`.
 
 [scala-datasets]: api/scala/index.html#org.apache.spark.sql.Dataset
 [java-datasets]: api/java/index.html?org/apache/spark/sql/Dataset.html
 
-Throughout this document, we will often refer to Scala/Java Datasets of `Row`s as DataFrames.
+在此文档中, 我们将常常会引用 Scala/Java Datasets 的 `Row`s 作为 DataFrames.
 
 # Getting Started
 
