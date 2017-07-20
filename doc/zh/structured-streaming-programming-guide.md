@@ -1,21 +1,22 @@
 ---
 layout: global
-displayTitle: Structured Streaming Programming Guide
-title: Structured Streaming Programming Guide
+displayTitle: Structured Streaming 编程指南
+title: Structured Streaming 编程指南
 ---
 
 * This will become a table of contents (this text will be scraped).
 {:toc}
 
-# Overview
-Structured Streaming is a scalable and fault-tolerant stream processing engine built on the Spark SQL engine. You can express your streaming computation the same way you would express a batch computation on static data. The Spark SQL engine will take care of running it incrementally and continuously and updating the final result as streaming data continues to arrive. You can use the [Dataset/DataFrame API](sql-programming-guide.html) in Scala, Java, Python or R to express streaming aggregations, event-time windows, stream-to-batch joins, etc. The computation is executed on the same optimized Spark SQL engine. Finally, the system ensures end-to-end exactly-once fault-tolerance guarantees through checkpointing and Write Ahead Logs. In short, *Structured Streaming provides fast, scalable, fault-tolerant, end-to-end exactly-once stream processing without the user having to reason about streaming.*
+# 概述
+Structured Streaming （结构化流）是一种基于 Spark SQL 引擎构建的可扩展且容错的 stream processing engine （流处理引擎）。您可以以静态数据表示批量计算的方式来表达 streaming computation （流式计算）。 Spark SQL 引擎将随着 streaming data 持续到达而增量地持续地运行，并更新最终结果。您可以使用 Scala ， Java ， Python 或 R 中的 [Dataset/DataFrame API](sql-programming-guide.html) 来表示 streaming aggregations （流聚合）， event-time windows （事件时间窗口）， stream-to-batch joins （流到批处理连接） 等。在同一个 optimized Spark SQL engine （优化的 Spark SQL 引擎）上执行计算。最后，系统通过 checkpointing （检查点） 和 Write Ahead Logs （预写日志）来确保 end-to-end exactly-once （端到端的完全一次性） 容错保证。简而言之，*Structured Streaming 提供快速，可扩展，容错，end-to-end exactly-once stream processing （端到端的完全一次性流处理），而无需用户理解 streaming 。*
 
-In this guide, we are going to walk you through the programming model and the APIs. First, let's start with a simple example - a streaming word count.
+在本指南中，我们将向您介绍 programming model （编程模型） 和 APIs 。首先，我们从一个简单的例子开始 - 一个 streaming word count 。
 
-# Quick Example
+# 快速示例
+假设您想要保持从监听 TCP socket 的 data server （数据服务器） 接收的 text data （文本数据）的运行的 word count 。 让我们看看如何使用 Structured Streaming 表达这一点。你可以在 [Scala]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/scala/org/apache/spark/examples/sql/streaming/StructuredNetworkWordCount.scala)/[Java]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/sql/streaming/JavaStructuredNetworkWordCount.java)/[Python]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/sql/streaming/structured_network_wordcount.py)/[R]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/r/streaming/structured_network_wordcount.R) 之中看到完整的代码。
 Let’s say you want to maintain a running word count of text data received from a data server listening on a TCP socket. Let’s see how you can express this using Structured Streaming. You can see the full code in
-[Scala]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/scala/org/apache/spark/examples/sql/streaming/StructuredNetworkWordCount.scala)/[Java]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/sql/streaming/JavaStructuredNetworkWordCount.java)/[Python]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/sql/streaming/structured_network_wordcount.py)/[R]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/r/streaming/structured_network_wordcount.R).
-And if you [download Spark](http://spark.apache.org/downloads.html), you can directly run the example. In any case, let’s walk through the example step-by-step and understand how it works. First, we have to import the necessary classes and create a local SparkSession, the starting point of all functionalities related to Spark.
+[Scala]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/scala/org/apache/spark/examples/sql/streaming/StructuredNetworkWordCount.scala)/[Java]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/sql/streaming/JavaStructuredNetworkWordCount.java)/[Python]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/sql/streaming/structured_network_wordcount.py)/[R]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/r/streaming/structured_network_wordcount.R) 。
+并且如果您 [下载 Spark](http://spark.apache.org/downloads.html) ，您可以直接运行这个例子。在任何情况下，让我们逐步了解示例并了解它的工作原理。首先，我们必须导入必要的 classes 并创建一个本地的 SparkSession ，这是与 Spark 相关的所有功能的起点。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -73,33 +74,33 @@ sparkR.session(appName = "StructuredNetworkWordCount")
 </div>
 </div>
 
-Next, let’s create a streaming DataFrame that represents text data received from a server listening on localhost:9999, and transform the DataFrame to calculate word counts.
+接下来，我们创建一个 streaming DataFrame ，它表示从监听 localhost:9999 的服务器上接收的 text data （文本数据），并且将 DataFrame 转换以计算 word counts 。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
 
 {% highlight scala %}
-// Create DataFrame representing the stream of input lines from connection to localhost:9999
+// 创建表示从连接到 localhost:9999 的输入行 stream 的 DataFrame
 val lines = spark.readStream
   .format("socket")
   .option("host", "localhost")
   .option("port", 9999)
   .load()
 
-// Split the lines into words
+// 将 lines 切分为 words
 val words = lines.as[String].flatMap(_.split(" "))
 
-// Generate running word count
+// 生成正在运行的 word count
 val wordCounts = words.groupBy("value").count()
 {% endhighlight %}
 
-This `lines` DataFrame represents an unbounded table containing the streaming text data. This table contains one column of strings named "value", and each line in the streaming text data becomes a row in the table. Note, that this is not currently receiving any data as we are just setting up the transformation, and have not yet started it. Next, we have converted the DataFrame to a  Dataset of String using `.as[String]`, so that we can apply the `flatMap` operation to split each line into multiple words. The resultant `words` Dataset contains all the words. Finally, we have defined the `wordCounts` DataFrame by grouping by the unique values in the Dataset and counting them. Note that this is a streaming DataFrame which represents the running word counts of the stream.
+这个 `lines` DataFrame 表示一个包含包含 streaming text data （流文本数据） 的无边界表。此表包含了一列名为 "value" 的 strings ，并且 streaming text data 中的每一 line （行）都将成为表中的一 row （行）。请注意，这并不是正在接收的任何数据，因为我们只是设置 transformation （转换），还没有开始。接下来，我们使用 `.as[String]` 将 DataFrame 转换为 String 的 Dataset ，以便我们可以应用 `flatMap` 操作将每 line （行）切分成多个 words 。所得到的 `words` Dataset 包含所有的 words 。最后，我们通过将 Dataset 中 unique values （唯一的值）进行分组并对它们进行计数来定义 `wordCounts` DataFrame 。请注意，这是一个 streaming DataFrame ，它表示 stream 的正在运行的 word counts 。
 
 </div>
 <div data-lang="java"  markdown="1">
 
 {% highlight java %}
-// Create DataFrame representing the stream of input lines from connection to localhost:9999
+// 创建表示从连接到 localhost:9999 的 input lines stream 的 DataFrame
 Dataset<Row> lines = spark
   .readStream()
   .format("socket")
@@ -107,22 +108,22 @@ Dataset<Row> lines = spark
   .option("port", 9999)
   .load();
 
-// Split the lines into words
+// 将 lines 切分成 words
 Dataset<String> words = lines
   .as(Encoders.STRING())
   .flatMap((FlatMapFunction<String, String>) x -> Arrays.asList(x.split(" ")).iterator(), Encoders.STRING());
 
-// Generate running word count
+// 生成正在运行着的 word count
 Dataset<Row> wordCounts = words.groupBy("value").count();
 {% endhighlight %}
 
-This `lines` DataFrame represents an unbounded table containing the streaming text data. This table contains one column of strings named "value", and each line in the streaming text data becomes a row in the table. Note, that this is not currently receiving any data as we are just setting up the transformation, and have not yet started it. Next, we have converted the DataFrame to a  Dataset of String using `.as(Encoders.STRING())`, so that we can apply the `flatMap` operation to split each line into multiple words. The resultant `words` Dataset contains all the words. Finally, we have defined the `wordCounts` DataFrame by grouping by the unique values in the Dataset and counting them. Note that this is a streaming DataFrame which represents the running word counts of the stream.
+这个 `lines` DataFrame 表示一个包含 streaming text data （流文本数据）的 unbounded table （无界表）。 此表包含一列名为 "value" 的 strings ，并且流文本数据中的每一 line （行）都将成为表中的一  row （行）。 请注意，这并不是当前正在收到任何数据，因为我们只是设置 transformation （转换），还没有开始。 接下来，我们使用 `.as(Encoders.STRING())` 将 DataFrame 转换为 String 的 Dataset ，以便我们可以应用 `flatMap` 操作将each line （每行）拆分成多个 words 。 所得到的 `words` Dataset 包含所有 words 。 最后，我们通过将 Dataset 中 unique values （唯一的值）进行分组并对它们进行计数来定义 `wordCounts` DataFrame 。 请注意，这是一个 streaming DataFrame ，它表示 stream 的 word counts 。
 
 </div>
 <div data-lang="python"  markdown="1">
 
 {% highlight python %}
-# Create DataFrame representing the stream of input lines from connection to localhost:9999
+# 创建表示从连接到 localhost:9999 的 input lines stream 的 DataFrame
 lines = spark \
     .readStream \
     .format("socket") \
@@ -130,45 +131,45 @@ lines = spark \
     .option("port", 9999) \
     .load()
 
-# Split the lines into words
+# 将 lines 切分成 words
 words = lines.select(
    explode(
        split(lines.value, " ")
    ).alias("word")
 )
 
-# Generate running word count
+# 生成正在运行着的 word count
 wordCounts = words.groupBy("word").count()
 {% endhighlight %}
 
-This `lines` DataFrame represents an unbounded table containing the streaming text data. This table contains one column of strings named "value", and each line in the streaming text data becomes a row in the table. Note, that this is not currently receiving any data as we are just setting up the transformation, and have not yet started it. Next, we have used two built-in SQL functions - split and explode, to split each line into multiple rows with a word each. In addition, we use the function `alias` to name the new column as "word". Finally, we have defined the `wordCounts` DataFrame by grouping by the unique values in the Dataset and counting them. Note that this is a streaming DataFrame which represents the running word counts of the stream.
+这个 `lines` DataFrame 表示一个包含 streaming text data （流文本数据）的 unbounded table （无界表）。 此表包含一列名为 "value" 的 strings ，并且流文本数据中的每一 line （行）都将成为表中的一  row （行）。 请注意，这并不是当前正在收到任何数据，因为我们只是设置 transformation （转换），还没有开始。 接下来，我们使用了两个内置的 SQL 函数 - split 和 explode ，将每一 line （行）切分成多个 rows （行），每 row（行）一个 word 。此外，我们使用函数 `alias` 来命名新的列为 "word" 。最后，我们通过将 Dataset 中 unique values （唯一的值）进行分组并对它们进行计数来定义 `wordCounts` DataFrame 。 请注意，这是一个 streaming DataFrame ，它表示 stream 的 word counts 。
 
 </div>
 <div data-lang="r"  markdown="1">
 
 {% highlight r %}
-# Create DataFrame representing the stream of input lines from connection to localhost:9999
+# 创建表示从连接到 localhost:9999 的 input lines stream 的 DataFrame
 lines <- read.stream("socket", host = "localhost", port = 9999)
 
-# Split the lines into words
+# 将 lines 切分成 words
 words <- selectExpr(lines, "explode(split(value, ' ')) as word")
 
-# Generate running word count
+# 生成正在运行着的 word count
 wordCounts <- count(group_by(words, "word"))
 {% endhighlight %}
 
-This `lines` SparkDataFrame represents an unbounded table containing the streaming text data. This table contains one column of strings named "value", and each line in the streaming text data becomes a row in the table. Note, that this is not currently receiving any data as we are just setting up the transformation, and have not yet started it. Next, we have a SQL expression with two SQL functions - split and explode, to split each line into multiple rows with a word each. In addition, we name the new column as "word". Finally, we have defined the `wordCounts` SparkDataFrame by grouping by the unique values in the SparkDataFrame and counting them. Note that this is a streaming SparkDataFrame which represents the running word counts of the stream.
+这个 `lines` SparkDataFrame 表示一个包含 streaming text data （流文本数据）的 unbounded table （无界表）。 此表包含一列名为 "value" 的 strings ，并且流文本数据中的每一 line （行）都将成为表中的一  row （行）。 请注意，这并不是当前正在收到任何数据，因为我们只是设置 transformation （转换），还没有开始。接下来，我们使用一个具有两个 SQL 函数的 SQL 表达式 - split 和 explode ，将每 line （行）拆分为多个 rows （行），每个 word 一行。此外，我们命名新的列为 "word" 。最后，我们通过将 SparkDataFrame 中 unique values （唯一的值）进行分组并对它们进行计数来定义 `wordCounts` SparkDataFrame 。 请注意，这是一个 streaming SparkDataFrame ，它表示 stream 的 word counts 。
 
 </div>
 </div>
 
-We have now set up the query on the streaming data. All that is left is to actually start receiving data and computing the counts. To do this, we set it up to print the complete set of counts (specified by `outputMode("complete")`) to the console every time they are updated. And then start the streaming computation using `start()`.
+我们现在已经设置了关于 streaming data （流数据）的 query （查询）。剩下的就是实际开始接收数据并计算 counts （计数）。为此，我们将其设置为在每次更新时将完整地计数（由 `outputMode("complete")` 指定）发送到控制台。然后使用 `start()` 启动 streaming computation （流式计算）。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
 
 {% highlight scala %}
-// Start running the query that prints the running counts to the console
+// 开始运行将 running counts 打印到控制台的查询
 val query = wordCounts.writeStream
   .outputMode("complete")
   .format("console")
@@ -181,7 +182,7 @@ query.awaitTermination()
 <div data-lang="java"  markdown="1">
 
 {% highlight java %}
-// Start running the query that prints the running counts to the console
+// 开始运行将 running counts 打印到控制台的查询
 StreamingQuery query = wordCounts.writeStream()
   .outputMode("complete")
   .format("console")
@@ -194,7 +195,7 @@ query.awaitTermination();
 <div data-lang="python"  markdown="1">
 
 {% highlight python %}
- # Start running the query that prints the running counts to the console
+ # 开始运行将 running counts 打印到控制台的查询
 query = wordCounts \
     .writeStream \
     .outputMode("complete") \
@@ -208,7 +209,7 @@ query.awaitTermination()
 <div data-lang="r"  markdown="1">
 
 {% highlight r %}
-# Start running the query that prints the running counts to the console
+# 开始运行将 running counts 打印到控制台的查询
 query <- write.stream(wordCounts, "console", outputMode = "complete")
 
 awaitTermination(query)
@@ -217,16 +218,14 @@ awaitTermination(query)
 </div>
 </div>
 
-After this code is executed, the streaming computation will have started in the background. The `query` object is a handle to that active streaming query, and we have decided to wait for the termination of the query using `awaitTermination()` to prevent the process from exiting while the query is active.
+执行此代码之后， streaming computation （流式计算） 将在后台启动。 `query` 对象是该 active streaming query （活动流查询）的 handle （句柄），并且我们决定使用 `awaitTermination()` 来等待查询的终止，以防止查询处于 active （活动）状态时退出。
 
-To actually execute this example code, you can either compile the code in your own 
-[Spark application](quick-start.html#self-contained-applications), or simply 
-[run the example](index.html#running-the-examples-and-shell) once you have downloaded Spark. We are showing the latter. You will first need to run Netcat (a small utility found in most Unix-like systems) as a data server by using
+要实际执行此示例代码，您可以在您自己的 [Spark 应用程序](quick-start.html#self-contained-applications) 编译代码，或者简单地 [运行示例](index.html#running-the-examples-and-shell) 一旦您下载了 Spark 。我们正在展示的是后者。您将首先需要运行 Netcat （大多数类 Unix 系统中的一个小型应用程序）作为 data server 通过使用
 
 
     $ nc -lk 9999
 
-Then, in a different terminal, you can start the example by using
+然后，在一个不同的终端，您可以启动示例通过使用
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -251,13 +250,13 @@ $ ./bin/spark-submit examples/src/main/r/streaming/structured_network_wordcount.
 </div>
 </div>
 
-Then, any lines typed in the terminal running the netcat server will be counted and printed on screen every second. It will look something like the following.
+然后，在运行 netcat 服务器的终端中输入的任何 lines 将每秒计数并打印在屏幕上。它看起来像下面这样。
 
 <table width="100%">
     <td>
 {% highlight bash %}
-# TERMINAL 1:
-# Running Netcat
+# 终端 1:
+# 运行 Netcat
 
 $ nc -lk 9999
 apache spark
@@ -290,7 +289,7 @@ apache hadoop
 
 <div data-lang="scala" markdown="1">
 {% highlight bash %}
-# TERMINAL 2: RUNNING StructuredNetworkWordCount
+# 终端 2: 运行 StructuredNetworkWordCount
 
 $ ./bin/run-example org.apache.spark.examples.sql.streaming.StructuredNetworkWordCount localhost 9999
 
@@ -320,7 +319,7 @@ Batch: 1
 
 <div data-lang="java" markdown="1">
 {% highlight bash %}
-# TERMINAL 2: RUNNING JavaStructuredNetworkWordCount
+# 终端 2: 运行 JavaStructuredNetworkWordCount
 
 $ ./bin/run-example org.apache.spark.examples.sql.streaming.JavaStructuredNetworkWordCount localhost 9999
 
@@ -349,7 +348,7 @@ Batch: 1
 </div>
 <div data-lang="python" markdown="1">
 {% highlight bash %}
-# TERMINAL 2: RUNNING structured_network_wordcount.py
+# 终端 2: 运行 structured_network_wordcount.py
 
 $ ./bin/spark-submit examples/src/main/python/sql/streaming/structured_network_wordcount.py localhost 9999
 
@@ -378,7 +377,7 @@ Batch: 1
 </div>
 <div data-lang="r" markdown="1">
 {% highlight bash %}
-# TERMINAL 2: RUNNING structured_network_wordcount.R
+# 终端 2: 运行 structured_network_wordcount.R
 
 $ ./bin/spark-submit examples/src/main/r/streaming/structured_network_wordcount.R localhost 9999
 
@@ -410,65 +409,39 @@ Batch: 1
 </table>
 
 
-# Programming Model
+# Programming Model （编程模型）
 
-The key idea in Structured Streaming is to treat a live data stream as a 
-table that is being continuously appended. This leads to a new stream 
-processing model that is very similar to a batch processing model. You will 
-express your streaming computation as standard batch-like query as on a static 
-table, and Spark runs it as an *incremental* query on the *unbounded* input 
-table. Let’s understand this model in more detail.
+Structured Streaming 的关键思想是将 live data stream （实时数据流）视为一种正在不断 appended （附加）的表。这形成了一个与 batch processing model （批处理模型）非常相似的新的 stream processing model （流处理模型）。您会将您的 streaming computation （流式计算）表示为在一个静态表上的 standard batch-like query （标准类批次查询），并且 Spark 在 *unbounded（无界）* 输入表上运行它作为 *incremental（增量）* 查询。让我们更加详细地了解这个模型。
 
-## Basic Concepts
-Consider the input data stream as the "Input Table". Every data item that is 
-arriving on the stream is like a new row being appended to the Input Table.
+## 基本概念
+将 input data stream （输入数据流） 视为 "Input Table"（输入表）。每个在 stream 上到达的 data item （数据项）就像是一个被 appended 到 Input Table 的新的 row 。
 
 ![Stream as a Table](img/structured-streaming-stream-as-a-table.png "Stream as a Table")
 
-A query on the input will generate the "Result Table". Every trigger interval (say, every 1 second), new rows get appended to the Input Table, which eventually updates the Result Table. Whenever the result table gets updated, we would want to write the changed result rows to an external sink. 
+对输入的查询将生成 "Result Table" （结果表）。每个 trigger interval （触发间隔）（例如，每 1 秒），新 row （行）将附加到 Input Table ，最终更新 Result Table 。无论何时更新 result table ，我们都希望将 changed result rows （更改的结果行）写入 external sink （外部接收器）。 
 
 ![Model](img/structured-streaming-model.png)
 
-The "Output" is defined as what gets written out to the external storage. The output can be defined in a different mode:
+"Output（输出）" 被定义为写入 external storage （外部存储器）的内容。可以以不同的模式定义 output ：
 
-  - *Complete Mode* - The entire updated Result Table will be written to the external storage. It is up to the storage connector to decide how to handle writing of the entire table. 
+  - *Complete Mode（完全模式）* - 整个更新的 Result Table 将被写入外部存储。由 storage connector （存储连接器）决定如何处理整个表的写入。 
 
-  - *Append Mode* - Only the new rows appended in the Result Table since the last trigger will be written to the external storage. This is applicable only on the queries where existing rows in the Result Table are not expected to change.
+  - *Append Mode（附加模式）* - 只有 Result Table 中自上次触发后附加的新 rows（行） 将被写入 external storage （外部存储）。这仅适用于不期望更改 Result Table 中现有行的查询。
   
-  - *Update Mode* - Only the rows that were updated in the Result Table since the last trigger will be written to the external storage (available since Spark 2.1.1). Note that this is different from the Complete Mode in that this mode only outputs the rows that have changed since the last trigger. If the query doesn't contain aggregations, it will be equivalent to Append mode.
+  - *Update Mode（更新模式）* - 只有自上次触发后 Result Table 中更新的 rows （行）将被写入 external storage （外部存储）（从 Spark 2.1.1 之后可用）。请注意，这与 Complete Mode （完全模式），因为此模式仅输出自上次触发以来更改的 rows （行）。如果查询不包含 aggregations （聚合），它将等同于 Append mode 。
 
-Note that each mode is applicable on certain types of queries. This is discussed in detail [later](#output-modes).
+请注意，每种模式适用于特定模型的查询。这将在 [later](#output-modes) 详细讨论。
 
-To illustrate the use of this model, let’s understand the model in context of 
-the [Quick Example](#quick-example) above. The first `lines` DataFrame is the input table, and 
-the final `wordCounts` DataFrame is the result table. Note that the query on 
-streaming `lines` DataFrame to generate `wordCounts` is *exactly the same* as 
-it would be a static DataFrame. However, when this query is started, Spark 
-will continuously check for new data from the socket connection. If there is 
-new data, Spark will run an "incremental" query that combines the previous 
-running counts with the new data to compute updated counts, as shown below.
+为了说明这个模型的使用，我们来了解一下上面章节的 [快速示例](#quick-example) 。第一个 `lines` DataFrame 是 input table ，并且最后的 `wordCounts` DataFrame 是 result table 。请注意，streaming `lines` DataFrame 上的查询生成 `wordCounts` 是 *exactly the same（完全一样的）* 因为它将是一个 static DataFrame （静态 DataFrame ）。但是，当这个查询启动时， Spark 将从 socket 连接中持续检查新数据。如果有新数据，Spark 将运行一个 "incremental（增量）" 查询，它会结合以前的 running counts （运行计数）与新数据计算更新的 counts ，如下所示。
 
 ![Model](img/structured-streaming-example-model.png)
 
-This model is significantly different from many other stream processing 
-engines. Many streaming systems require the user to maintain running 
-aggregations themselves, thus having to reason about fault-tolerance, and 
-data consistency (at-least-once, or at-most-once, or exactly-once). In this 
-model, Spark is responsible for updating the Result Table when there is new 
-data, thus relieving the users from reasoning about it. As an example, let’s 
-see how this model handles event-time based processing and late arriving data.
+这种模式与许多其他 stream processing engines （流处理引擎）有着显著不同。许多 streaming systems （流系统）要求用户本身保持运行 aggregations （聚合），因此必须要考虑容错，和数据一致性（at-least-once（至少一次）， at-most-once （最多一次），exactly-once （完全一次））。在这个模型中，当有新数据时， Spark 负责更新 Result Table ，从而减轻用户对它的考虑。举个例子，我们来看一下这个模型如何处理对于基于 event-time 的处理和 late arriving （迟到）的数据。
 
-## Handling Event-time and Late Data
-Event-time is the time embedded in the data itself. For many applications, you may want to operate on this event-time. For example, if you want to get the number of events generated by IoT devices every minute, then you probably want to use the time when the data was generated (that is, event-time in the data), rather than the time Spark receives them. This event-time is very naturally expressed in this model -- each event from the devices is a row in the table, and event-time is a column value in the row. This allows window-based aggregations (e.g. number of events every minute) to be just a special type of grouping and aggregation on the event-time column -- each time window is a group and each row can belong to multiple windows/groups. Therefore, such event-time-window-based aggregation queries can be defined consistently on both a static dataset (e.g. from collected device events logs) as well as on a data stream, making the life of the user much easier.
+## 处理 Event-time 和延迟数据
+Event-time 是数据本身 embedded （嵌入）的时间。对于很多应用程序，您可能需要在此 event-time 进行操作。例如，如果要每分钟获取 IoT devices （设备）生成的 events 数，则可能希望使用数据生成的时间（即数据中的 event-time ），而不是 Spark 接收到它们的时间。这个 event-time 在这个模型中非常自然地表现出来 -- 来自 devices （设备）的每个 event 都是表中的一 row（行），并且 event-time 是 row （行）中的 column value （列值）。这允许 window-based aggregations （基于窗口的聚合）（例如每分钟的 events 数）仅仅是 event-time 列上的特殊类型的 group （分组）和 aggregation （聚合） -- 每个 time window 是一个组，并且每一 row （行）可以属于多个 windows/groups 。因此，可以在 static dataset （静态数据集）（例如来自 collected device events logs （收集的设备事件日志））以及 data stream 上一致地定义 event-time-window-based aggregation queries （基于事件时间窗口的聚合查询），从而使用户的使用寿命更加容易。
 
-Furthermore, this model naturally handles data that has arrived later than 
-expected based on its event-time. Since Spark is updating the Result Table, 
-it has full control over updating old aggregates when there is late data, 
-as well as cleaning up old aggregates to limit the size of intermediate
-state data. Since Spark 2.1, we have support for watermarking which 
-allows the user to specify the threshold of late data, and allows the engine
-to accordingly clean up old state. These are explained later in more 
-detail in the [Window Operations](#window-operations-on-event-time) section.
+此外，这个模型自然地处理了比预计将根据它的 event-time 到达的数据晚到的数据。由于 Spark 正在更新 Result Table ， Spark 有完整的控制对当有迟到的数据时 updating old aggregates （更新旧的聚合），以及清理 old aggregates （旧聚合） 以限制 intermediate state data （中间体状态数据）的大小。自 Spark 2.1 以来，我们对于 watermarking 进行了支持，允许用户指定 late data 的阈值，并允许引擎相应地清理旧状态。这些将在后面的 [Window Operations](#window-operations-on-event-time) 部分解释。
 
 ## Fault Tolerance Semantics
 Delivering end-to-end exactly-once semantics was one of key goals behind the design of Structured Streaming. To achieve that, we have designed the Structured Streaming sources, the sinks and the execution engine to reliably track the exact progress of the processing so that it can handle any kind of failure by restarting and/or reprocessing. Every streaming source is assumed to have offsets (similar to Kafka offsets, or Kinesis sequence numbers)
