@@ -7,8 +7,7 @@ This document gives a short overview of how Spark runs on clusters, to make it e
 the components involved. Read through the [application submission guide](submitting-applications.html)
 to learn about launching applications on a cluster.
 
-本文档简要介绍了Spark如何在群集上运行，以使其更易于理解所涉及的组件。阅读[应用提交指南]（submitting-applications.html）
-了解如何在集群上启动应用程序。
+该文档给出了 Spark 如何在集群上运行、使之更容易来理解所涉及到的组件的简短概述。通过阅读 应用提交指南 来学习关于在集群上启动应用。
 
 # Components
 组件
@@ -16,7 +15,7 @@ to learn about launching applications on a cluster.
 Spark applications run as independent sets of processes on a cluster, coordinated by the `SparkContext`
 object in your main program (called the _driver program_).
 
-Spark应用程序作为独立的进程在集群上运行，由主程序中的“SparkContext”对象（称为_driver program_）来协调。
+Spark应用程序作为独立的进程在集群上运行，由主程序中的“SparkContext”对象（称为driver program）来协调。
 
 
 
@@ -27,7 +26,7 @@ processes that run computations and store data for your application.
 Next, it sends your application code (defined by JAR or Python files passed to SparkContext) to
 the executors. Finally, SparkContext sends *tasks* to the executors to run.
 
-具体来说，为了在集群上运行，SparkContext可以连接到多种类型的 _cluster managers_（Spark自己的standalone集群管理器，Mesos或YARN），它们跨应用程序分配资源。 一旦连接，Spark将在集群中的节点上获取*executors*，这是运行计算并为应用程序存储数据的进程。接下来，它将您的应用程序代码（由JAR或Python文件传递给SparkContext）发送到executors执行。 最后，SparkContext将*tasks*发送给执行程序运行。
+具体的说，为了运行在集群上，SparkContext 可以连接至几种类型的 Cluster Manager（既可以用 Spark 自己的 Standlone Cluster Manager，或者 Mesos，也可以使用 YARN），它们会分配应用的资源。一旦连接上，Spark 获得集群中节点上的 Executor，这些进程可以运行计算并且为您的应用存储数据。接下来，它将发送您的应用代码（通过 JAR 或者 Python 文件定义传递给 SparkContext）至 Executor。最终，SparkContext 将发送 Task 到 Executor 以运行。
 
 <p style="text-align: center;">
   <img src="img/cluster-overview.png" title="Spark cluster components" alt="Spark cluster components" />
@@ -35,7 +34,7 @@ the executors. Finally, SparkContext sends *tasks* to the executors to run.
 
 There are several useful things to note about this architecture:
 
-有关这个架构有几个有用的事情要注意：
+这里有几个关于这个架构需要注意的地方 :
 1. Each application gets its own executor processes, which stay up for the duration of the whole
    application and run tasks in multiple threads. This has the benefit of isolating applications
    from each other, on both the scheduling side (each driver schedules its own tasks) and executor
@@ -43,48 +42,48 @@ There are several useful things to note about this architecture:
    data cannot be shared across different Spark applications (instances of SparkContext) without
    writing it to an external storage system.
 
-   1.每个应用程序都获得自己的executor进程，这些进程在整个应用程序的持续时间内保持不变，并在多个线程中运行任务。 这有利于将应用程序彼此隔离，在调度端（每个驱动程序安排其自己的任务）和执行端（来自不同应用程序的任务在不同的JVM中运行）。 但是，这也意味着数据不能在不写入外部存储系统的情况下在不同的Spark应用程序（SparkContext的实例）之间共享。
+   1.每个应用获取到它自己的 Executor 进程，它们会保持在整个应用的生命周期中并且在多个线程中运行 Task（任务）。这样做的优点是把应用互相隔离，在调度方面（每个 driver 调度它自己的 task）和 Executor 方面（来自不同应用的 task 运行在不同的 JVM 中）。然而，这也意味着若是不把数据写到外部的存储系统中的话，数据就不能够被不同的 Spark 应用（SparkContext 的实例）之间共享。
 2. Spark is agnostic to the underlying cluster manager. As long as it can acquire executor
    processes, and these communicate with each other, it is relatively easy to run it even on a
    cluster manager that also supports other applications (e.g. Mesos/YARN).
 
-   2.Spark与底层集群管理器无关。 只要可以获取执行程序进程，并且彼此进行通信，即使在一个集群管理器上运行也是比较容易的也支持其他应用程序（例如Mesos / YARN）。
+   2.Spark 是不知道底层的 Cluster Manager 到底是什么类型的。只要它能够获得 Executor 进程，并且它们可以和彼此之间通信，那么即使是在一个也支持其它应用的 Cluster Manager（例如，Mesos / YARN）上来运行它也是相对简单的。
 3. The driver program must listen for and accept incoming connections from its executors throughout
    its lifetime (e.g., see [spark.driver.port in the network config
    section](configuration.html#networking)). As such, the driver program must be network
    addressable from the worker nodes.
 
-   3.驱动程序必须在其生命周期中监听并接受其执行器的传入连接（例如，请参阅[spark.driver.port在网络配置章节]（configuration.html＃networking））。 因此，驱动程序必须能够从工作节点中网络寻址。
+   3.Driver 程序必须在自己的生命周期内（例如，请看 在网络中配置 spark.driver.port 章节）监听和接受来自它的 Executor 的连接请求。同样的，driver 程序必须可以从 worker 节点上网络寻址（就是网络没问题）。
 4. Because the driver schedules tasks on the cluster, it should be run close to the worker
    nodes, preferably on the same local area network. If you'd like to send requests to the
    cluster remotely, it's better to open an RPC to the driver and have it submit operations
    from nearby than to run a driver far away from the worker nodes.
 
-4，因为驱动程序调度集群上的任务，所以它应该靠近工作节点运行，最好在同一个局域网上运行。 如果您想要远程发送请求到集群，最好是向驱动程序打开一个RPC，并从附近提交操作，而不是在远离工作节点的地方运行驱动程序。
+  4，因为 driver 调度了集群上的 task（任务），更好的方式应该是在相同的局域网中靠近 worker 的节点上运行。如果您不喜欢发送请求到远程的集群，倒不如打开一个 RPC 至 driver 并让它就近提交操作而不是从很远的 worker 节点上运行一个 driver。
 # Cluster Manager Types
-群集管理器类型
+Cluster Manager 类型
 
 The system currently supports three cluster managers:
 
-系统目前支持三种集群管理器：
+系统目前支持三种Cluster Manager：
 
 * [Standalone](spark-standalone.html) -- a simple cluster manager included with Spark that makes it
   easy to set up a cluster.
  
-* [Standalone](spark-standalone.html) -- Spark中包含一个简单的集群管理器，可以轻松设置集群。
+* [Standalone](spark-standalone.html) -- 包含在 Spark 中使得它更容易来安装集群的一个简单的 Cluster Manager
 
 * [Apache Mesos](running-on-mesos.html) -- a general cluster manager that can also run Hadoop MapReduce
   and service applications.
 
- * [Apache Mesos](running-on-mesos.html) --  也可以运行Hadoop MapReduce和服务应用程序的通用集群管理器。
+ * [Apache Mesos](running-on-mesos.html) --  一个通用的 Cluster Manager，它也可以运行 Hadoop MapReduce 和其它服务应用。
 * [Hadoop YARN](running-on-yarn.html) -- the resource manager in Hadoop 2.
-* [Hadoop YARN](running-on-yarn.html) --Hadoop 2的资源管理器。
+* [Hadoop YARN](running-on-yarn.html) --Hadoop 2 中的 resource manager（资源管理器）。
 * [Kubernetes (experimental)](https://github.com/apache-spark-on-k8s/spark) -- In addition to the above,
 there is experimental support for Kubernetes. Kubernetes is an open-source platform
 for providing container-centric infrastructure. Kubernetes support is being actively
 developed in an [apache-spark-on-k8s](https://github.com/apache-spark-on-k8s/) Github organization. 
 For documentation, refer to that project's README.
-* [Kubernetes (experimental)](https://github.com/apache-spark-on-k8s/spark) --除了上述之外，还有Kubernetes的实验支持。 Kubernetes提供以容器为中心的基础设施的开源平台。 Kubernetes的支持正在apache-spark-on-k8s Github组织中积极开发。 有关文档，请参阅该项目的README。
+* [Kubernetes (experimental)](https://github.com/apache-spark-on-k8s/spark) --除了上述之外，还有 Kubernetes 的实验支持。Kubernetes 提供以容器为中心的基础设施的开源平台。Kubernetes 的支持正在[apache-spark-on-k8s](https://github.com/apache-spark-on-k8s/) Github 组织中积极开发。 有关文档，请参阅该项目的 README。
 
 # Submitting Applications
 提交应用程序
@@ -92,7 +91,7 @@ For documentation, refer to that project's README.
 Applications can be submitted to a cluster of any type using the `spark-submit` script.
 The [application submission guide](submitting-applications.html) describes how to do this.
 
-应用程序可以使用`spark-submit`脚本提交给任何类型的集群。The [application submission guide](submitting-applications.html)介绍了如何做到这一点。
+应用程序可以使用 `spark-submit` 脚本提交给任何类型的集群。在 [ 应用提交指南](submitting-applications.html)介绍了如何做到这一点。
 
 # Monitoring
 监控
@@ -101,23 +100,23 @@ Each driver program has a web UI, typically on port 4040, that displays informat
 tasks, executors, and storage usage. Simply go to `http://<driver-node>:4040` in a web browser to
 access this UI. The [monitoring guide](monitoring.html) also describes other monitoring options.
 
-每个驱动程序都有一个Web UI，通常在端口4040上，可以显示有关正在运行的任务，执行程序和存储使用情况的信息。 只需在Web浏览器中的`http：// <driver-node>：4040`中访问此UI。[monitoring guide](monitoring.html)中还介绍了其他监控选项。
+每个驱动程序都有一个Web UI，通常在端口4040上，可以显示有关正在运行的 task，executor，和存储使用情况的信息。只需在 Web 浏览器中的 `http：// <driver-node>：4040`中访问此 UI。[监控指南](monitoring.html)中还介绍了其他监控选项。
 
 # Job Scheduling
-任务调度
+Job调度
 
 Spark gives control over resource allocation both _across_ applications (at the level of the cluster
 manager) and _within_ applications (if multiple computations are happening on the same SparkContext).
 The [job scheduling overview](job-scheduling.html) describes this in more detail.
 
-Spark可以控制不同应用程序（集群管理器级别）和应用程序（如果多个计算发生在同一个SparkContext上）的资源分配。 The [job scheduling overview](job-scheduling.html)更详细地描述了这一点。
+Spark 即可以在应用间（Cluster Manager 级别），也可以在应用内（如果多个计算发生在相同的 SparkContext 上时）控制资源分配。[Job 调度指南](job-scheduling.html) 描述的更详细。
 
 # Glossary
 术语
 
 The following table summarizes terms you'll see used to refer to cluster concepts:
 
-下表总结了您将看到的用于引用集群概念的术语：
+下表中总结了您将会看到用于涉及到集群时的术语：
 
 <table class="table">
   <thead>
@@ -125,53 +124,53 @@ The following table summarizes terms you'll see used to refer to cluster concept
   </thead>
   <tbody>
     <tr>
-      <td>Application应用程序</td>
-      <td>User program built on Spark. Consists of a <em>driver program</em> and <em>executors</em> on the cluster.基于Spark的用户程序。 由驱动程序和集群上的执行器组成。</td>
+      <td>Application</td>
+      <td>User program built on Spark. Consists of a <em>driver program</em> and <em>executors</em> on the cluster.用户构建在 Spark 上的程序。由集群上的一个 driver 程序和多个 executor 组成。</td>
     </tr>
     <tr>
-      <td>Application jar应用程序jar</td>
+      <td>Application jar</td>
       <td>
         A jar containing the user's Spark application. In some cases users will want to create
         an "uber jar" containing their application along with its dependencies. The user's jar
-        should never include Hadoop or Spark libraries, however, these will be added at runtime.包含用户的Spark应用程序的jar。 在某些情况下，用户将希望创建一个包含其应用程序及其依赖关系的“uber jar”。 用户的jar不应该包含Hadoop或Spark库，但这些将在运行时添加。
+        should never include Hadoop or Spark libraries, however, these will be added at runtime.一个包含用户 Spark 应用的 Jar。有时候用户会想要去创建一个包含他们应用以及它的依赖的 “uber jar”。用户的 Jar 应该没有包括 Hadoop 或者 Spark 库，然而，它们将会在运行时被添加。
       </td>
     </tr>
     <tr>
-      <td>Driver program驱动程序</td>
-      <td>The process running the main() function of the application and creating the SparkContext该进程运行应用程序的main()函数并创建SparkContext</td>
+      <td>Driver program</td>
+      <td>The process running the main() function of the application and creating the SparkContext该进程运行应用程序的 main() 函数并创SparkContext</td>
     </tr>
     <tr>
-      <td>Cluster manager集群管理器</td>
-      <td>An external service for acquiring resources on the cluster (e.g. standalone manager, Mesos, YARN)用于在集群上获取资源的外部服务(e.g. standalone manager, Mesos, YARN)</td>
+      <td>Cluster manager</td>
+      <td>An external service for acquiring resources on the cluster (e.g. standalone manager, Mesos, YARN)一个外部的用于获取集群上资源的服务。（例如，Standlone Manager，Mesos，YARN）</td>
     </tr>
     <tr>
-      <td>Deploy mode部署模式</td>
+      <td>Deploy mode</td>
       <td>Distinguishes where the driver process runs. In "cluster" mode, the framework launches
         the driver inside of the cluster. In "client" mode, the submitter launches the driver
-        outside of the cluster.区分驱动程序进程的运行位置。 在“集群”模式下，该框架在集群中启动驱动程序。 在“客户端”模式下，提交者在集群外部启动驱动程序。</td>
+        outside of the cluster.根据 driver 程序运行的地方区别。在 “Cluster” 模式中，框架在群集内部启动 driver。在 “Client” 模式中，submitter（提交者）在 Custer 外部启动 driver。</td>
     </tr>
     <tr>
-      <td>Worker node Workr节点</td>
-      <td>Any node that can run application code in the cluster可以在群集中运行应用程序代码的任何节点</td>
+      <td>Worker node</td>
+      <td>Any node that can run application code in the cluster任何在集群中可以运行应用代码的节点。</td>
     </tr>
     <tr>
-      <td>Executor 执行者</td>
+      <td>Executor</td>
       <td>A process launched for an application on a worker node, that runs tasks and keeps data in memory
-        or disk storage across them. Each application has its own executors.为工作节点上的应用程序启动的进程，该进程运行任务并将数据保留在内存或磁盘存储器中。 每个应用程序都有自己的执行者。</td>
+        or disk storage across them. Each application has its own executors.一个为了在 worker 节点上的应用而启动的进程，它运行 task 并且将数据保持在内存中或者硬盘存储。每个应用有它自己的 Executor。</td>
     </tr>
     <tr>
-      <td>Task任务</td>
-      <td>A unit of work that will be sent to one executor将发送给一个executor的任务集合</td>
+      <td>Task</td>
+      <td>A unit of work that will be sent to one executor一个将要被发送到 Executor 中的工作单元。</td>
     </tr>
     <tr>
       <td>Job</td>
       <td>A parallel computation consisting of multiple tasks that gets spawned in response to a Spark action
-        (e.g. <code>save</code>, <code>collect</code>); you'll see this term used in the driver's logs.一个由多个任务组成的并行计算，这些任务可以响应Spark action（例如save，collect）而产生; 你会看到驱动程序日志中使用的这个术语。</td>
+        (e.g. <code>save</code>, <code>collect</code>); you'll see this term used in the driver's logs.一个由多个 task 组成的并行计算，并且能从 Spark action 中获取响应（例如，save，collect），您将在 driver 的日志中看到这个术语。</td>
     </tr>
     <tr>
       <td>Stage</td>
       <td>Each job gets divided into smaller sets of tasks called <em>stages</em> that depend on each other
-        (similar to the map and reduce stages in MapReduce); you'll see this term used in the driver's logs.每个作业被分成较小的任务称为stage,这些tasks相互依赖（类似于MapReduce中的映射并减少阶段）; 您会看到驱动程序日志中使用的这个术语。</td>
+        (similar to the map and reduce stages in MapReduce); you'll see this term used in the driver's logs.每个 Job 被拆分成更小的被称作 stage（阶段） 的 task（任务） 组，stage 彼此之间是相互依赖的（与 MapReduce 中的 map 和 reduce stage 相似）。您将在 driver 的日志中看到这个术语。</td>
     </tr>
   </tbody>
 </table>
