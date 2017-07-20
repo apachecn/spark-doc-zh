@@ -1,75 +1,59 @@
 ---
 layout: global
-title: "MLlib: Main Guide"
-displayTitle: "Machine Learning Library (MLlib) Guide"
+title: "MLlib: 主要指南"
+displayTitle: "机器学习库 (MLlib) 指南"
 ---
 
-MLlib is Spark's machine learning (ML) library.
-Its goal is to make practical machine learning scalable and easy.
-At a high level, it provides tools such as:
+MLib 是 Spark 的机器学习（ML）库。其目标是使实用的机器学习具有可扩展性并且变得容易。在较高的水平上，它提供了以下工具：
 
-* ML Algorithms: common learning algorithms such as classification, regression, clustering, and collaborative filtering
-* Featurization: feature extraction, transformation, dimensionality reduction, and selection
-* Pipelines: tools for constructing, evaluating, and tuning ML Pipelines
-* Persistence: saving and load algorithms, models, and Pipelines
-* Utilities: linear algebra, statistics, data handling, etc.
+* ML Algorithms （ML 算法）: 常用的学习算法，如分类，回归，聚类和协同过滤
+* Featurization （特征）: 特征提取，变换，降维和选择
+* Pipelines （管道）: 用于构建，评估和调整 ML Pipelines 的工具
+* Persistence （持久性）: 保存和加载算法，模型和 Pipelines
+* Utilities （实用）: 线性代数，统计学，数据处理等
 
-# Announcement: DataFrame-based API is primary API
+# 公告: 基于 DataFrame 的 API 是主要的 API
 
-**The MLlib RDD-based API is now in maintenance mode.**
+**MLlib 的基于 RDD 的 API 现在处于维护状态。**
 
-As of Spark 2.0, the [RDD](programming-guide.html#resilient-distributed-datasets-rdds)-based APIs in the `spark.mllib` package have entered maintenance mode.
-The primary Machine Learning API for Spark is now the [DataFrame](sql-programming-guide.html)-based API in the `spark.ml` package.
+从 Spark 2.0 开始， `spark.mllib` 包中的基于 [RDD](programming-guide.html#resilient-distributed-datasets-rdds) 的 API 已经进入了维护模式。Spark 的主要的机器学习 API 现在是 `spark.ml` 包中的基于 [DataFrame](sql-programming-guide.html) 的 API 。
 
-*What are the implications?*
+*有什么影响？*
 
-* MLlib will still support the RDD-based API in `spark.mllib` with bug fixes.
-* MLlib will not add new features to the RDD-based API.
-* In the Spark 2.x releases, MLlib will add features to the DataFrames-based API to reach feature parity with the RDD-based API.
-* After reaching feature parity (roughly estimated for Spark 2.3), the RDD-based API will be deprecated.
-* The RDD-based API is expected to be removed in Spark 3.0.
+* MLlib 仍将支持基于 RDD 的 API ，在 `spark.mllib` 中有 bug 修复。
+* MLlib 不会为基于 RDD 的 API 添加新功能。
+* 在 Spark 2.x 发行版本中， MLlib 将向基于 DataFrames 的 API 添加功能，以达到与基于 RDD 的 API 的功能奇偶校验。
+* 在达到功能奇偶校验（大概估计为 Spark 2.3 ）之后，基于 RDD 的 API 将被弃用。
+* 预计将在 Spark 3.0 中删除基于 RDD 的 API 。
 
-*Why is MLlib switching to the DataFrame-based API?*
+*为什么 MLlib 切换到基于 DataFrame 的 API ？*
 
-* DataFrames provide a more user-friendly API than RDDs.  The many benefits of DataFrames include Spark Datasources, SQL/DataFrame queries, Tungsten and Catalyst optimizations, and uniform APIs across languages.
-* The DataFrame-based API for MLlib provides a uniform API across ML algorithms and across multiple languages.
-* DataFrames facilitate practical ML Pipelines, particularly feature transformations.  See the [Pipelines guide](ml-pipeline.html) for details.
+* DataFrames 提供比 RDD 更加用户友好的 API 。 DataFrames 的许多好处包括 Spark Datasources，SQL/DataFrame 查询，Tungsten 和 Catalyst 优化以及跨语言的统一 API 。
+* 用于 MLlib 的基于 DataFrame 的 API 为 ML algorithms （ML 算法）和跨多种语言提供了统一的 API 。
+* DataFrames 便于实际的 ML Pipelines （ML 管道），特别是 feature transformations （特征转换）。有关详细信息，请参阅 [Pipelines 指南](ml-pipeline.html) 。
 
-*What is "Spark ML"?*
+*什么是 "Spark ML" ?*
 
-* "Spark ML" is not an official name but occasionally used to refer to the MLlib DataFrame-based API.
-  This is majorly due to the `org.apache.spark.ml` Scala package name used by the DataFrame-based API, 
-  and the "Spark ML Pipelines" term we used initially to emphasize the pipeline concept.
+* "Spark ML" 不是官方名称，但偶尔用于引用基于 MLlib DataFrame 的 API 。这主要是由于基于 DataFrame 的 API 使用的 `org.apache.spark.ml` Scala 包名称，以及我们最初使用的 "Spark ML Pipelines" 术语来强调 pipeline （管道）概念。
   
-*Is MLlib deprecated?*
+*MLlib 是否被弃用了？*
 
-* No. MLlib includes both the RDD-based API and the DataFrame-based API.
-  The RDD-based API is now in maintenance mode.
-  But neither API is deprecated, nor MLlib as a whole.
+* 不是。 MLlib 包括基于 RDD 的 API 和基于 DataFrame 的 API 。基于 RDD 的 API 现在处于维护模式。但是，API 和 MLlib 都不会被弃用。
 
-# Dependencies
+# 依赖
 
-MLlib uses the linear algebra package [Breeze](http://www.scalanlp.org/), which depends on
-[netlib-java](https://github.com/fommil/netlib-java) for optimised numerical processing.
-If native libraries[^1] are not available at runtime, you will see a warning message and a pure JVM
-implementation will be used instead.
+MLlib 使用线性代数包 [Breeze](http://www.scalanlp.org/) ，这取决于 [netlib-java](https://github.com/fommil/netlib-java) 进行优化数字处理。如果 native libraries[^1] （本地库）在运行时不可用，您将看到一条警告消息并且 pure JVM 将使用实现。
 
-Due to licensing issues with runtime proprietary binaries, we do not include `netlib-java`'s native
-proxies by default.
-To configure `netlib-java` / Breeze to use system optimised binaries, include
-`com.github.fommil.netlib:all:1.1.2` (or build Spark with `-Pnetlib-lgpl`) as a dependency of your
-project and read the [netlib-java](https://github.com/fommil/netlib-java) documentation for your
-platform's additional installation instructions.
+由于运行时专用二进制文件的许可问题，我们不包括 `netlib-java` 的本机默认情况下代理。
+要配置 `netlib-java` / Breeze 以使用系统优化的二进制文件，包括 `com.github.fommil.netlib：all：1.1.2` （或者用 `-Pnetlib-lgpl` 构建 Spark ）作为你项目的依赖并参阅 [netlib-java](https://github.com/fommil/netlib-java) 文档了解为您的平台的额外安装说明。
 
-To use MLlib in Python, you will need [NumPy](http://www.numpy.org) version 1.4 or newer.
+要在 Python 中使用 MLlib ，您将需要 [NumPy](http://www.numpy.org) 1.4 版本或者更高版本。
 
-[^1]: To learn more about the benefits and background of system optimised natives, you may wish to
-    watch Sam Halliday's ScalaX talk on [High Performance Linear Algebra in Scala](http://fommil.github.io/scalax14/#/).
+[^1]: 要了解更多关于本地系统优化的好处和背景，您可能希望观看 Sam Halliday 的 ScalaX 讨论关于 [Scala 中的高性能线性代数](http://fommil.github.io/scalax14/#/) 。
 
-# Highlights in 2.2
+# 2.2 中的亮点
 
-The list below highlights some of the new features and enhancements added to MLlib in the `2.2`
-release of Spark:
+下面的列表突出显示了在 Spark 发行的 `2.2` 版本中添加到 MLlib 的一些新功能和增强功能：
 
 * [`ALS`](ml-collaborative-filtering.html) methods for _top-k_ recommendations for all
  users or items, matching the functionality in `mllib`
@@ -93,37 +77,31 @@ release of Spark:
 * Logistic regression now supports constraints on the coefficients during training
  ([SPARK-20047](https://issues.apache.org/jira/browse/SPARK-20047))
 
-# Migration guide
+# Migration guide （迁移指南）
 
-MLlib is under active development.
-The APIs marked `Experimental`/`DeveloperApi` may change in future releases,
-and the migration guide below will explain all changes between releases.
+MLlib 正在积极发展。标记为 `Experimental`/`DeveloperApi` 的 APIs 可能会在将来的版本中更改，下面的迁移指南将解释发行版本之间的所有更改。
 
-## From 2.1 to 2.2
+## 从 2.1 到 2.2
 
-### Breaking changes
+### 重大改变
 
-There are no breaking changes.
+没有重大改变。
 
-### Deprecations and changes of behavior
+### behavior 的弃用和更改
 
-**Deprecations**
+**弃用**
 
-There are no deprecations.
+没有弃用。
 
-**Changes of behavior**
+**behavior 的更改**
 
-* [SPARK-19787](https://issues.apache.org/jira/browse/SPARK-19787):
- Default value of `regParam` changed from `1.0` to `0.1` for `ALS.train` method (marked `DeveloperApi`).
- **Note** this does _not affect_ the `ALS` Estimator or Model, nor MLlib's `ALS` class.
-* [SPARK-14772](https://issues.apache.org/jira/browse/SPARK-14772):
- Fixed inconsistency between Python and Scala APIs for `Param.copy` method.
-* [SPARK-11569](https://issues.apache.org/jira/browse/SPARK-11569):
- `StringIndexer` now handles `NULL` values in the same way as unseen values. Previously an exception
- would always be thrown regardless of the setting of the `handleInvalid` parameter.
+* [SPARK-19787](https://issues.apache.org/jira/browse/SPARK-19787):对于`ALS.train` 方法 （标记为 `DeveloperApi` ）， `regParam` 的默认值从 `1.0` 更改为 `0.1` 。
+ **注意** 这样做不会影响 `ALS` Estimator or Model （估计器或模型），也不影响 MLlib 的 `ALS` 类。
+* [SPARK-14772](https://issues.apache.org/jira/browse/SPARK-14772):修复了 `Param.copy` 方法的 Python 和 Scala API 之间的不一致。
+* [SPARK-11569](https://issues.apache.org/jira/browse/SPARK-11569): `StringIndexer`现在处理 `NULL` 值，就像 unseen values 一样。 以前是 exception 将始终抛出 `handleInvalid` 参数的设置。
   
-## Previous Spark versions
+## 以前的 Spark 版本
 
-Earlier migration guides are archived [on this page](ml-migration-guides.html).
+以前的迁移指南已经在 [这个页面](ml-migration-guides.html) 进行了归档。
 
 ---
