@@ -4,7 +4,6 @@ displayTitle: Spark Streaming Programming Guide
 title: Spark Streaming
 description: Spark Streaming programming guide and tutorial for Spark SPARK_VERSION_SHORT
 ---
-
 * This will become a table of contents (this text will be scraped).
 {:toc}
 
