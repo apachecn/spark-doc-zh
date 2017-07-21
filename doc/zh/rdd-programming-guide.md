@@ -910,11 +910,11 @@ We could also use `counts.sortByKey()`, for example, to sort the pairs alphabeti
 </tr>
 <tr>
   <td> <b>mapPartitions</b>(<i>func</i>) <a name="MapPartLink"></a> </td>
-  <td> 与 map 类似，但是单独的运行在在每个 RDD 的 partition（分区，block）上，所以在一个类型为 T 的 RDD 上运行时 <i>func</i> 必须是 Iterator<T> => Iterator<U> 类型. </td>
+  <td> 与 map 类似，但是单独的运行在在每个 RDD 的 partition（分区，block）上，所以在一个类型为 T 的 RDD 上运行时 <i>func</i> 必须是 Iterator&lt;T&gt; => Iterator&lt;U&gt; 类型. </td>
 </tr>
 <tr>
   <td> <b>mapPartitionsWithIndex</b>(<i>func</i>) </td>
-  <td> 与 mapPartitions 类似，但是也需要提供一个代表 partition 的 index（索引）的 interger value（整型值）作为参数的 <i>func</i>，所以在一个类型为 T 的 RDD 上运行时 <i>func</i> 必须是 (Int, Iterator<T>) => Iterator<U> 类型.
+  <td> 与 mapPartitions 类似，但是也需要提供一个代表 partition 的 index（索引）的 interger value（整型值）作为参数的 <i>func</i>，所以在一个类型为 T 的 RDD 上运行时 <i>func</i> 必须是 (Int, Iterator&lt;T&gt;) => Iterator&lt;U&gt; 类型.
   </td>
 </tr>
 <tr>
