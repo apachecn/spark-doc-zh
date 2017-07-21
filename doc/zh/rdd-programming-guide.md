@@ -898,100 +898,90 @@ We could also use `counts.sortByKey()`, for example, to sort the pairs alphabeti
 <tr><th style="width:25%">Transformation（转换）</th><th>Meaning（含义）</th></tr>
 <tr>
   <td> <b>map</b>(<i>func</i>) </td>
-  <td> Return a new distributed dataset formed by passing each element of the source through a function <i>func</i>. </td>
+  <td> 返回一个新的 distributed dataset（分布式数据集），它由每个 source（数据源）中的元素应用一个函数 <i>func</i> 来生成. </td>
 </tr>
 <tr>
   <td> <b>filter</b>(<i>func</i>) </td>
-  <td> Return a new dataset formed by selecting those elements of the source on which <i>func</i> returns true. </td>
+  <td> 返回一个新的 distributed dataset（分布式数据集），它由每个 source（数据源）中应用一个函数 <i>func</i> 且返回值为 true 的元素来生成. </td>
 </tr>
 <tr>
   <td> <b>flatMap</b>(<i>func</i>) </td>
-  <td> Similar to map, but each input item can be mapped to 0 or more output items (so <i>func</i> should return a Seq rather than a single item). </td>
+  <td> 与 map 类似，但是每一个输入的 item 可以被映射成 0 个或多个输出的 items（所以 <i>func</i> 应该返回一个 Seq 而不是一个单独的 item）. </td>
 </tr>
 <tr>
   <td> <b>mapPartitions</b>(<i>func</i>) <a name="MapPartLink"></a> </td>
-  <td> Similar to map, but runs separately on each partition (block) of the RDD, so <i>func</i> must be of type
-    Iterator&lt;T&gt; => Iterator&lt;U&gt; when running on an RDD of type T. </td>
+  <td> 与 map 类似，但是单独的运行在在每个 RDD 的 partition（分区，block）上，所以在一个类型为 T 的 RDD 上运行时 <i>func</i> 必须是 Iterator<T> => Iterator<U> 类型. </td>
 </tr>
 <tr>
   <td> <b>mapPartitionsWithIndex</b>(<i>func</i>) </td>
-  <td> Similar to mapPartitions, but also provides <i>func</i> with an integer value representing the index of
-  the partition, so <i>func</i> must be of type (Int, Iterator&lt;T&gt;) => Iterator&lt;U&gt; when running on an RDD of type T.
+  <td> 与 mapPartitions 类似，但是也需要提供一个代表 partition 的 index（索引）的 interger value（整型值）作为参数的 <i>func</i>，所以在一个类型为 T 的 RDD 上运行时 <i>func</i> 必须是 (Int, Iterator<T>) => Iterator<U> 类型.
   </td>
 </tr>
 <tr>
   <td> <b>sample</b>(<i>withReplacement</i>, <i>fraction</i>, <i>seed</i>) </td>
-  <td> Sample a fraction <i>fraction</i> of the data, with or without replacement, using a given random number generator seed. </td>
+  <td> 样本数据，设置是否放回（withReplacement）, 采样的百分比（<i>fraction</i>）、使用指定的随机数生成器的种子（seed）.</td>
 </tr>
 <tr>
   <td> <b>union</b>(<i>otherDataset</i>) </td>
-  <td> Return a new dataset that contains the union of the elements in the source dataset and the argument. </td>
+  <td> 反回一个新的 dataset，它包含了 source dataset（源数据集）和 otherDataset（其它数据集）的并集. </td>
 </tr>
 <tr>
   <td> <b>intersection</b>(<i>otherDataset</i>) </td>
-  <td> Return a new RDD that contains the intersection of elements in the source dataset and the argument. </td>
+  <td> 返回一个新的 RDD，它包含了 source dataset（源数据集）和 otherDataset（其它数据集）的交集. </td>
 </tr>
 <tr>
   <td> <b>distinct</b>([<i>numTasks</i>])) </td>
-  <td> Return a new dataset that contains the distinct elements of the source dataset.</td>
+  <td> 返回一个新的 dataset，它包含了 source dataset（源数据集）中去重的元素.</td>
 </tr>
 <tr>
   <td> <b>groupByKey</b>([<i>numTasks</i>]) <a name="GroupByLink"></a> </td>
-  <td> When called on a dataset of (K, V) pairs, returns a dataset of (K, Iterable&lt;V&gt;) pairs. <br />
-    <b>Note:</b> If you are grouping in order to perform an aggregation (such as a sum or
-      average) over each key, using <code>reduceByKey</code> or <code>aggregateByKey</code> will yield much better
-      performance.
+  <td> 在一个 (K, V) pair 的 dataset 上调用时，返回一个 (K, Iterable&lt;V&gt;) . <br />
+    <b>Note:</b> 如果分组是为了在每一个 key 上执行聚合操作（例如，sum 或 average)，此时使用 <code>reduceByKey</code> 或 <code>aggregateByKey</code> 来计算性能会更好.
     <br />
-    <b>Note:</b> By default, the level of parallelism in the output depends on the number of partitions of the parent RDD.
-      You can pass an optional <code>numTasks</code> argument to set a different number of tasks.
+    <b>Note:</b> 默认情况下，并行度取决于父 RDD 的分区数。可以传递一个可选的 <code>numTasks</code> 参数来设置不同的任务数.
   </td>
 </tr>
 <tr>
   <td> <b>reduceByKey</b>(<i>func</i>, [<i>numTasks</i>]) <a name="ReduceByLink"></a> </td>
-  <td> When called on a dataset of (K, V) pairs, returns a dataset of (K, V) pairs where the values for each key are aggregated using the given reduce function <i>func</i>, which must be of type (V,V) => V. Like in <code>groupByKey</code>, the number of reduce tasks is configurable through an optional second argument. </td>
+  <td> 在 (K, V) pairs 的 dataset 上调用时, 返回 dataset of (K, V) pairs 的 dataset, 其中的  values 是针对每个 key 使用给定的函数 <i>func</i> 来进行聚合的, 它必须是 type (V,V) => V 的类型. 像 <code>groupByKey</code> 一样,  reduce tasks 的数量是可以通过第二个可选的参数来配置的. </td>
 </tr>
 <tr>
   <td> <b>aggregateByKey</b>(<i>zeroValue</i>)(<i>seqOp</i>, <i>combOp</i>, [<i>numTasks</i>]) <a name="AggregateByLink"></a> </td>
-  <td> When called on a dataset of (K, V) pairs, returns a dataset of (K, U) pairs where the values for each key are aggregated using the given combine functions and a neutral "zero" value. Allows an aggregated value type that is different than the input value type, while avoiding unnecessary allocations. Like in <code>groupByKey</code>, the number of reduce tasks is configurable through an optional second argument. </td>
+  <td> 在 (K, V) pairs 的 dataset 上调用时, 返回 (K, U) pairs 的 dataset，其中的 values 是针对每个 key 使用给定的 combine 函数以及一个 neutral "0" 值来进行聚合的. 允许聚合值的类型与输入值的类型不一样, 同时避免不必要的配置. 像 <code>groupByKey</code> 一样, reduce tasks 的数量是可以通过第二个可选的参数来配置的. </td>
 </tr>
 <tr>
   <td> <b>sortByKey</b>([<i>ascending</i>], [<i>numTasks</i>]) <a name="SortByLink"></a> </td>
-  <td> When called on a dataset of (K, V) pairs where K implements Ordered, returns a dataset of (K, V) pairs sorted by keys in ascending or descending order, as specified in the boolean <code>ascending</code> argument.</td>
+  <td> 在一个 (K, V) pair 的 dataset 上调用时，其中的 K 实现了 Ordered，返回一个按 keys 升序或降序的 (K, V) pairs 的 dataset, 由 boolean 类型的 <code>ascending</code> 参数来指定. </td>
 </tr>
 <tr>
   <td> <b>join</b>(<i>otherDataset</i>, [<i>numTasks</i>]) <a name="JoinLink"></a> </td>
-  <td> When called on datasets of type (K, V) and (K, W), returns a dataset of (K, (V, W)) pairs with all pairs of elements for each key.
-    Outer joins are supported through <code>leftOuterJoin</code>, <code>rightOuterJoin</code>, and <code>fullOuterJoin</code>.
+  <td> 在一个 (K, V) 和 (K, W) 类型的 dataset 上调用时，返回一个 (K, (V, W)) pairs 的 dataset，它拥有每个 key 中所有的元素对。Outer joins 可以通过 <code>leftOuterJoin</code>, <code>rightOuterJoin</code> 和 <code>fullOuterJoin</code> 来实现.
   </td>
 </tr>
 <tr>
   <td> <b>cogroup</b>(<i>otherDataset</i>, [<i>numTasks</i>]) <a name="CogroupLink"></a> </td>
-  <td> When called on datasets of type (K, V) and (K, W), returns a dataset of (K, (Iterable&lt;V&gt;, Iterable&lt;W&gt;)) tuples. This operation is also called <code>groupWith</code>. </td>
+  <td>在一个 (K, V) 和的 dataset 上调用时，返回一个 (K, (Iterable&lt;V&gt;, Iterable&lt;W&gt;)) tuples 的 dataset. 这个操作也调用了 <code>groupWith</code>. </td>
 </tr>
 <tr>
   <td> <b>cartesian</b>(<i>otherDataset</i>) </td>
-  <td> When called on datasets of types T and U, returns a dataset of (T, U) pairs (all pairs of elements). </td>
+  <td> 在一个 T 和 U 类型的 dataset 上调用时，返回一个 (T, U) pairs 类型的 dataset（所有元素的 pairs，即笛卡尔积）. </td>
 </tr>
 <tr>
   <td> <b>pipe</b>(<i>command</i>, <i>[envVars]</i>) </td>
-  <td> Pipe each partition of the RDD through a shell command, e.g. a Perl or bash script. RDD elements are written to the
-    process's stdin and lines output to its stdout are returned as an RDD of strings. </td>
+  <td> 通过使用 shell 命令来将每个 RDD 的分区给 Pipe。例如，一个 Perl 或 bash 脚本。RDD 的元素会被写入进程的标准输入（stdin），并且 lines（行）输出到它的标准输出（stdout）被作为一个字符串型 RDD 的 string 返回. </td>
 </tr>
 <tr>
   <td> <b>coalesce</b>(<i>numPartitions</i>) <a name="CoalesceLink"></a> </td>
-  <td> Decrease the number of partitions in the RDD to numPartitions. Useful for running operations more efficiently
-    after filtering down a large dataset. </td>
+  <td> Decrease（降低）RDD 中 partitions（分区）的数量为 numPartitions。对于执行过滤后一个大的 dataset 操作是更有效的. </td>
 </tr>
 <tr>
   <td> <b>repartition</b>(<i>numPartitions</i>) </td>
-  <td> Reshuffle the data in the RDD randomly to create either more or fewer partitions and balance it across them.
-    This always shuffles all data over the network. <a name="RepartitionLink"></a></td>
+  <td> Reshuffle（重新洗牌）RDD 中的数据以创建或者更多的 partitions（分区）并将每个分区中的数据尽量保持均匀.
+    该操作总是通过网络来 shuffles 所有的数据. <a name="RepartitionLink"></a></td>
 </tr>
 <tr>
   <td> <b>repartitionAndSortWithinPartitions</b>(<i>partitioner</i>) <a name="Repartition2Link"></a></td>
-  <td> Repartition the RDD according to the given partitioner and, within each resulting partition,
-  sort records by their keys. This is more efficient than calling <code>repartition</code> and then sorting within
-  each partition because it can push the sorting down into the shuffle machinery. </td>
+  <td> 根据给定的 partitioner（分区器）对 RDD 进行重新分区，并在每个结果分区中，按照 key 值对记录排序。这比每一个分区中先调用 <code>repartition</code> 然后再 sorting（排序）效率更高，因为它可以将排序过程推送到 shuffle 操作的机器上进行. </td>
 </tr>
 </table>
 
@@ -1011,59 +1001,55 @@ We could also use `counts.sortByKey()`, for example, to sort the pairs alphabeti
 <tr><th>Action（动作）</th><th>Meaning（含义）</th></tr>
 <tr>
   <td> <b>reduce</b>(<i>func</i>) </td>
-  <td> Aggregate the elements of the dataset using a function <i>func</i> (which takes two arguments and returns one). The function should be commutative and associative so that it can be computed correctly in parallel. </td>
+  <td> 使用函数 <i>func</i> 聚合 dataset 中的元素，这个函数 <i>func</i> 输入为两个元素，返回为一个元素。这个函数应该是可交换（commutative ）和关联（associative）的，这样才能保证它可以被并行地正确计算. </td>
 </tr>
 <tr>
   <td> <b>collect</b>() </td>
-  <td> Return all the elements of the dataset as an array at the driver program. This is usually useful after a filter or other operation that returns a sufficiently small subset of the data. </td>
+  <td> 在 driver 程序中，以一个 array 数组的形式返回 dataset 的所有元素。这在过滤器（filter）或其他操作（other operation）之后返回足够小（sufficiently small）的数据子集通常是有用的. </td>
 </tr>
 <tr>
   <td> <b>count</b>() </td>
-  <td> Return the number of elements in the dataset. </td>
+  <td> 返回 dataset 中元素的个数. </td>
 </tr>
 <tr>
   <td> <b>first</b>() </td>
-  <td> Return the first element of the dataset (similar to take(1)). </td>
+  <td> 返回 dataset 中的第一个元素（类似于 take(1). </td>
 </tr>
 <tr>
   <td> <b>take</b>(<i>n</i>) </td>
-  <td> Return an array with the first <i>n</i> elements of the dataset. </td>
+  <td> 将数据集中的前 <i>n</i> 个元素作为一个 array 数组返回. </td>
 </tr>
 <tr>
   <td> <b>takeSample</b>(<i>withReplacement</i>, <i>num</i>, [<i>seed</i>]) </td>
-  <td> Return an array with a random sample of <i>num</i> elements of the dataset, with or without replacement, optionally pre-specifying a random number generator seed.</td>
+  <td> 对一个 dataset 进行随机抽样，返回一个包含 <i>num</i> 个随机抽样（random sample）元素的数组，参数 withReplacement 指定是否有放回抽样，参数 seed 指定生成随机数的种子.</td>
 </tr>
 <tr>
   <td> <b>takeOrdered</b>(<i>n</i>, <i>[ordering]</i>) </td>
-  <td> Return the first <i>n</i> elements of the RDD using either their natural order or a custom comparator. </td>
+  <td> 返回 RDD 按自然顺序（natural order）或自定义比较器（custom comparator）排序后的前 <i>n</i> 个元素. </td>
 </tr>
 <tr>
   <td> <b>saveAsTextFile</b>(<i>path</i>) </td>
-  <td> Write the elements of the dataset as a text file (or set of text files) in a given directory in the local filesystem, HDFS or any other Hadoop-supported file system. Spark will call toString on each element to convert it to a line of text in the file. </td>
+  <td> 将 dataset 中的元素以文本文件（或文本文件集合）的形式写入本地文件系统、HDFS 或其它 Hadoop 支持的文件系统中的给定目录中。Spark 将对每个元素调用 toString 方法，将数据元素转换为文本文件中的一行记录. </td>
 </tr>
 <tr>
   <td> <b>saveAsSequenceFile</b>(<i>path</i>) <br /> (Java and Scala) </td>
-  <td> Write the elements of the dataset as a Hadoop SequenceFile in a given path in the local filesystem, HDFS or any other Hadoop-supported file system. This is available on RDDs of key-value pairs that implement Hadoop's Writable interface. In Scala, it is also
-   available on types that are implicitly convertible to Writable (Spark includes conversions for basic types like Int, Double, String, etc). </td>
+  <td> 将 dataset 中的元素以 Hadoop SequenceFile 的形式写入到本地文件系统、HDFS 或其它 Hadoop 支持的文件系统指定的路径中。该操作可以在实现了 Hadoop 的 Writable 接口的键值对（key-value pairs）的 RDD 上使用。在 Scala 中，它还可以隐式转换为 Writable 的类型（Spark 包括了基本类型的转换，例如 Int, Double, String 等等). </td>
 </tr>
 <tr>
   <td> <b>saveAsObjectFile</b>(<i>path</i>) <br /> (Java and Scala) </td>
-  <td> Write the elements of the dataset in a simple format using Java serialization, which can then be loaded using
-    <code>SparkContext.objectFile()</code>. </td>
+  <td> 使用 Java 序列化（serialization）以简单的格式（simple format）编写数据集的元素，然后使用 <code>SparkContext.objectFile()</code> 进行加载. </td>
 </tr>
 <tr>
   <td> <b>countByKey</b>() <a name="CountByLink"></a> </td>
-  <td> Only available on RDDs of type (K, V). Returns a hashmap of (K, Int) pairs with the count of each key. </td>
+  <td> 仅适用于（K,V）类型的 RDD 。返回具有每个 key 的计数的 （K , Int）pairs 的 hashmap. </td>
 </tr>
 <tr>
   <td> <b>foreach</b>(<i>func</i>) </td>
-  <td> Run a function <i>func</i> on each element of the dataset. This is usually done for side effects such as updating an <a href="#accumulators">Accumulator</a> or interacting with external storage systems.
-  <br /><b>Note</b>: modifying variables other than Accumulators outside of the <code>foreach()</code> may result in undefined behavior. See <a href="#understanding-closures-a-nameclosureslinka">Understanding closures </a> for more details.</td>
+  <td> 对 dataset 中每个元素运行函数 <i>func</i> 。这通常用于副作用（side effects），例如更新一个 <a href="#accumulators">Accumulator</a>（累加器）或与外部存储系统（external storage systems）进行交互。<b>Note</b>：修改除 <code>foreach()</code>之外的累加器以外的变量（variables）可能会导致未定义的行为（undefined behavior）。详细介绍请阅读 <a href="#understanding-closures-a-nameclosureslinka">Understanding closures（理解闭包）</a> 部分.</td>
 </tr>
 </table>
 
-The Spark RDD API also exposes asynchronous versions of some actions, like `foreachAsync` for `foreach`, which immediately return a `FutureAction` to the caller instead of blocking on completion of the action. This can be used to manage or wait for the asynchronous execution of the action.
-
+该 Spark RDD API 还暴露了一些 actions（操作）的异步版本，例如针对 `foreach` 的 `foreachAsync`，它们会立即返回一个`FutureAction` 到调用者，而不是在完成 action 时阻塞。 这可以用于管理或等待 action 的异步执行。.
 
 ### Shuffle 操作
 
@@ -1086,7 +1072,7 @@ ordered data following shuffle then it's possible to use:
 * `sortBy` 对 RDD 进行全局的排序
 
 触发的 shuffle 操作包括 **repartition** 操作，如
-[`repartition`](#RepartitionLink) 和 [`coalesce`](#CoalesceLink), **ByKey** 操作
+[`repartition`](#RepartitionLink) 和 [`coalesce`](#CoalesceLink), **'ByKey** 操作
 (除了 counting 之外) 像 [`groupByKey`](#GroupByLink) 和 [`reduceByKey`](#ReduceByLink), 和
 **join** 操作, 像 [`cogroup`](#CogroupLink) 和 [`join`](#JoinLink).
 
@@ -1096,7 +1082,7 @@ ordered data following shuffle then it's possible to use:
 
 在内部，一个 map 任务的所有结果数据会保存在内存，直到内存不能全部存储为止。然后，这些数据将基于目标分区进行排序并写入一个单独的文件中。在 reduce 时，任务将读取相关的已排序的数据块。
 
-某些 shuffle 操作会大量消耗堆内存空间，因为 shuffle 操作在数据转换前后，需要在使用内存中的数据结构对数据进行组织。需要特别说明的是，`reduceByKey` 和 `aggregateByKey` 在 map 时会创建这些数据结构，`ByKey` 操作在 reduce 时创建这些数据结构。当内存满的时候，Spark 会把溢出的数据存到磁盘上，这将导致额外的磁盘 I/O 开销和垃圾回收开销的增加。
+某些 shuffle 操作会大量消耗堆内存空间，因为 shuffle 操作在数据转换前后，需要在使用内存中的数据结构对数据进行组织。需要特别说明的是，`reduceByKey` 和 `aggregateByKey` 在 map 时会创建这些数据结构，`'ByKey` 操作在 reduce 时创建这些数据结构。当内存满的时候，Spark 会把溢出的数据存到磁盘上，这将导致额外的磁盘 I/O 开销和垃圾回收开销的增加。
 
 shuffle 操作还会在磁盘上生成大量的中间文件。在 Spark 1.3 中，这些文件将会保留至对应的 RDD 不在使用并被垃圾回收为止。这么做的好处是，如果在 Spark 重新计算 RDD 的血统关系（lineage）时，shuffle 操作产生的这些中间文件不需要重新创建。如果 Spark 应用长期保持对 RDD 的引用，或者垃圾回收不频繁，这将导致垃圾回收的周期比较长。这意味着，长期运行 Spark 任务可能会消耗大量的磁盘空间。临时数据存储路径可以通过 SparkContext 中设置参数 `spark.local.dir` 进行配置。
 
