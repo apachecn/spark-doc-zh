@@ -4,9 +4,8 @@ title: "MLlib: RDD-based API"
 displayTitle: "MLlib: RDD-based API"
 ---
 
-This page documents sections of the MLlib guide for the RDD-based API (the `spark.mllib` package).
-Please see the [MLlib Main Guide](ml-guide.html) for the DataFrame-based API (the `spark.ml` package),
-which is now the primary API for MLlib.
+本页介绍了基于 RDD 的 API（ `spark.mllib` 软件包）的 MLlib 指南的部分。
+请参阅基于 DataFrame 的 API （`spark.ml` 软件包）的 [MLlib 指南](ml-guide.html) ，该软件包现在是 MLlib 的主要 API 。
 
 * [Data types](mllib-data-types.html)
 * [Basic statistics](mllib-statistics.html)
