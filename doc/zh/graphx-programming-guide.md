@@ -202,7 +202,7 @@ val inDegrees: VertexRDD[Int] = graph.inDegrees
 
 区分核心图形操作的原因 [`GraphOps`][GraphOps] 是能够在将来支持不同的图形表示。每个图形表示必须提供核心操作的实现，并重用许多有用的操作 [`GraphOps`][GraphOps]。
 
-### 运算符的汇总表
+### 运算符的汇总表
 
 以下是两个定义的功能的简要摘要，但为简单起见 [`Graph`][Graph]， [`GraphOps`][GraphOps] 它作为 Graph 的成员呈现。请注意，已经简化了一些功能签名（例如，删除了默认参数和类型约束），并且已经删除了一些更高级的功能，因此请参阅API文档以获取正式的操作列表。
 
