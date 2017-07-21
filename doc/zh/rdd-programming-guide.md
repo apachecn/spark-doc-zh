@@ -1213,8 +1213,6 @@ broadcastVar.value();
 
 Accumulators（累加器）是一个仅可以执行 "added"（添加）的变量来通过一个关联和交换操作，因此可以高效地执行支持并行。累加器可以用于实现 counter（ 计数，类似在 MapReduce 中那样）或者 sums（求和）。原生 Spark 支持数值型的累加器，并且程序员可以添加新的支持类型。
 
-As a user, you can create named or unnamed accumulators. As seen in the image below, a named accumulator (in this instance `counter`) will display in the web UI for the stage that modifies that accumulator. Spark displays the value for each accumulator modified by a task in the "Tasks" table.
-
 作为一个用户，您可以创建 accumulators（累加器）并且重命名. 如下图所示, 一个命名的 accumulator 累加器（在这个例子中是 `counter`）将显示在 web UI 中，用于修改该累加器的阶段。 Spark 在 "Tasks" 任务表中显示由任务修改的每个累加器的值.
 
 <p style="text-align: center;">
