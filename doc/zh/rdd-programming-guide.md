@@ -1102,46 +1102,40 @@ RDD 可以使用 `persist()` 方法或 `cache()` 方法进行持久化。数据�
 <tr><th style="width:23%">Storage Level（存储级别）</th><th>Meaning（含义）</th></tr>
 <tr>
   <td> MEMORY_ONLY </td>
-  <td> Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, some partitions will
-    not be cached and will be recomputed on the fly each time they're needed. This is the default level. </td>
+  <td> 将 RDD 以反序列化的 Java 对象的形式存储在 JVM 中. 如果内存空间不够，部分数据分区将不再缓存，在每次需要用到这些数据时重新进行计算. 这是默认的级别. </td>
 </tr>
 <tr>
   <td> MEMORY_AND_DISK </td>
-  <td> Store RDD as deserialized Java objects in the JVM. If the RDD does not fit in memory, store the
-    partitions that don't fit on disk, and read them from there when they're needed. </td>
+  <td>  将 RDD 以反序列化的 Java 对象的形式存储在 JVM 中。如果内存空间不够，将未缓存的数据分区存储到磁盘，在需要使用这些分区时从磁盘读取. </td>
 </tr>
 <tr>
   <td> MEMORY_ONLY_SER <br /> (Java and Scala) </td>
-  <td> Store RDD as <i>serialized</i> Java objects (one byte array per partition).
-    This is generally more space-efficient than deserialized objects, especially when using a
-    <a href="tuning.html">fast serializer</a>, but more CPU-intensive to read.
+  <td> 将 RDD 以序列化的 Java 对象的形式进行存储（每个分区为一个 byte 数组）。这种方式会比反序列化对象的方式节省很多空间，尤其是在使用 <a href="tuning.html">fast serializer</a> 时会节省更多的空间，但是在读取时会增加 CPU 的计算负担.
   </td>
 </tr>
 <tr>
   <td> MEMORY_AND_DISK_SER <br /> (Java and Scala) </td>
-  <td> Similar to MEMORY_ONLY_SER, but spill partitions that don't fit in memory to disk instead of
-    recomputing them on the fly each time they're needed. </td>
+  <td> 类似于 MEMORY_ONLY_SER ，但是溢出的分区会存储到磁盘，而不是在用到它们时重新计算. </td>
 </tr>
 <tr>
   <td> DISK_ONLY </td>
-  <td> Store the RDD partitions only on disk. </td>
+  <td> 只在磁盘上缓存 RDD. </td>
 </tr>
 <tr>
   <td> MEMORY_ONLY_2, MEMORY_AND_DISK_2, etc.  </td>
-  <td> Same as the levels above, but replicate each partition on two cluster nodes. </td>
+  <td> 与上面的级别功能相同，只不过每个分区在集群中两个节点上建立副本. </td>
 </tr>
 <tr>
-  <td> OFF_HEAP (experimental) </td>
-  <td> Similar to MEMORY_ONLY_SER, but store the data in
-    <a href="configuration.html#memory-management">off-heap memory</a>. This requires off-heap memory to be enabled. </td>
+  <td> OFF_HEAP (experimental 实验性) </td>
+  <td> 类似于 MEMORY_ONLY_SER, 但是将数据存储在
+    <a href="configuration.html#memory-management">off-heap memory</a> 中. 这需要启用 off-heap 内存. </td>
 </tr>
 </table>
 
-**Note:** *In Python, stored objects will always be serialized with the [Pickle](https://docs.python.org/2/library/pickle.html) library,
-so it does not matter whether you choose a serialized level. The available storage levels in Python include `MEMORY_ONLY`, `MEMORY_ONLY_2`,
-`MEMORY_AND_DISK`, `MEMORY_AND_DISK_2`, `DISK_ONLY`, and `DISK_ONLY_2`.*
+**Note:** *在 Python 中, stored objects will 总是使用 [Pickle](https://docs.python.org/2/library/pickle.html) library 来序列化对象, 所以无论你选择序列化级别都没关系. 在 Python 中可用的存储级别有 `MEMORY_ONLY`, `MEMORY_ONLY_2`,
+`MEMORY_AND_DISK`, `MEMORY_AND_DISK_2`, `DISK_ONLY`, 和 `DISK_ONLY_2`.*
 
-Spark also automatically persists some intermediate data in shuffle operations (e.g. `reduceByKey`), even without users calling `persist`. This is done to avoid recomputing the entire input if a node fails during the shuffle. We still recommend users call `persist` on the resulting RDD if they plan to reuse it.
+在 shuffle 操作中（例如 `reduceByKey`），即便是用户没有调用 `persist` 方法，Spark 也会自动缓存部分中间数据.这么做的目的是，在 shuffle 的过程中某个节点运行失败时，不需要重新计算所有的输入数据。如果用户想多次使用某个 RDD，强烈推荐在该 RDD 上调用 persist 方法.
 
 ### 如何选择存储级别 ?
 
