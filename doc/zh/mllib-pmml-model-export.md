@@ -7,15 +7,15 @@ displayTitle: PMML model export - RDD-based API
 * Table of contents
 {:toc}
 
-## `spark.mllib` supported models
+## `spark.mllib` 支持的模型
 
-`spark.mllib` supports model export to Predictive Model Markup Language ([PMML](http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language)).
+`spark.mllib` 支持模型导出到预测模型标记语言 ([PMML](http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language))。
 
-The table below outlines the `spark.mllib` models that can be exported to PMML and their equivalent PMML model.
+下表列出了 `spark.mllib` 可以导出到PMML的模型及其等效的PMML模型。
 
 <table class="table">
   <thead>
-    <tr><th>`spark.mllib` model</th><th>PMML model</th></tr>
+    <tr><th>`spark.mllib` 模型</th><th>PMML 模型</th></tr>
   </thead>
   <tbody>
     <tr>
@@ -39,20 +39,23 @@ The table below outlines the `spark.mllib` models that can be exported to PMML a
   </tbody>
 </table>
 
-## Examples
+## 示例
+
 <div class="codetabs">
 
 <div data-lang="scala" markdown="1">
-To export a supported `model` (see table above) to PMML, simply call `model.toPMML`.
 
-As well as exporting the PMML model to a String (`model.toPMML` as in the example above), you can export the PMML model to other formats.
+要将支持的 `模型`（见上表）导出到PMML，只需调用 `model.toPMML`。
 
-Refer to the [`KMeans` Scala docs](api/scala/index.html#org.apache.spark.mllib.clustering.KMeans) and [`Vectors` Scala docs](api/scala/index.html#org.apache.spark.mllib.linalg.Vectors$) for details on the API.
+除了将 PMML 模型导出为 String（ `model.toPMML` 如上例所示），您可以将 PMML 模型导出为其他格式。
 
-Here a complete example of building a KMeansModel and print it out in PMML format:
+有关 API 的详细信息，请参阅 [`KMeans` Scala 文档](api/scala/index.html#org.apache.spark.mllib.clustering.KMeans) 和 [VectorsScala文档](api/scala/index.html#org.apache.spark.mllib.linalg.Vectors$)。
+
+这里是一个建立 KMeansModel 并以 PMML 格式打印出来的完整示例：
+
 {% include_example scala/org/apache/spark/examples/mllib/PMMLModelExportExample.scala %}
 
-For unsupported models, either you will not find a `.toPMML` method or an `IllegalArgumentException` will be thrown.
+对于不支持的模型，您将无法找到 `.toPMML` 方法或 `IllegalArgumentException` 抛出异常。
 
 </div>
 
