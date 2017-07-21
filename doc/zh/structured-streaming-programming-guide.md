@@ -443,52 +443,43 @@ Event-time 是数据本身 embedded （嵌入）的时间。对于很多应用�
 
 此外，这个模型自然地处理了比预计将根据它的 event-time 到达的数据晚到的数据。由于 Spark 正在更新 Result Table ， Spark 有完整的控制对当有迟到的数据时 updating old aggregates （更新旧的聚合），以及清理 old aggregates （旧聚合） 以限制 intermediate state data （中间体状态数据）的大小。自 Spark 2.1 以来，我们对于 watermarking 进行了支持，允许用户指定 late data 的阈值，并允许引擎相应地清理旧状态。这些将在后面的 [Window Operations](#window-operations-on-event-time) 部分解释。
 
-## Fault Tolerance Semantics
-Delivering end-to-end exactly-once semantics was one of key goals behind the design of Structured Streaming. To achieve that, we have designed the Structured Streaming sources, the sinks and the execution engine to reliably track the exact progress of the processing so that it can handle any kind of failure by restarting and/or reprocessing. Every streaming source is assumed to have offsets (similar to Kafka offsets, or Kinesis sequence numbers)
-to track the read position in the stream. The engine uses checkpointing and write ahead logs to record the offset range of the data being processed in each trigger. The streaming sinks are designed to be idempotent for handling reprocessing. Together, using replayable sources and idempotent sinks, Structured Streaming can ensure **end-to-end exactly-once semantics** under any failure.
+## 容错语义
+提供 end-to-end exactly-once semantics （端到端的完全一次性语义）是 Structured Streaming 设计背后的关键目标之一。为了实现这一点，我们设计了 Structured Streaming sources ， sinks 和 execution engine （执行引擎），以可靠的跟踪处理确切进度，以便它可以通过 restarting and/or reprocessing （重新启动和/或重新处理）来处理任何类型的故障。假设每个 streaming source 都具有 offsets （偏移量）（类似于 Kafka offsets 或 Kinesis sequence numbers （Kafka 偏移量或 Kinesis 序列号））来跟踪 stream 中的 read position （读取位置）。引擎使用 checkpointing （检查点）并 write ahead logs （预写日志）记录每个 trigger （触发器）中正在处理的数据的 offset range （偏移范围）。 streaming sinks 设计为处理后处理的 idempotent （幂等）。一起使用 replayable sources （可重放源）和 idempotent sinks （幂等接收器）， Structured Streaming 可以确保在任何故障下 **end-to-end exactly-once semantics（端对端完全一次性语义）**。 
 
-# API using Datasets and DataFrames
-Since Spark 2.0, DataFrames and Datasets can represent static, bounded data, as well as streaming, unbounded data. Similar to static Datasets/DataFrames, you can use the common entry point `SparkSession`
-([Scala](api/scala/index.html#org.apache.spark.sql.SparkSession)/[Java](api/java/org/apache/spark/sql/SparkSession.html)/[Python](api/python/pyspark.sql.html#pyspark.sql.SparkSession)/[R](api/R/sparkR.session.html) docs)
-to create streaming DataFrames/Datasets from streaming sources, and apply the same operations on them as static DataFrames/Datasets. If you are not familiar with Datasets/DataFrames, you are strongly advised to familiarize yourself with them using the
-[DataFrame/Dataset Programming Guide](sql-programming-guide.html).
+# API 使用 Datasets 和 DataFrames
+自从 Spark 2.0 ， DataFrame 和 Datasets 可以表示 static （静态）， bounded data（有界数据），以及 streaming ， unbounded data （无界数据）。类似于 static Datasets/DataFrames ，您可以使用常用的 entry point （入口点）`SparkSession` （[Scala](api/scala/index.html#org.apache.spark.sql.SparkSession)/[Java](api/java/org/apache/spark/sql/SparkSession.html)/[Python](api/python/pyspark.sql.html#pyspark.sql.SparkSession)/[R](api/R/sparkR.session.html) 文档） 来从 streaming sources 中创建 streaming DataFrames/Datasets ，并将其作为 static DataFrames/Datasets 应用相同的操作。如果您不熟悉 Datasets/DataFrames ，强烈建议您使用 [DataFrame/Dataset 编程指南](sql-programming-guide.html) 来熟悉它们。
 
-## Creating streaming DataFrames and streaming Datasets
-Streaming DataFrames can be created through the `DataStreamReader` interface
-([Scala](api/scala/index.html#org.apache.spark.sql.streaming.DataStreamReader)/[Java](api/java/org/apache/spark/sql/streaming/DataStreamReader.html)/[Python](api/python/pyspark.sql.html#pyspark.sql.streaming.DataStreamReader) docs)
-returned by `SparkSession.readStream()`. In [R](api/R/read.stream.html), with the `read.stream()` method. Similar to the read interface for creating static DataFrame, you can specify the details of the source – data format, schema, options, etc.
+## 创建 streaming DataFrames 和 streaming Datasets
+可以通过 `DataStreamReader` 的接口 （ [Scala](api/scala/index.html#org.apache.spark.sql.streaming.DataStreamReader)/[Java](api/java/org/apache/spark/sql/streaming/DataStreamReader.html)/[Python](api/python/pyspark.sql.html#pyspark.sql.streaming.DataStreamReader) 文档 ）来创建 Streaming DataFrames 并由 `SparkSession.readStream()` 返回。在 [R](api/R/read.stream.html) 中，使用 `read.stream()` 方法。与创建 static DataFrame 的 read interface （读取接口）类似，您可以指定 source - data format （数据格式）， schema （模式）， options （选项）等的详细信息。
 
-#### Input Sources
-In Spark 2.0, there are a few built-in sources.
+#### Input Sources （输入源）
+在 Spark 2.0 中，有一些内置的 sources 。
 
-  - **File source** - Reads files written in a directory as a stream of data. Supported file formats are text, csv, json, parquet. See the docs of the DataStreamReader interface for a more up-to-date list, and supported options for each file format. Note that the files must be atomically placed in the given directory, which in most file systems, can be achieved by file move operations.
+  - **File source（文件源）** - 以文件流的形式读取目录中写入的文件。支持的文件格式为 text ， csv ， json ， parquet 。有关更多的 up-to-date 列表，以及每种文件格式的支持选项，请参阅 DataStreamReader interface 的文档。请注意，文件必须以 atomically （原子方式）放置在给定的目录中，这在大多数文件系统中可以通过文件移动操作实现。
 
-  - **Kafka source** - Poll data from Kafka. It's compatible with Kafka broker versions 0.10.0 or higher. See the [Kafka Integration Guide](structured-streaming-kafka-integration.html) for more details.
+  - **Kafka source（Kafka 源）** - 来自 Kafka 的 Poll 数据。它与 Kafka broker 的 0.10.0 或者更高的版本兼容。有关详细信息，请参阅 [Kafka Integration 指南](structured-streaming-kafka-integration.html) 。
 
-  - **Socket source (for testing)** - Reads UTF8 text data from a socket connection. The listening server socket is at the driver. Note that this should be used only for testing as this does not provide end-to-end fault-tolerance guarantees. 
+  - **Socket source (for testing) （Socket 源（用于测试））** - 从一个 socket 连接中读取 UTF8 文本数据。 listening server socket （监听服务器 socket）位于 driver 。请注意，这只能用于测试，因为它不提供 end-to-end fault-tolerance （端到端的容错）保证。
 
-Some sources are not fault-tolerant because they do not guarantee that data can be replayed using 
-checkpointed offsets after a failure. See the earlier section on 
-[fault-tolerance semantics](#fault-tolerance-semantics).
-Here are the details of all the sources in Spark.
+某些 sources 是不容错的，因为它们不能保证数据在使用 checkpointed offsets （检查点偏移量）故障之后可以被重新使用。参见前面的部分 [fault-tolerance semantics](#fault-tolerance-semantics) 。以下是 Spark 中所有 sources 的详细信息。
 
 <table class="table">
   <tr>
     <th>Source</th>
-    <th>Options</th>
-    <th>Fault-tolerant</th>
-    <th>Notes</th>
+    <th>Options（选项）</th>
+    <th>Fault-tolerant（容错）</th>
+    <th>Notes（说明）</th>
   </tr>
   <tr>
-    <td><b>File source</b></td>
+    <td><b>File source（文件源）</b></td>
     <td>
-        <code>path</code>: path to the input directory, and common to all file formats.
+        <code>path</code>: 输入路径的目录，并且与所有文件格式通用。
         <br/>
-        <code>maxFilesPerTrigger</code>: maximum number of new files to be considered in every trigger (default: no max)
+        <code>maxFilesPerTrigger</code>: 每个 trigger （触发器）中要考虑的最大新文件数（默认是: 无最大值）
         <br/>
-        <code>latestFirst</code>: whether to processs the latest new files first, useful when there is a large backlog of files (default: false)
+        <code>latestFirst</code>: 是否先处理最新的新文件，当有大量积压的文件时有用（默认: false）
         <br/>
-        <code>fileNameOnly</code>: whether to check new files based on only the filename instead of on the full path (default: false). With this set to `true`, the following files would be considered as the same file, because their filenames, "dataset.txt", are the same:
+        <code>fileNameOnly</code>: 是否仅根据文件名而不是完整路径检查新文件（默认值: false）。将此设置为 `true` ，以下文件将被视为相同的文件，因为它们的文件名 "dataset.txt" 是相同的: 
         <br/>
         · "file:///dataset.txt"<br/>
         · "s3://a/dataset.txt"<br/>
@@ -497,26 +488,26 @@ Here are the details of all the sources in Spark.
         <br/>
 
         <br/>
-        For file-format-specific options, see the related methods in <code>DataStreamReader</code>
+        有关特定于 file-format-specific （文件格式）的选项，请参阅<code>DataStreamReader</code>
         (<a href="api/scala/index.html#org.apache.spark.sql.streaming.DataStreamReader">Scala</a>/<a href="api/java/org/apache/spark/sql/streaming/DataStreamReader.html">Java</a>/<a href="api/python/pyspark.sql.html#pyspark.sql.streaming.DataStreamReader">Python</a>/<a
-        href="api/R/read.stream.html">R</a>).
-        E.g. for "parquet" format options see <code>DataStreamReader.parquet()</code></td>
+        href="api/R/read.stream.html">R</a>) 中的相关方法。例如，对于 "parquet" 格式选项请参阅 <code>DataStreamReader.parquet()</code>
+  </td>
     <td>Yes</td>
-    <td>Supports glob paths, but does not support multiple comma-separated paths/globs.</td>
+    <td>支持 glob 路径，但是不支持多个逗号分隔的 paths/globs 。</td>
   </tr>
   <tr>
-    <td><b>Socket Source</b></td>
+    <td><b>Socket Source（Socket 源）</b></td>
     <td>
-        <code>host</code>: host to connect to, must be specified<br/>
-        <code>port</code>: port to connect to, must be specified
+        <code>host</code>: 连接到的 host ，必须指定<br/>
+        <code>port</code>: 连接的 port （端口），必须指定
     </td>
     <td>No</td>
     <td></td>
   </tr>
   <tr>
-    <td><b>Kafka Source</b></td>
+    <td><b>Kafka Source（Kafka 源）</b></td>
     <td>
-        See the <a href="structured-streaming-kafka-integration.html">Kafka Integration Guide</a>.
+        请查看 <a href="structured-streaming-kafka-integration.html">Kafka Integration 指南</a>.
     </td>
     <td>Yes</td>
     <td></td>
@@ -529,7 +520,7 @@ Here are the details of all the sources in Spark.
   </tr>
 </table>
 
-Here are some examples.
+这里有一些例子。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -537,7 +528,7 @@ Here are some examples.
 {% highlight scala %}
 val spark: SparkSession = ...
 
-// Read text from socket
+// 从 socket 读取 text 
 val socketDF = spark
   .readStream
   .format("socket")
@@ -545,17 +536,17 @@ val socketDF = spark
   .option("port", 9999)
   .load()
 
-socketDF.isStreaming    // Returns True for DataFrames that have streaming sources
+socketDF.isStreaming    // 对于有 streaming sources 的 DataFrame 返回 True
 
 socketDF.printSchema
 
-// Read all the csv files written atomically in a directory
+// 读取目录内原子写入的所有 csv 文件
 val userSchema = new StructType().add("name", "string").add("age", "integer")
 val csvDF = spark
   .readStream
   .option("sep", ";")
-  .schema(userSchema)      // Specify schema of the csv files
-  .csv("/path/to/directory")    // Equivalent to format("csv").load("/path/to/directory")
+  .schema(userSchema)      // 指定 csv 文件的模式
+  .csv("/path/to/directory")    // 等同于 format("csv").load("/path/to/directory")
 {% endhighlight %}
 
 </div>
@@ -564,7 +555,7 @@ val csvDF = spark
 {% highlight java %}
 SparkSession spark = ...
 
-// Read text from socket
+// 从 socket 读取 text
 Dataset<Row> socketDF = spark
   .readStream()
   .format("socket")
@@ -572,17 +563,17 @@ Dataset<Row> socketDF = spark
   .option("port", 9999)
   .load();
 
-socketDF.isStreaming();    // Returns True for DataFrames that have streaming sources
+socketDF.isStreaming();    // 对于有 streaming sources 的 DataFrame 返回 True
 
 socketDF.printSchema();
 
-// Read all the csv files written atomically in a directory
+// 读取目录内原子写入的所有 csv 文件
 StructType userSchema = new StructType().add("name", "string").add("age", "integer");
 Dataset<Row> csvDF = spark
   .readStream()
   .option("sep", ";")
-  .schema(userSchema)      // Specify schema of the csv files
-  .csv("/path/to/directory");    // Equivalent to format("csv").load("/path/to/directory")
+  .schema(userSchema)      // 指定 csv 文件的模式
+  .csv("/path/to/directory");    // 等同于 format("csv").load("/path/to/directory")
 {% endhighlight %}
 
 </div>
@@ -591,7 +582,7 @@ Dataset<Row> csvDF = spark
 {% highlight python %}
 spark = SparkSession. ...
 
-# Read text from socket
+# 从 socket 读取 text
 socketDF = spark \
     .readStream \
     .format("socket") \
@@ -599,17 +590,17 @@ socketDF = spark \
     .option("port", 9999) \
     .load()
 
-socketDF.isStreaming()    # Returns True for DataFrames that have streaming sources
+socketDF.isStreaming()    # 对于有 streaming sources 的 DataFrame 返回 True
 
 socketDF.printSchema()
 
-# Read all the csv files written atomically in a directory
+# 读取目录内原子写入的所有 csv 文件
 userSchema = StructType().add("name", "string").add("age", "integer")
 csvDF = spark \
     .readStream \
     .option("sep", ";") \
     .schema(userSchema) \
-    .csv("/path/to/directory")  # Equivalent to format("csv").load("/path/to/directory")
+    .csv("/path/to/directory")  # 等同于 format("csv").load("/path/to/directory")
 {% endhighlight %}
 
 </div>
@@ -618,14 +609,14 @@ csvDF = spark \
 {% highlight r %}
 sparkR.session(...)
 
-# Read text from socket
+# 从 socket 读取 text
 socketDF <- read.stream("socket", host = hostname, port = port)
 
-isStreaming(socketDF)    # Returns TRUE for SparkDataFrames that have streaming sources
+isStreaming(socketDF)    # 对于有 streaming sources 的 DataFrame 返回 True
 
 printSchema(socketDF)
 
-# Read all the csv files written atomically in a directory
+# 读取目录内原子写入的所有 csv 文件
 schema <- structType(structField("name", "string"),
                      structField("age", "integer"))
 csvDF <- read.stream("csv", path = "/path/to/directory", schema = schema, sep = ";")
@@ -634,19 +625,19 @@ csvDF <- read.stream("csv", path = "/path/to/directory", schema = schema, sep = 
 </div>
 </div>
 
-These examples generate streaming DataFrames that are untyped, meaning that the schema of the DataFrame is not checked at compile time, only checked at runtime when the query is submitted. Some operations like `map`, `flatMap`, etc. need the type to be known at compile time. To do those, you can convert these untyped streaming DataFrames to typed streaming Datasets using the same methods as static DataFrame. See the [SQL Programming Guide](sql-programming-guide.html) for more details. Additionally, more details on the supported streaming sources are discussed later in the document.
+这些示例生成无类型的 streaming DataFrames ，这意味着在编译时不会检查 DataFrame 的模式，仅在运行时在 query is submitted （查询提交）的时候进行检查。像 `map` ，`flatMap` 等这样的操作需要在编译时知道这个类型。要做到这一点，您可以使用与 static DataFrame 相同的方法将这些 untyped （无类型）的 streaming DataFrames 转换为 typed streaming Datasets （类型化的 streaming Datasets ）。有关详细信息，请参阅  [SQL 编程指南](sql-programming-guide.html) 。此外，有关支持的 streaming sources 的更多详细信息将在文档后面讨论。
 
-### Schema inference and partition of streaming DataFrames/Datasets
+### streaming DataFrames/Datasets 的模式接口和分区
 
-By default, Structured Streaming from file based sources requires you to specify the schema, rather than rely on Spark to infer it automatically. This restriction ensures a consistent schema will be used for the streaming query, even in the case of failures. For ad-hoc use cases, you can reenable schema inference by setting `spark.sql.streaming.schemaInference` to `true`.
+默认情况下，基于文件的 sources 的 Structured Streaming 需要您指定 schema （模式），而不是依靠 Spark 自动 infer 。这种 restriction 确保了 consistent schema （一致的模式）将被用于 streaming query （流式查询），即使在出现故障的情况下也是如此。对于 ad-hoc use cases （特殊用例），您可以通过将 `spark.sql.streaming.schemaInference` 设置为 `true` 来重新启用 schema inference （模式接口）。
 
-Partition discovery does occur when subdirectories that are named `/key=value/` are present and listing will automatically recurse into these directories. If these columns appear in the user provided schema, they will be filled in by Spark based on the path of the file being read. The directories that make up the partitioning scheme must be present when the query starts and must remain static. For example, it is okay to add `/data/year=2016/` when `/data/year=2015/` was present, but it is invalid to change the partitioning column (i.e. by creating the directory `/data/date=2016-04-17/`).
+当存在名为 `/key=value/` 的子目录并且列表将自动递归到这些目录中时，会发生 Partition discovery （分区发现）。如果这些 columns （列）显示在用户提供的 schema 中，则它们将根据正在读取的文件路径由 Spark 进行填充。 构成 partitioning scheme （分区方案）的目录 must be present when the query starts （必须在查询开始时是存在的），并且必须保持 static 。例如，当 `/data/year=2015/` 存在时，可以添加 `/data/year=2016/` ，但是更改 partitioning column （分区列）是无效的（即通过创建目录 `/data/date=2016-04-17/` ）。
 
-## Operations on streaming DataFrames/Datasets
-You can apply all kinds of operations on streaming DataFrames/Datasets – ranging from untyped, SQL-like operations (e.g. `select`, `where`, `groupBy`), to typed RDD-like operations (e.g. `map`, `filter`, `flatMap`). See the [SQL programming guide](sql-programming-guide.html) for more details. Let’s take a look at a few example operations that you can use.
+## streaming DataFrames/Datasets 上的操作
+您可以对 streaming DataFrames/Datasets 应用各种操作 - 从 untyped （无类型）， SQL-like operations （类似 SQL 的操作）（例如 `select` ， `where` ， `groupBy` ） 到 typed RDD-like operations （类型化的类似 RDD 的操作）（例如 `map` ，`filter` ， `flatMap` ）。有关详细信息，请参阅 [SQL 编程指南](sql-programming-guide.html) 。让我们来看看可以使用的几个示例操作。
 
-### Basic Operations - Selection, Projection, Aggregation
-Most of the common operations on DataFrame/Dataset are supported for streaming. The few operations that are not supported are [discussed later](#unsupported-operations) in this section.
+### 基础操作 - Selection, Projection, Aggregation
+streaming 支持 DataFrame/Dataset 上的大多数常见操作。不支持的少数操作 [discussed later](#unsupported-operations) 将在本节中讨论（稍后讨论）。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -731,17 +722,16 @@ count(groupBy(df, "deviceType"))
 </div>
 </div>
 
-### Window Operations on Event Time
-Aggregations over a sliding event-time window are straightforward with Structured Streaming and are very similar to grouped aggregations. In a grouped aggregation, aggregate values (e.g. counts) are maintained for each unique value in the user-specified grouping column. In case of window-based aggregations, aggregate values are maintained for each window the event-time of a row falls into. Let's understand this with an illustration. 
+### Window Operations on Event Time （事件时间窗口操作）
+通过 Structured Streaming ， sliding event-time window （滑动事件时间窗口）的 Aggregations （聚合）很简单，与 grouped aggregations （分组聚合）非常相似。在 grouped aggregation （分组聚合）中，为 user-specified grouping column （用户指定的分组列）中的每个唯一值维护 aggregate values （聚合值）（例如 counts ）。在 window-based aggregations （基于窗口的聚合）的情况下，针对每个窗口的 event-time 维持 aggregate values （聚合值）。让我们用一个例子来理解这一点。
 
-Imagine our [quick example](#quick-example) is modified and the stream now contains lines along with the time when the line was generated. Instead of running word counts, we want to count words within 10 minute windows, updating every 5 minutes. That is, word counts in words received between 10 minute windows 12:00 - 12:10, 12:05 - 12:15, 12:10 - 12:20, etc. Note that 12:00 - 12:10 means data that arrived after 12:00 but before 12:10. Now, consider a word that was received at 12:07. This word should increment the counts corresponding to two windows 12:00 - 12:10 and 12:05 - 12:15. So the counts will be indexed by both, the grouping key (i.e. the word) and the window (can be calculated from the event-time).
+想象一下，我们的 [快速示例](#quick-example) 被修改，并且 stream 现在包含生成 line 的时间的 line 。不运行 word counts ，我们想 count words within 10 minute windows （在 10 分钟内的窗口计数单词），每 5 分钟更新一次。也就是说，在 10 minute windows （10 分钟的窗口之间）收到的 word counts 12:00 - 12:10, 12:05 - 12:15, 12:10 - 12:20 等。请注意， 12:00 - 12:10 表示数据在 12:00 之后但在 12:10 之前抵达。现在，考虑在 12:07 收到一个 word 。这个 word 应该增加对应于两个窗口的计数 12:00 - 12:10 和 12:05 - 12:15 。因此， counts 将被二者分组， grouping key （分组秘钥）（即 word）和 window （窗口）（可以从 event-time 计算）来 indexed （索引）。
 
-The result tables would look something like the following.
+result tables 将如下所示。
 
 ![Window Operations](img/structured-streaming-window.png)
 
-Since this windowing is similar to grouping, in code, you can use `groupBy()` and `window()` operations to express windowed aggregations. You can see the full code for the below examples in
-[Scala]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/scala/org/apache/spark/examples/sql/streaming/StructuredNetworkWordCountWindowed.scala)/[Java]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/sql/streaming/JavaStructuredNetworkWordCountWindowed.java)/[Python]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/sql/streaming/structured_network_wordcount_windowed.py).
+由于这个 windowing （窗口）类似于 grouping （分组），在代码中，您可以使用 `groupBy()` 和 `window()` 操作来表示 windowed aggregations （窗口化的聚合）。您可以看到以下示例 [Scala]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/scala/org/apache/spark/examples/sql/streaming/StructuredNetworkWordCountWindowed.scala)/[Java]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/sql/streaming/JavaStructuredNetworkWordCountWindowed.java)/[Python]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/sql/streaming/structured_network_wordcount_windowed.py) 的完整代码。 
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -787,29 +777,12 @@ windowedCounts = words.groupBy(
 </div>
 
 
-### Handling Late Data and Watermarking
-Now consider what happens if one of the events arrives late to the application.
-For example, say, a word generated at 12:04 (i.e. event time) could be received by 
-the application at 12:11. The application should use the time 12:04 instead of 12:11
-to update the older counts for the window `12:00 - 12:10`. This occurs 
-naturally in our window-based grouping – Structured Streaming can maintain the intermediate state 
-for partial aggregates for a long period of time such that late data can update aggregates of 
-old windows correctly, as illustrated below.
+### 处理 Late Data （迟到数据）和 Watermarking （水印）
+现在考虑以下如果其中一个 event 迟到应用程序会发生什么。例如，想象一下，在 12:04 （即 event time ）生成的 word 可以在 12:11 被接收申请。应用程序应该使用 12:04 而不是 12:11 来更新 window `12:00 - 12:10` 的较旧 counts 。发生这种情况自然就是在我们 window-based grouping （基于窗口的分组中） - Structured Streaming 可以保持intermediate state 对于部分 aggregates （聚合）长时间，以便后期数据可以 update aggregates of old windows correctly （更新聚合）旧窗口正确，如下图所示。
 
 ![Handling Late Data](img/structured-streaming-late-data.png)
 
-However, to run this query for days, it's necessary for the system to bound the amount of 
-intermediate in-memory state it accumulates. This means the system needs to know when an old 
-aggregate can be dropped from the in-memory state because the application is not going to receive 
-late data for that aggregate any more. To enable this, in Spark 2.1, we have introduced 
-**watermarking**, which lets the engine automatically track the current event time in the data
-and attempt to clean up old state accordingly. You can define the watermark of a query by 
-specifying the event time column and the threshold on how late the data is expected to be in terms of 
-event time. For a specific window starting at time `T`, the engine will maintain state and allow late
-data to update the state until `(max event time seen by the engine - late threshold > T)`. 
-In other words, late data within the threshold will be aggregated, 
-but data later than the threshold will be dropped. Let's understand this with an example. We can 
-easily define watermarking on the previous example using `withWatermark()` as shown below.
+但是，要运行此查询几天，系统必须绑定 the amount of intermediate in-memory state it accumulates （中间状态累积的数量）。这意味着系统需要知道什么时候 old aggregate （老聚合）可以从内存中的状态丢失，因为这个应用程序不会在继续接收 aggregate （该聚合）的更多late data （后期的数据）。为了实现这一点，在 Spark 2.1 中，我们介绍了 **watermarking（水印）** ，让引擎自动跟踪数据中的 current event time （当前事件时间）并试图相应地清理旧状态。您可以定义查询的 watermark 指定  event time column （事件时间列）和数据预期的延迟阈值 event time （事件时间）。对于从 `T` 时间开始的特定窗口，引擎将保持状态并允许 late data （延迟数据）更新状态直到 `(max event time seen by the engine - late threshold > T)`。换句话说， threshold （阈值）内的 late data （晚期数据）将被 aggregated ，但数据晚于阈值将被丢弃。让我们以一个例子来理解这一点。我们可以使用 `withWatermark()` 可以轻松地定义上一个例子的 watermarking （水印），如下所示。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -860,68 +833,36 @@ windowedCounts = words \
 </div>
 </div>
 
-In this example, we are defining the watermark of the query on the value of the column "timestamp", 
-and also defining "10 minutes" as the threshold of how late is the data allowed to be. If this query 
-is run in Update output mode (discussed later in [Output Modes](#output-modes) section), 
-the engine will keep updating counts of a window in the Result Table until the window is older
-than the watermark, which lags behind the current event time in column "timestamp" by 10 minutes.
-Here is an illustration. 
+在这个例子中，我们正在定义查询的 watermark 对 "timestamp" 列的值，并将 "10 minutes" 定义为允许数据延迟的阈值。如果这个查询以 Update output mode （更新输出模式）运行（稍后在 [Output Modes](#output-modes) 部分中讨论），引擎将不断更新 Result Table 中窗口的 counts ，直到 window is older than the watermark （窗口比水印较旧），它滞后于 current event time （当前事件时间）列 "timestamp" 10分钟。这是一个例子。
 
 ![Watermarking in Update Mode](img/structured-streaming-watermark-update-mode.png)
 
-As shown in the illustration, the maximum event time tracked by the engine is the 
-*blue dashed line*, and the watermark set as `(max event time - '10 mins')`
-at the beginning of every trigger is the red line  For example, when the engine observes the data 
-`(12:14, dog)`, it sets the watermark for the next trigger as `12:04`.
-This watermark lets the engine maintain intermediate state for additional 10 minutes to allow late
-data to be counted. For example, the data `(12:09, cat)` is out of order and late, and it falls in
-windows `12:05 - 12:15` and `12:10 - 12:20`. Since, it is still ahead of the watermark `12:04` in 
-the trigger, the engine still maintains the intermediate counts as state and correctly updates the 
-counts of the related windows. However, when the watermark is updated to `12:11`, the intermediate 
-state for window `(12:00 - 12:10)` is cleared, and all subsequent data (e.g. `(12:04, donkey)`) 
-is considered "too late" and therefore ignored. Note that after every trigger, 
-the updated counts (i.e. purple rows) are written to sink as the trigger output, as dictated by 
-the Update mode.
+如图所示，maximum event time tracked （引擎跟踪的最大事件时间）是 *蓝色虚线*，watermark 设置为 `(max event time - '10 mins')` 在每个触发的开始处是红线。例如，当引擎观察数据 `(12:14, dog)` 时，它为下一个触发器设置 watermark 为 `12:04` 。该 watermark 允许 engine 保持 intermediate state （中间状态）另外 10 分钟以允许延迟 late data to be counted （要计数的数据）。例如，数据 `(12:09, cat)` 是 out of order and late （不正常的，而且延迟了），它落在了 windows `12:05 - 12:15` 和 `12:10 - 12:20` 。因为它仍然在 watermark `12:04` 之前的触发器，引擎仍然将 intermediate counts （中间计数）保持为状态并正确 updates the 
+counts of the related windows （更新相关窗口的计数）。然而，当 watermark 更新为 `12:11` 时，window `(12:00 - 12:10)` 的中间状态被清除，所有 subsequent data （后续数据）（例如 `(12:04, donkey)` ）被认为是 "too late" ，因此被忽视。请注意，每次触发后，写入 updated counts （更新的计数）（即紫色行）作为 trigger output 进行 sink ，如下 Update mode 所示。
 
-Some sinks (e.g. files) may not supported fine-grained updates that Update Mode requires. To work
-with them, we have also support Append Mode, where only the *final counts* are written to sink.
-This is illustrated below.
+某些 sinks （接收器）（例如 文件）可能不支持更新模式所需的 fine-grained updates （细粒度更新）。 与他们一起工作，我们也支持 Append Mode （附加模式），只有 *final counts（最终计数）* 被写入 sink 。这如下所示。
 
-Note that using `withWatermark` on a non-streaming Dataset is no-op. As the watermark should not affect 
-any batch query in any way, we will ignore it directly.
+请注意，在 non-streaming Dataset （非流数据集）上使用 `withWatermark` 是不可行的。 由于 watermark 不应该以任何方式影响任何批处理查询，我们将直接忽略它。
 
 ![Watermarking in Append Mode](img/structured-streaming-watermark-append-mode.png)
 
-Similar to the Update Mode earlier, the engine maintains intermediate counts for each window. 
-However, the partial counts are not updated to the Result Table and not written to sink. The engine
-waits for "10 mins" for late date to be counted, 
-then drops intermediate state of a window < watermark, and appends the final
-counts to the Result Table/sink. For example, the final counts of window `12:00 - 12:10` is 
-appended to the Result Table only after the watermark is updated to `12:11`. 
+与之前的 Update Mode 类似，引擎维护 intermediate counts for each window （每个窗口的中间计数）。但是，partial counts （部分计数）不会更新到 Result Table ，也不是写入 sink 。 引擎等待迟到的 "10 mins" 计数，然后删除 window < watermark 的 intermediate state （中间状态），并追加最终
+计数到 Result Table/sink 。 例如， window `12:00 - 12:10` 的最终计数是仅在水印更新为 `12:11` 之后附加到 Result Table 。 
 
-**Conditions for watermarking to clean aggregation state**
-It is important to note that the following conditions must be satisfied for the watermarking to 
-clean the state in aggregation queries *(as of Spark 2.1.1, subject to change in the future)*.
+**Conditions for watermarking to clean aggregation state（watermarking 清理聚合状态的条件）**
+重要的是要注意，watermarking 必须满足以下清理聚合查询中的状态的条件*（从 Spark 2.1.1 开始，将来会更改）*。
 
-- **Output mode must be Append or Update.** Complete mode requires all aggregate data to be preserved, 
-and hence cannot use watermarking to drop intermediate state. See the [Output Modes](#output-modes) 
-section for detailed explanation of the semantics of each output mode.
+- **Output mode must be Append or Update.（输出模式必须是追加或者更新）** Complete mode 要求保留所有 aggregate data （聚合数据），因此不能使用 watermarking 去掉 intermediate state （中间状态）。参见 [Output Modes](#output-modes) 部分，详细说明每种输出模式的语义。
 
-- The aggregation must have either the event-time column, or a `window` on the event-time column. 
+- aggregation （聚合）必须具有 event-time column （事件时间列）或 event-time column 上的 `window` 。
 
-- `withWatermark` must be called on the 
-same column as the timestamp column used in the aggregate. For example, 
-`df.withWatermark("time", "1 min").groupBy("time2").count()` is invalid 
-in Append output mode, as watermark is defined on a different column
-from the aggregation column.
+- `withWatermark` 必须被调用与聚合中使用的 timestamp column （时间戳列）相同的列。例如， `df.withWatermark("time", "1 min").groupBy("time2").count()` 在 Append output mode 是无效的，因为 watermark 是从聚合列在不同的列上定义的。
 
-- `withWatermark` must be called before the aggregation for the watermark details to be used. 
-For example, `df.groupBy("time").count().withWatermark("time", "1 min")` is invalid in Append 
-output mode.
+- 在使用 watermark details 的 aggregation （聚合）之前必须调用 `withWatermark` 。例如， `df.groupBy("time").count().withWatermark("time", "1 min")` 在 Append output mode 中是无效的。
 
 
-### Join Operations
-Streaming DataFrames can be joined with static DataFrames to create new streaming DataFrames. Here are a few examples.
+### Join 操作
+Streaming DataFrames 可以与 static DataFrames 连接，以创建新的 streaming DataFrames 。 这里有几个例子。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -959,12 +900,12 @@ streamingDf.join(staticDf, "type", "right_join")  # right outer join with a stat
 </div>
 </div>
 
-### Streaming Deduplication
-You can deduplicate records in data streams using a unique identifier in the events. This is exactly same as deduplication on static using a unique identifier column. The query will store the necessary amount of data from previous records such that it can filter duplicate records. Similar to aggregations, you can use deduplication with or without watermarking.
+### Streaming Deduplication （Streaming 去重）
+您可以使用 events 中的 unique identifier （唯一标识符）对 data streams 中的记录进行重复数据删除。 这与使用唯一标识符列的 static 重复数据消除完全相同。 该查询将存储先前记录所需的数据量，以便可以过滤重复的记录。 与 aggregations （聚合）类似，您可以使用带有或不带有 watermarking 的重复数据删除功能。
 
-- *With watermark* - If there is a upper bound on how late a duplicate record may arrive, then you can define a watermark on a event time column and deduplicate using both the guid and the event time columns. The query will use the watermark to remove old state data from past records that are not expected to get any duplicates any more. This bounds the amount of the state the query has to maintain.
+- *With watermark（使用 watermark ）* - 如果重复记录可能到达的时间有上限，则可以在 event time column （事件时间列）上定义 watermark ，并使用 guid 和 event time columns 进行重复数据删除。 该查询将使用 watermark 从以前的记录中删除旧的状态数据，这些记录不会再受到任何重复。 这界定了查询必须维护的状态量。
 
-- *Without watermark* - Since there are no bounds on when a duplicate record may arrive, the query stores the data from all the past records as state.
+- *Without watermark （不适用 watermark ）* - 由于当重复记录可能到达时没有界限，查询将来自所有过去记录的数据存储为状态。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -1015,142 +956,123 @@ streamingDf \
 </div>
 </div>
 
-### Arbitrary Stateful Operations
-Many uscases require more advanced stateful operations than aggregations. For example, in many usecases, you have to track sessions from data streams of events. For doing such sessionization, you will have to save arbitrary types of data as state, and perform arbitrary operations on the state using the data stream events in every trigger. Since Spark 2.2, this can be done using the operation `mapGroupsWithState` and the more powerful operation `flatMapGroupsWithState`. Both operations allow you to apply user-defined code on grouped Datasets to update user-defined state. For more concrete details, take a look at the API documentation ([Scala](api/scala/index.html#org.apache.spark.sql.streaming.GroupState)/[Java](api/java/org/apache/spark/sql/streaming/GroupState.html)) and the examples ([Scala]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/scala/org/apache/spark/examples/sql/streaming/StructuredSessionization.scala)/[Java]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/sql/streaming/JavaStructuredSessionization.java)). 
+### Arbitrary Stateful Operations （任意有状态的操作）
+许多用例需要比 aggregations 更高级的状态操作。例如，在许多用例中，您必须 track （跟踪） data streams of events （事件数据流）中的 sessions （会话）。对于进行此类 sessionization （会话），您必须将 arbitrary types of data （任意类型的数据）保存为 state （状态），并在每个 trigger 中使用 state using the data stream events （数据流事件对状态）执行 arbitrary operations 。自从 Spark 2.2 ，可以使用 `mapGroupsWithState` 操作和更强大的操作 `flatMapGroupsWithState` 来完成。这两个操作都允许您在 grouped Datasets （分组的数据集）上应用用户定义的代码来更新用户定义的状态。有关更具体的细节，请查看 API文档（[Scala](api/scala/index.html#org.apache.spark.sql.streaming.GroupState)/[Java](api/java/org/apache/spark/sql/streaming/GroupState.html)) 和例子 ([Scala]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/scala/org/apache/spark/examples/sql/streaming/StructuredSessionization.scala)/[Java]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/sql/streaming/JavaStructuredSessionization.java)）。
 
-### Unsupported Operations
-There are a few DataFrame/Dataset operations that are not supported with streaming DataFrames/Datasets. 
-Some of them are as follows.
+### 不支持的操作
+streaming DataFrames/Datasets 不支持一些 DataFrame/Dataset 操作。其中一些如下。
  
-- Multiple streaming aggregations (i.e. a chain of aggregations on a streaming DF) are not yet supported on streaming Datasets.
+- streaming Datasets 不支持 Multiple streaming aggregations （多个流聚合） (i.e. a chain of aggregations on a streaming DF)（即 streaming DF 上的聚合链）
 
-- Limit and take first N rows are not supported on streaming Datasets.
+- streaming Datasets 不支持 Limit and take first N rows 。
 
-- Distinct operations on streaming Datasets are not supported.
+- streaming Datasets 上的 Distinct operations 不支持。
 
-- Sorting operations are supported on streaming Datasets only after an aggregation and in Complete Output Mode.
+- 只有在 aggregation 和 Complete Output Mode 下，streaming Datasets 才支持排序操作。
 
-- Outer joins between a streaming and a static Datasets are conditionally supported.
+- 有条件地支持 streaming 和 static Datasets 之间的 Outer joins 。
 
-    + Full outer join with a streaming Dataset is not supported
+    + 不支持使用 streaming Dataset 的 Full outer join 
 
-    + Left outer join with a streaming Dataset on the right is not supported
+    + 不支持在右侧使用 streaming Dataset 的 Left outer join
 
-    + Right outer join with a streaming Dataset on the left is not supported
+    + 不支持在左侧使用 streaming Dataset 的 Right outer join 
 
-- Any kind of joins between two streaming Datasets is not yet supported.
+- 不支持两种 streaming Datasets 之间的任何种类的 joins 。
 
-In addition, there are some Dataset methods that will not work on streaming Datasets. They are actions that will immediately run queries and return results, which does not make sense on a streaming Dataset. Rather, those functionalities can be done by explicitly starting a streaming query (see the next section regarding that).
+此外，还有一些 Dataset 方法将不适用于 streaming Datasets 。他们是立即运行查询并返回结果的操作，这在 streaming Dataset 上没有意义。相反，这些功能可以通过显式启动 streaming query 来完成（参见下一节）。
 
-- `count()` - Cannot return a single count from a streaming Dataset. Instead, use `ds.groupBy().count()` which returns a streaming Dataset containing a running count. 
+- `count()` - 无法从 streaming Dataset 返回 single count 。 而是使用 `ds.groupBy().count()` 返回一个包含 running count 的 streaming Dataset 。
 
-- `foreach()` - Instead use `ds.writeStream.foreach(...)` (see next section).
+- `foreach()` - 而是使用 `ds.writeStream.foreach(...)` (参见下一节).
 
-- `show()` - Instead use the console sink (see next section).
+- `show()` - 而是使用 console sink (参见下一节).
 
-If you try any of these operations, you will see an `AnalysisException` like "operation XYZ is not supported with streaming DataFrames/Datasets".
-While some of them may be supported in future releases of Spark, 
-there are others which are fundamentally hard to implement on streaming data efficiently. 
-For example, sorting on the input stream is not supported, as it requires keeping 
-track of all the data received in the stream. This is therefore fundamentally hard to execute 
-efficiently.
+如果您尝试任何这些操作，您将看到一个 `AnalysisException` ，如 "operation XYZ is not supported with streaming DataFrames/Datasets" 。虽然其中一些可能在未来版本的 Spark 中得到支持，还有其他一些从根本上难以有效地实现 streaming data 。例如， input stream 的排序不受支持，因为它需要保留 track of all the data received in the stream （跟踪流中接收到的所有数据）。 因此从根本上难以有效率地执行。
 
-## Starting Streaming Queries
-Once you have defined the final result DataFrame/Dataset, all that is left is for you to start the streaming computation. To do that, you have to use the `DataStreamWriter`
-([Scala](api/scala/index.html#org.apache.spark.sql.streaming.DataStreamWriter)/[Java](api/java/org/apache/spark/sql/streaming/DataStreamWriter.html)/[Python](api/python/pyspark.sql.html#pyspark.sql.streaming.DataStreamWriter) docs)
-returned through `Dataset.writeStream()`. You will have to specify one or more of the following in this interface.
+## 开始 Streaming Queries
+一旦定义了 final result DataFrame/Dataset ，剩下的就是让你开始 streaming computation 。 为此，您必须使用 `DataStreamWriter`
+([Scala](api/scala/index.html#org.apache.spark.sql.streaming.DataStreamWriter)/[Java](api/java/org/apache/spark/sql/streaming/DataStreamWriter.html)/[Python](api/python/pyspark.sql.html#pyspark.sql.streaming.DataStreamWriter) 文档)通过 `Dataset.writeStream()` 返回。您将必须在此 interface 中指定以下一个或多个。
 
-- *Details of the output sink:* Data format, location, etc.
+- *Details of the output sink （ output sink 的详细信息）:* Data format, location, etc.
 
-- *Output mode:* Specify what gets written to the output sink.
+- *Output mode （输出模式）:* 指定写入 output sink 的内容。
 
-- *Query name:* Optionally, specify a unique name of the query for identification.
+- *Query name （查询名称）:* 可选，指定用于标识的查询的唯一名称。
 
-- *Trigger interval:* Optionally, specify the trigger interval. If it is not specified, the system will check for availability of new data as soon as the previous processing has completed. If a trigger time is missed because the previous processing has not completed, then the system will attempt to trigger at the next trigger point, not immediately after the processing has completed.
+- *Trigger interval （触发间隔）:* 可选，指定触发间隔。 如果未指定，则系统将在上一次处理完成后立即检查新数据的可用性。 如果由于先前的处理尚未完成而导致触发时间错误，则系统将尝试在下一个触发点触发，而不是在处理完成后立即触发。
 
-- *Checkpoint location:* For some output sinks where the end-to-end fault-tolerance can be guaranteed, specify the location where the system will write all the checkpoint information. This should be a directory in an HDFS-compatible fault-tolerant file system. The semantics of checkpointing is discussed in more detail in the next section.
+- *Checkpoint location （检查点位置）:* 对于可以保证 end-to-end fault-tolerance （端对端容错）能力的某些 output sinks ，请指定系统将写入所有 checkpoint （检查点）信息的位置。 这应该是与 HDFS 兼容的容错文件系统中的目录。 检查点的语义将在下一节中进行更详细的讨论。
 
-#### Output Modes
-There are a few types of output modes.
+#### Output Modes （输出模式）
+有几种类型的输出模式。
 
-- **Append mode (default)** - This is the default mode, where only the 
-new rows added to the Result Table since the last trigger will be 
-outputted to the sink. This is supported for only those queries where 
-rows added to the Result Table is never going to change. Hence, this mode 
-guarantees that each row will be output only once (assuming 
-fault-tolerant sink). For example, queries with only `select`, 
-`where`, `map`, `flatMap`, `filter`, `join`, etc. will support Append mode.
+- **Append mode (default) （附加模式（默认））** - 这是默认模式，其中只有
+自从 last trigger （上一次触发）以来，添加到 Result Table 的新行将会是 outputted to the sink 。 只有添加到 Result Table 的行将永远不会改变那些查询才支持这一点。 因此，这种模式
+保证每行只能输出一次（假设 fault-tolerant sink ）。例如，只有 `select`, 
+`where`, `map`, `flatMap`, `filter`, `join` 等查询支持 Append mode 。
 
-- **Complete mode** - The whole Result Table will be outputted to the sink after every trigger.
- This is supported for aggregation queries.
+- **Complete mode （完全模式）** - 每次触发后，整个 Result Table 将被输出到 sink 。 aggregation queries （聚合查询）支持这一点。
 
-- **Update mode** - (*Available since Spark 2.1.1*) Only the rows in the Result Table that were 
-updated since the last trigger will be outputted to the sink. 
-More information to be added in future releases.
+- **Update mode （更新模式）** - (*自 Spark 2.1.1 可用*) 只有 Result Table rows 自上次触发后更新将被输出到 sink 。更多信息将在以后的版本中添加。
 
-Different types of streaming queries support different output modes.
-Here is the compatibility matrix.
+不同类型的 streaming queries 支持不同的 output modes 。
+以下是兼容性矩阵。
 
 <table class="table">
   <tr>
-    <th>Query Type</th>
+    <th>Query Type（查询类型）</th>
     <th></th>
-    <th>Supported Output Modes</th>
-    <th>Notes</th>        
+    <th>Supported Output Modes（支持的输出模式）</th>
+    <th>Notes（说明）</th>        
   </tr>
   <tr>
-    <td rowspan="2" style="vertical-align: middle;">Queries with aggregation</td>
-    <td style="vertical-align: middle;">Aggregation on event-time with watermark</td>
-    <td style="vertical-align: middle;">Append, Update, Complete</td>
+    <td rowspan="2" style="vertical-align: middle;">Queries with aggregation （使用聚合的查询）</td>
+    <td style="vertical-align: middle;">Aggregation on event-time with watermark （使用 watermark 的 event-time 聚合 ）</td>
+    <td style="vertical-align: middle;">Append, Update, Complete （附加，更新，完全）</td>
     <td>
-        Append mode uses watermark to drop old aggregation state. But the output of a 
-        windowed aggregation is delayed the late threshold specified in `withWatermark()` as by
-        the modes semantics, rows can be added to the Result Table only once after they are 
-        finalized (i.e. after watermark is crossed). See the
-        <a href="#handling-late-data-and-watermarking">Late Data</a> section for more details.
-        <br/><br/>
-        Update mode uses watermark to drop old aggregation state.
-        <br/><br/>
-        Complete mode does not drop old aggregation state since by definition this mode
-        preserves all data in the Result Table.
+        Append mode 使用 watermark 来降低 old aggregation state （旧聚合状态）。 但输出 windowed aggregation （窗口聚合）延迟在 `withWatermark()` 中指定的 late threshold （晚期阈值）模式语义，rows 只能在 Result Table 中添加一次在 finalized （最终确定）之后（即 watermark is crossed （水印交叉）后）。 有关详细信息，请参阅 <a href="#handling-late-data-and-watermarking">Late Data</a> 部分。
+        <br/><br/>
+         Update mode 使用 watermark 删除 old aggregation state （旧的聚合状态）。
+        <br/><br/>
+         Complete mode （完全模式）不会删除旧的聚合状态，因为从定义这个模式
+         保留 Result Table 中的所有数据。
     </td>    
   </tr>
   <tr>
-    <td style="vertical-align: middle;">Other aggregations</td>
-    <td style="vertical-align: middle;">Complete, Update</td>
+    <td style="vertical-align: middle;">Other aggregations （其他聚合）</td>
+    <td style="vertical-align: middle;">Complete, Update （完全，更新）</td>
     <td>
-        Since no watermark is defined (only defined in other category), 
-        old aggregation state is not dropped.
-        <br/><br/>
-        Append mode is not supported as aggregates can update thus violating the semantics of 
-        this mode.
+        由于没有定义 watermark（仅在其他 category 中定义），旧的聚合状态不会删除。
+        <br/><br/>
+         不支持 Append mode ，因为 aggregates （聚合）可以更新，从而违反了这种模式的语义。
     </td>  
   </tr>
   <tr>
     <td colspan="2" style="vertical-align: middle;">Queries with <code>mapGroupsWithState</code></td>
-    <td style="vertical-align: middle;">Update</td>
+    <td style="vertical-align: middle;">Update （更新）</td>
     <td style="vertical-align: middle;"></td>
   </tr>
   <tr>
     <td rowspan="2" style="vertical-align: middle;">Queries with <code>flatMapGroupsWithState</code></td>
-    <td style="vertical-align: middle;">Append operation mode</td>
-    <td style="vertical-align: middle;">Append</td>
+    <td style="vertical-align: middle;">Append operation mode （附加操作模式）</td>
+    <td style="vertical-align: middle;">Append （附加）</td>
     <td style="vertical-align: middle;">
-      Aggregations are allowed after <code>flatMapGroupsWithState</code>.
+      <code>flatMapGroupsWithState</code> 之后允许 Aggregations （聚合）。
     </td>
   </tr>
   <tr>
-    <td style="vertical-align: middle;">Update operation mode</td>
-    <td style="vertical-align: middle;">Update</td>
+    <td style="vertical-align: middle;">Update operation mode （更新操作模式）</td>
+    <td style="vertical-align: middle;">Update（更新）</td>
     <td style="vertical-align: middle;">
-      Aggregations not allowed after <code>flatMapGroupsWithState</code>.
+      <code>flatMapGroupsWithState</code> 之后不允许 Aggregations （聚合）。
     </td>
   </tr>
   <tr>
-    <td colspan="2" style="vertical-align: middle;">Other queries</td>
-    <td style="vertical-align: middle;">Append, Update</td>
+    <td colspan="2" style="vertical-align: middle;">Other queries （其他查询）</td>
+    <td style="vertical-align: middle;">Append, Update （附加，更新）</td>
     <td style="vertical-align: middle;">
-      Complete mode not supported as it is infeasible to keep all unaggregated data in the Result Table.
+      不支持 Complete mode ，因为将所有未分组数据保存在 Result Table 中是不可行的 。
     </td>
   </tr>
   <tr>
@@ -1162,10 +1084,10 @@ Here is the compatibility matrix.
 </table>
 
 
-#### Output Sinks
-There are a few types of built-in output sinks.
+#### Output Sinks （输出接收器）
+有几种类型的内置输出接收器。
 
-- **File sink** - Stores the output to a directory.
+- **File sink （文件接收器）** - 将输出存储到目录中。
 
 {% highlight scala %}
 writeStream
@@ -1174,7 +1096,7 @@ writeStream
     .start()
 {% endhighlight %}
 
-- **Foreach sink** - Runs arbitrary computation on the records in the output. See later in the section for more details.
+- **Foreach sink** - 对 output 中的记录运行 arbitrary computation 。 有关详细信息，请参阅本节后面部分。
 
 {% highlight scala %}
 writeStream
@@ -1182,7 +1104,7 @@ writeStream
     .start()
 {% endhighlight %}
 
-- **Console sink (for debugging)** - Prints the output to the console/stdout every time there is a trigger. Both, Append and Complete output modes, are supported. This should be used for debugging purposes on low data volumes as the entire output is collected and stored in the driver's memory after every trigger.
+- **Console sink (for debugging) （控制台接收器（用于调试））** - 每次触发时，将输出打印到 console/stdout 。 都支持 Append 和 Complete 输出模式。 这应该用于低数据量的调试目的，因为在每次触发后，整个输出被收集并存储在驱动程序的内存中。
 
 {% highlight scala %}
 writeStream
@@ -1190,10 +1112,7 @@ writeStream
     .start()
 {% endhighlight %}
 
-- **Memory sink (for debugging)** - The output is stored in memory as an in-memory table.
-Both, Append and Complete output modes, are supported. This should be used for debugging purposes
-on low data volumes as the entire output is collected and stored in the driver's memory.
-Hence, use it with caution.
+- **Memory sink (for debugging) （内存 sink （用于调试））** - 输出作为 in-memory table （内存表）存储在内存中。都支持 Append 和 Complete 输出模式。 这应该用于调试目的在低数据量下，整个输出被收集并存储在驱动程序的存储器中。因此，请谨慎使用。
 
 {% highlight scala %}
 writeStream
@@ -1202,57 +1121,53 @@ writeStream
     .start()
 {% endhighlight %}
 
-Some sinks are not fault-tolerant because they do not guarantee persistence of the output and are 
-meant for debugging purposes only. See the earlier section on 
-[fault-tolerance semantics](#fault-tolerance-semantics). 
-Here are the details of all the sinks in Spark.
+某些 sinks 是不容错的，因为它们不能保证输出的持久性并且仅用于调试目的。参见前面的部分 [容错语义](#fault-tolerance-semantics) 。以下是 Spark 中所有接收器的详细信息。
 
 <table class="table">
   <tr>
-    <th>Sink</th>
-    <th>Supported Output Modes</th>
-    <th>Options</th>
-    <th>Fault-tolerant</th>
-    <th>Notes</th>
+    <th>Sink （接收器）</th>
+    <th>Supported Output Modes （支持的输出模式）</th>
+    <th>Options （选项）</th>
+    <th>Fault-tolerant （容错）</th>
+    <th>Notes （说明）</th>
   </tr>
   <tr>
-    <td><b>File Sink</b></td>
-    <td>Append</td>
+    <td><b>File Sink （文件接收器）</b></td>
+    <td>Append （附加）</td>
     <td>
-        <code>path</code>: path to the output directory, must be specified.
+        <code>path</code>: 必须指定输出目录的路径。
         <br/><br/>
-        For file-format-specific options, see the related methods in DataFrameWriter
-        (<a href="api/scala/index.html#org.apache.spark.sql.DataFrameWriter">Scala</a>/<a href="api/java/org/apache/spark/sql/DataFrameWriter.html">Java</a>/<a href="api/python/pyspark.sql.html#pyspark.sql.DataFrameWriter">Python</a>/<a
-        href="api/R/write.stream.html">R</a>).
-        E.g. for "parquet" format options see <code>DataFrameWriter.parquet()</code>
+        有关特定于文件格式的选项，请参阅 DataFrameWriter (<a href="api/scala/index.html#org.apache.spark.sql.DataFrameWriter">Scala</a>/<a href="api/java/org/apache/spark/sql/DataFrameWriter.html">Java</a>/<a href="api/python/pyspark.sql.html#pyspark.sql.DataFrameWriter">Python</a>/<a
+        href="api/R/write.stream.html">R</a>) 中的相关方法。
+        例如，对于 "parquet" 格式选项，请参阅 <code>DataFrameWriter.parquet()</code>
     </td>
     <td>Yes</td>
-    <td>Supports writes to partitioned tables. Partitioning by time may be useful.</td>
+    <td>支持对 partitioned tables （分区表）的写入。按时间 Partitioning （划分）可能是有用的。</td>
   </tr>
   <tr>
     <td><b>Foreach Sink</b></td>
-    <td>Append, Update, Compelete</td>
+    <td>Append, Update, Compelete （附加，更新，完全）</td>
     <td>None</td>
-    <td>Depends on ForeachWriter implementation</td>
-    <td>More details in the <a href="#using-foreach">next section</a></td>
+    <td>取决于 ForeachWriter 的实现。</td>
+    <td>更多详细信息在 <a href="#using-foreach">下一节</a></td>
   </tr>
   <tr>
-    <td><b>Console Sink</b></td>
-    <td>Append, Update, Complete</td>
+    <td><b>Console Sink （控制台接收器）</b></td>
+    <td>Append, Update, Complete （附加，更新，完全）</td>
     <td>
-        <code>numRows</code>: Number of rows to print every trigger (default: 20)
+        <code>numRows</code>: 每个触发器需要打印的行数（默认:20）
         <br/>
-        <code>truncate</code>: Whether to truncate the output if too long (default: true)
+        <code>truncate</code>: 如果输出太长是否截断（默认: true）
     </td>
     <td>No</td>
     <td></td>
   </tr>
   <tr>
-    <td><b>Memory Sink</b></td>
-    <td>Append, Complete</td>
+    <td><b>Memory Sink （内存接收器）</b></td>
+    <td>Append, Complete （附加，完全）</td>
     <td>None</td>
-    <td>No. But in Complete Mode, restarted query will recreate the full table.</td>
-    <td>Table name is the query name.</td>
+    <td>否。但是在 Complete Mode 模式下，重新启动的查询将重新创建完整的表。</td>
+    <td>Table name is the query name.（表名是查询的名称）</td>
   </tr>
   <tr>
     <td></td>
@@ -1263,7 +1178,7 @@ Here are the details of all the sinks in Spark.
   </tr>
 </table>
 
-Note that you have to call `start()` to actually start the execution of the query. This returns a StreamingQuery object which is a handle to the continuously running execution. You can use this object to manage the query, which we will discuss in the next subsection. For now, let’s understand all this with a few examples.
+请注意，您必须调用 `start()` 来实际启动查询的执行。 这将返回一个 StreamingQuery 对象，它是连续运行的执行的句柄。 您可以使用此对象来管理查询，我们将在下一小节中讨论。 现在，让我们通过几个例子了解所有这些。
 
 
 <div class="codetabs">
@@ -1424,25 +1339,23 @@ head(sql("select * from aggregates"))
 </div>
 </div>
 
-#### Using Foreach
-The `foreach` operation allows arbitrary operations to be computed on the output data. As of Spark 2.1, this is available only for Scala and Java. To use this, you will have to implement the interface `ForeachWriter`
-([Scala](api/scala/index.html#org.apache.spark.sql.ForeachWriter)/[Java](api/java/org/apache/spark/sql/ForeachWriter.html) docs),
-which has methods that get called whenever there is a sequence of rows generated as output after a trigger. Note the following important points.
+#### 使用 Foreach
+`foreach` 操作允许在输出数据上计算 arbitrary operations 。从 Spark 2.1 开始，这只适用于 Scala 和 Java 。为了使用这个，你必须实现接口 `ForeachWriter` ([Scala](api/scala/index.html#org.apache.spark.sql.ForeachWriter)/[Java](api/java/org/apache/spark/sql/ForeachWriter.html) 文档) 其具有在 trigger （触发器）之后生成 sequence of rows generated as output （作为输出的行的序列）时被调用的方法。请注意以下要点。
 
-- The writer must be serializable, as it will be serialized and sent to the executors for execution.
+- writer 必须是 serializable （可序列化）的，因为它将被序列化并发送给 executors 执行。
 
-- All the three methods, `open`, `process` and `close` will be called on the executors.
+- 所有这三个方法， `open` ，`process` 和 `close` 都会在执行器上被调用。
 
-- The writer must do all the initialization (e.g. opening connections, starting a transaction, etc.) only when the `open` method is called. Be aware that, if there is any initialization in the class as soon as the object is created, then that initialization will happen in the driver (because that is where the instance is being created), which may not be what you intend.
+- 只有当调用 `open` 方法时，writer 才能执行所有的初始化（例如打开连接，启动事务等）。请注意，如果在创建对象时立即在类中进行任何初始化，那么该初始化将在 driver 中发生（因为这是正在创建的实例），这可能不是您打算的。
 
-- `version` and `partition` are two parameters in `open` that uniquely represent a set of rows that needs to be pushed out. `version` is a monotonically increasing id that increases with every trigger. `partition` is an id that represents a partition of the output, since the output is distributed and will be processed on multiple executors.
+- `version` 和 `partition` 是 `open` 中的两个参数，它们独特地表示一组需要被 pushed out 的行。 `version` 是每个触发器增加的单调递增的 id 。 `partition` 是一个表示输出分区的 id ，因为输出是分布式的，将在多个执行器上处理。
 
-- `open` can use the `version` and `partition` to choose whether it needs to write the sequence of rows. Accordingly, it can return `true` (proceed with writing), or `false` (no need to write). If `false` is returned, then `process` will not be called on any row. For example, after a partial failure, some of the output partitions of the failed trigger may have already been committed to a database. Based on metadata stored in the database, the writer can identify partitions that have already been committed and accordingly return false to skip committing them again. 
+- `open` 可以使用 `version` 和 `partition` 来选择是否需要写入行的顺序。因此，它可以返回 `true` （继续写入）或 `false` （ 不需要写入 ）。如果返回 `false` ，那么 `process` 不会在任何行上被调用。例如，在 partial failure （部分失败）之后，失败的触发器的一些输出分区可能已经被提交到数据库。基于存储在数据库中的 metadata （元数据）， writer 可以识别已经提交的分区，因此返回 false 以跳过再次提交它们。 
 
-- Whenever `open` is called, `close` will also be called (unless the JVM exits due to some error). This is true even if `open` returns false. If there is any error in processing and writing the data, `close` will be called with the error. It is your responsibility to clean up state (e.g. connections, transactions, etc.) that have been created in `open` such that there are no resource leaks.
+- 当 `open` 被调用时， `close` 也将被调用（除非 JVM 由于某些错误而退出）。即使 `open` 返回 false 也是如此。如果在处理和写入数据时出现任何错误，那么 `close` 将被错误地调用。您有责任清理以 `open` 创建的状态（例如，连接，事务等），以免资源泄漏。
 
-## Managing Streaming Queries
-The `StreamingQuery` object created when a query is started can be used to monitor and manage the query. 
+## 管理 Streaming Queries
+在启动查询时创建的 `StreamingQuery` 对象可用于 monitor and manage the query （监视和管理查询）。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -1543,9 +1456,8 @@ lastProgress(query)       # the most recent progress update of this streaming qu
 </div>
 </div>
 
-You can start any number of queries in a single SparkSession. They will all be running concurrently sharing the cluster resources. You can use `sparkSession.streams()` to get the `StreamingQueryManager`
-([Scala](api/scala/index.html#org.apache.spark.sql.streaming.StreamingQueryManager)/[Java](api/java/org/apache/spark/sql/streaming/StreamingQueryManager.html)/[Python](api/python/pyspark.sql.html#pyspark.sql.streaming.StreamingQueryManager) docs)
-that can be used to manage the currently active queries.
+您可以在单个 SparkSession 中启动任意数量的查询。 他们都将同时运行共享集群资源。 您可以使用 `sparkSession.streams()` 获取 `StreamingQueryManager`
+([Scala](api/scala/index.html#org.apache.spark.sql.streaming.StreamingQueryManager)/[Java](api/java/org/apache/spark/sql/streaming/StreamingQueryManager.html)/[Python](api/python/pyspark.sql.html#pyspark.sql.streaming.StreamingQueryManager) 文档) 可用于管理 currently active queries （当前活动的查询）。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -1596,29 +1508,18 @@ Not available in R.
 </div>
 
 
-## Monitoring Streaming Queries
-There are two APIs for monitoring and debugging active queries - 
-interactively and asynchronously.
+## 监控 Streaming Queries
+有两个用于 monitoring and debugging active queries （监视和调试活动查询） 的 API - interactively 和 asynchronously 。
 
 ### Interactive APIs
 
-You can directly get the current status and metrics of an active query using 
-`streamingQuery.lastProgress()` and `streamingQuery.status()`. 
-`lastProgress()` returns a `StreamingQueryProgress` object 
-in [Scala](api/scala/index.html#org.apache.spark.sql.streaming.StreamingQueryProgress) 
-and [Java](api/java/org/apache/spark/sql/streaming/StreamingQueryProgress.html)
-and a dictionary with the same fields in Python. It has all the information about
-the progress made in the last trigger of the stream - what data was processed, 
-what were the processing rates, latencies, etc. There is also 
-`streamingQuery.recentProgress` which returns an array of last few progresses.  
+您可以直接获取活动查询的当前状态和指标使用 `streamingQuery.lastProgress()` 和 `streamingQuery.status()` 。 `lastProgress()` 返回一个 `StreamingQueryProgress` 对象 在 [Scala](api/scala/index.html#org.apache.spark.sql.streaming.StreamingQueryProgress) 
+和 [Java](api/java/org/apache/spark/sql/streaming/StreamingQueryProgress.html) 和 Python 中具有相同字段的字典。它有所有的信息在 stream 的最后一个触发器中取得的 progress - 处理了哪些数据，处理率是多少，延迟等等。 `streamingQuery.recentProgress` 返回最后几个进度的 array 。 
 
-In addition, `streamingQuery.status()` returns a `StreamingQueryStatus` object 
-in [Scala](api/scala/index.html#org.apache.spark.sql.streaming.StreamingQueryStatus) 
-and [Java](api/java/org/apache/spark/sql/streaming/StreamingQueryStatus.html)
-and a dictionary with the same fields in Python. It gives information about
-what the query is immediately doing - is a trigger active, is data being processed, etc.
+另外， `streamingQuery.status()` 返回一个 `StreamingQueryStatus` 对象在 [Scala](api/scala/index.html#org.apache.spark.sql.streaming.StreamingQueryStatus) 
+和 [Java](api/java/org/apache/spark/sql/streaming/StreamingQueryStatus.html) 和 Python 中具有相同字段的字典。它提供有关的信息立即执行的查询 - 触发器是否 active ，数据是否正在处理等。
 
-Here are a few examples.
+这里有几个例子。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -1832,12 +1733,8 @@ Will print something like the following.
 
 ### Asynchronous API
 
-You can also asynchronously monitor all queries associated with a
-`SparkSession` by attaching a `StreamingQueryListener`
-([Scala](api/scala/index.html#org.apache.spark.sql.streaming.StreamingQueryListener)/[Java](api/java/org/apache/spark/sql/streaming/StreamingQueryListener.html) docs).
-Once you attach your custom `StreamingQueryListener` object with
-`sparkSession.streams.attachListener()`, you will get callbacks when a query is started and
-stopped and when there is progress made in an active query. Here is an example,
+您还可以 asynchronously monitor （异步监视）与 `SparkSession` 相关联的所有查询
+通过附加一个 `StreamingQueryListener` ([Scala](api/scala/index.html#org.apache.spark.sql.streaming.StreamingQueryListener)/[Java](api/java/org/apache/spark/sql/streaming/StreamingQueryListener.html) docs) 。一旦你使用 `sparkSession.streams.attachListener()` 附加你的自定义 `StreamingQueryListener` 对象，当您启动查询和当有活动查询有进度时停止时，您将收到 callbacks （回调）。 这是一个例子，
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -1895,8 +1792,8 @@ Not available in R.
 </div>
 </div>
 
-## Recovering from Failures with Checkpointing 
-In case of a failure or intentional shutdown, you can recover the previous progress and state of a previous query, and continue where it left off. This is done using checkpointing and write ahead logs. You can configure a query with a checkpoint location, and the query will save all the progress information (i.e. range of offsets processed in each trigger) and the running aggregates (e.g. word counts in the [quick example](#quick-example)) to the checkpoint location. This checkpoint location has to be a path in an HDFS compatible file system, and can be set as an option in the DataStreamWriter when [starting a query](#starting-streaming-queries).
+## Recovering from Failures with Checkpointing （从检查点恢复故障）
+如果发生 failure or intentional shutdown （故障或故意关机），您可以恢复之前的查询的进度和状态，并继续停止的位置。 这是使用 checkpointing and write ahead logs （检查点和预写入日志）来完成的。 您可以使用 checkpoint location （检查点位置）配置查询，并且查询将保存所有进度信息（即，每个触发器中处理的偏移范围）和正在运行的 aggregates （聚合）（例如 [quick example](#quick-example) 中的 woed counts ） 到 checkpoint location （检查点位置）。 此检查点位置必须是 HDFS 兼容文件系统中的路径，并且可以在 [starting a query](#starting-streaming-queries) 时将其设置为DataStreamWriter 中的选项。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -1944,8 +1841,7 @@ write.stream(aggDF, "memory", outputMode = "complete", checkpointLocation = "pat
 </div>
 </div>
 
-# Where to go from here
-- Examples: See and run the
-[Scala]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/scala/org/apache/spark/examples/sql/streaming)/[Java]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/java/org/apache/spark/examples/sql/streaming)/[Python]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/python/sql/streaming)/[R]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/r/streaming)
-examples.
-- Spark Summit 2016 Talk - [A Deep Dive into Structured Streaming](https://spark-summit.org/2016/events/a-deep-dive-into-structured-streaming/)
+# 从这里去哪儿
+- 示例: 查看并运行 
+[Scala]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/scala/org/apache/spark/examples/sql/streaming)/[Java]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/java/org/apache/spark/examples/sql/streaming)/[Python]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/python/sql/streaming)/[R]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/r/streaming) 示例。
+- Spark Summit 2016 Talk - [深入 Structured Streaming](https://spark-summit.org/2016/events/a-deep-dive-into-structured-streaming/)
