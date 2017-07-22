@@ -218,8 +218,20 @@
             });
 
             $(".second-level").on('mouseout', function () {
-            $(this).children(".nav-itme__list.animate").removeClass('active')
-            })
+                $(this).children(".nav-itme__list.animate").removeClass('active')
+            });
+
+            //scroll top menu hide;
+            $(document).scroll(function() {
+                var scrollT = $(document).scrollTop();
+                // console.log(scrollT, "===scrollT=>>>")
+                if(scrollT >= 52){
+                    $("#apachecn-spark-menu").addClass('active');
+                }
+                if(scrollT < 52){
+                    $("#apachecn-spark-menu").removeClass('active');
+                }
+            });
         </script>
 
         <!-- MathJax Section -->
