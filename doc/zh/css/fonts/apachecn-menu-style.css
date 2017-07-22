@@ -15,10 +15,31 @@
   line-height: 22px !important;
 }
 
+
+.spark-top__nav{
+    position: fixed;
+    z-index:10;
+    width:100%;
+    top:0;
+}
+
 .nav-apachecn{
     width: 100%;
-    position: fixed;
-    top: 0;
+    position: relative;
+    z-index: 10;
+    background: #fff;
+    margin-bottom: 0;
+}
+
+.navbar-fixed-top{
+    position: relative;
+    /*z-index: 10;*/
+}
+
+.nav-apachecn{
+    width: 100%;
+    /*position: fixed;*/
+    /*top: 0;*/
     z-index: 10;
     background: #fff;
 }
