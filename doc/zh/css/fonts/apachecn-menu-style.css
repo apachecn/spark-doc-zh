@@ -41,6 +41,33 @@ body{
     height: 0;
 }
 
+#apachecn-spark-menu.slideUp {
+    /* -webkit-transform: translateY(-100px);
+     transform: translateY(-100px);*/
+    -webkit-transform: translateY(-100px);
+    -ms-transform: translateY(-100px);
+    -o-transform: translateY(-100px);
+    transform: translateY(-100px);
+    /*transition: transform .5s ease-out;*/
+    -webkit-transition: transform .5s ease-out;
+    -o-transition: transform .5s ease-out;
+    transition: transform .5s ease-out;
+}
+
+#apachecn-spark-menu.slideDown {
+    /*-webkit-transform: translateY(0);
+    transform: translateY(0);*/
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+    /*transition: transform .5s ease-out;*/
+    -webkit-transition: transform .5s ease-out;
+    -o-transition: transform .5s ease-out;
+    transition: transform .5s ease-out;
+}
+
+
 .nav-item{
    display: inline-block;
    width: 240px;
@@ -48,7 +75,6 @@ body{
    position: relative;
    float: left;
    text-decoration: none;
-
 }
 
 .nav-item label, 
