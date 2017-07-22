@@ -36,6 +36,10 @@
 
         <link rel="stylesheet" href="css/pygments-default.css">
 
+        <!-- <link rel="stylesheet" href="../css/fonts/font-awesome.css"> -->
+        <link rel="stylesheet" href="../css/fonts/apachecn-menu-style.css" type="text/css" />
+        <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+
         {% production %}
         <!-- Google analytics script -->
         <script type="text/javascript">
@@ -58,6 +62,42 @@
         <![endif]-->
 
         <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+
+        <div class="nav">
+            <div class="container">
+                <a href="javascript:;" class="nav-item">
+                    <label  class="animate">Menu1<i class="fa fa-bars float-right"></i></label>
+                    <ul class="nav-itme__list animate">
+                        <li href="javascript:;" class="animate">Code </li>
+                        <li href="javascript:;"  class="animate">Zoom </li>
+                        <li href="javascript:;"  class="animate">Settings</li>
+                    </ul>
+                </a>
+
+                <a href="javascript:;" class="nav-item">
+                    <label  class="animate">Menu1<i class="fa fa-bars float-right"></i></label>
+                    <ul class="nav-itme__list animate">
+                        <li href="javascript:;" class="animate second-level">
+                            <label  class="animate">Menu1 22222 <i class="fa fa-chevron-right"></i></label>
+                            <ul class="nav-itme__list animate">
+                            <li href="javascript:;" class="animate">111 </li>
+                            <li href="javascript:;"  class="animate">222 </li>
+                            <li href="javascript:;"  class="animate">333</li>
+                        </ul>
+                        </li>
+                        <li href="javascript:;" class="animate second-level">
+                            <label  class="animate">Menu1 333 <i class="fa fa-chevron-right"></i></label>
+                            <ul class="nav-itme__list animate">
+                            <li href="javascript:;" class="animate">111 </li>
+                            <li href="javascript:;"  class="animate">222 </li>
+                            <li href="javascript:;"  class="animate">333</li>
+                        </ul>
+                        </li>
+                        <li href="javascript:;"  class="animate">2222</li>
+                    </ul>
+                </a>
+            </div>
+        </div>
 
         <div class="navbar navbar-fixed-top" id="topbar">
             <div class="navbar-inner">
@@ -162,6 +202,25 @@
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/vendor/anchor.min.js"></script>
         <script src="js/main.js"></script>
+
+        <!-- apachecn menu script -->
+        <script>
+            $("a.nav-item").on('mouseover', function () {
+                $(this).children(".nav-itme__list.animate").addClass('active')
+            });
+
+            $("a.nav-item").on('mouseout', function () {
+            $(this).children(".nav-itme__list.animate").removeClass('active')
+            })
+
+            $(".second-level").on('mouseover', function () {
+                $(this).children(".nav-itme__list.animate").addClass('active')
+            });
+
+            $(".second-level").on('mouseout', function () {
+            $(this).children(".nav-itme__list.animate").removeClass('active')
+            })
+        </script>
 
         <!-- MathJax Section -->
         <script type="text/x-mathjax-config">
