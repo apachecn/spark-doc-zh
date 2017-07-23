@@ -114,11 +114,13 @@ body{
 
 .nav .nav-item .nav-itme__list li.second-level{
     padding: 0;
+    border-bottom: 0;
 }
 
 .nav .nav-item .nav-itme__list li,
 .nav .nav-item .nav-itme__list li.second-level label{
     padding: 0 20px;
+    border-bottom: 1px dashed #1ABC9C;
 }
 
 .nav .nav-item>label {
@@ -170,7 +172,7 @@ body{
 }
 
 .nav-itme__list li{
- border-bottom: 1px dashed #1ABC9C;
+ /*border-bottom: 1px dashed #1ABC9C;*/
 }
 
 .nav-itme__list li:last-child{
@@ -212,7 +214,7 @@ body{
     /*color: white;*/
 }
 .nav-apachecn .second-level label >i{
-    right: 0;
+    /*right: 0;*/
 }
 
 .nav-apachecn .second-level .nav-itme__list.animate.active{
