@@ -441,60 +441,61 @@ head(teenagers)
 {% endhighlight %}
 </div>
 
-# Machine Learning
+# 机器学习
 
-## Algorithms
+## 算法
 
-SparkR supports the following machine learning algorithms currently:
+SparkR 现支持下列机器学习算法:
 
-#### Classification
+#### 分类
 
-* [`spark.logit`](api/R/spark.logit.html): [`Logistic Regression`](ml-classification-regression.html#logistic-regression)
-* [`spark.mlp`](api/R/spark.mlp.html): [`Multilayer Perceptron (MLP)`](ml-classification-regression.html#multilayer-perceptron-classifier)
-* [`spark.naiveBayes`](api/R/spark.naiveBayes.html): [`Naive Bayes`](ml-classification-regression.html#naive-bayes)
-* [`spark.svmLinear`](api/R/spark.svmLinear.html): [`Linear Support Vector Machine`](ml-classification-regression.html#linear-support-vector-machine)
+* [`spark.logit`](api/R/spark.logit.html): [`逻辑回归 Logistic Regression
+`](ml-classification-regression.html#logistic-regression)
+* [`spark.mlp`](api/R/spark.mlp.html): [`多层感知 (MLP)`](ml-classification-regression.html#multilayer-perceptron-classifier)
+* [`spark.naiveBayes`](api/R/spark.naiveBayes.html): [`朴素贝叶斯`](ml-classification-regression.html#naive-bayes)
+* [`spark.svmLinear`](api/R/spark.svmLinear.html): [`线性支持向量机`](ml-classification-regression.html#linear-support-vector-machine)
 
-#### Regression
+#### 回归
 
-* [`spark.survreg`](api/R/spark.survreg.html): [`Accelerated Failure Time (AFT) Survival  Model`](ml-classification-regression.html#survival-regression)
-* [`spark.glm`](api/R/spark.glm.html) or [`glm`](api/R/glm.html): [`Generalized Linear Model (GLM)`](ml-classification-regression.html#generalized-linear-regression)
-* [`spark.isoreg`](api/R/spark.isoreg.html): [`Isotonic Regression`](ml-classification-regression.html#isotonic-regression)
+* [`spark.survreg`](api/R/spark.survreg.html): [`加速失败时间生存模型 Accelerated Failure Time (AFT) Survival  Model`](ml-classification-regression.html#survival-regression)
+* [`spark.glm`](api/R/spark.glm.html) or [`glm`](api/R/glm.html): [`广义线性模型 Generalized Linear Model (GLM)`](ml-classification-regression.html#generalized-linear-regression)
+* [`spark.isoreg`](api/R/spark.isoreg.html): [`保序回归`](ml-classification-regression.html#isotonic-regression)
 
-#### Tree
+#### 树
 
-* [`spark.gbt`](api/R/spark.gbt.html): `Gradient Boosted Trees for` [`Regression`](ml-classification-regression.html#gradient-boosted-tree-regression) `and` [`Classification`](ml-classification-regression.html#gradient-boosted-tree-classifier)
-* [`spark.randomForest`](api/R/spark.randomForest.html): `Random Forest for` [`Regression`](ml-classification-regression.html#random-forest-regression) `and` [`Classification`](ml-classification-regression.html#random-forest-classifier)
+* [`spark.gbt`](api/R/spark.gbt.html): `梯度提升树 for` [`回归`](ml-classification-regression.html#gradient-boosted-tree-regression) `and` [`分类`](ml-classification-regression.html#gradient-boosted-tree-classifier)
+* [`spark.randomForest`](api/R/spark.randomForest.html): `随机森林 for` [`回归`](ml-classification-regression.html#random-forest-regression) `and` [`分类`](ml-classification-regression.html#random-forest-classifier)
 
-#### Clustering
+#### 聚类
 
-* [`spark.bisectingKmeans`](api/R/spark.bisectingKmeans.html): [`Bisecting k-means`](ml-clustering.html#bisecting-k-means)
-* [`spark.gaussianMixture`](api/R/spark.gaussianMixture.html): [`Gaussian Mixture Model (GMM)`](ml-clustering.html#gaussian-mixture-model-gmm)
+* [`spark.bisectingKmeans`](api/R/spark.bisectingKmeans.html): [`二分k均值`](ml-clustering.html#bisecting-k-means)
+* [`spark.gaussianMixture`](api/R/spark.gaussianMixture.html): [`高斯混合模型 (GMM)`](ml-clustering.html#gaussian-mixture-model-gmm)
 * [`spark.kmeans`](api/R/spark.kmeans.html): [`K-Means`](ml-clustering.html#k-means)
-* [`spark.lda`](api/R/spark.lda.html): [`Latent Dirichlet Allocation (LDA)`](ml-clustering.html#latent-dirichlet-allocation-lda)
+* [`spark.lda`](api/R/spark.lda.html): [`隐含狄利克雷分布 (LDA)`](ml-clustering.html#latent-dirichlet-allocation-lda)
 
-#### Collaborative Filtering
+#### 协同过滤
 
-* [`spark.als`](api/R/spark.als.html): [`Alternating Least Squares (ALS)`](ml-collaborative-filtering.html#collaborative-filtering)
+* [`spark.als`](api/R/spark.als.html): [`交替最小二乘 (ALS)`](ml-collaborative-filtering.html#collaborative-filtering)
 
-#### Frequent Pattern Mining
+#### 频繁模式挖掘
 
 * [`spark.fpGrowth`](api/R/spark.fpGrowth.html) : [`FP-growth`](ml-frequent-pattern-mining.html#fp-growth)
 
-#### Statistics
+#### 统计
 
-* [`spark.kstest`](api/R/spark.kstest.html): `Kolmogorov-Smirnov Test`
+* [`spark.kstest`](api/R/spark.kstest.html): `柯尔莫哥洛夫-斯米尔诺夫检验`
 
-Under the hood, SparkR uses MLlib to train the model. Please refer to the corresponding section of MLlib user guide for example code.
-Users can call `summary` to print a summary of the fitted model, [predict](api/R/predict.html) to make predictions on new data, and [write.ml](api/R/write.ml.html)/[read.ml](api/R/read.ml.html) to save/load fitted models.
-SparkR supports a subset of the available R formula operators for model fitting, including ‘~’, ‘.’, ‘:’, ‘+’, and ‘-‘.
+SparkR 底层实现使用 MLlib 来训练模型. 有关示例代码，请参阅MLlib用户指南的相应章节.
+用户可以调用`summary`输出拟合模型的摘要, 利用模型对数据进行[预测](api/R/predict.html), 并且使用 [write.ml](api/R/write.ml.html)/[read.ml](api/R/read.ml.html) 来 保存/加载拟合的模型 .
+SparkR 支持对模型拟合使用部分R的公式运算符, 包括 ‘~’, ‘.’, ‘:’, ‘+’, 和 ‘-‘.
 
 
-## Model persistence
+## 模型持久化
 
-The following example shows how to save/load a MLlib model by SparkR.
+下面的例子展示了SparkR如何 保存/加载 机器学习模型.
 {% include_example read_write r/ml/ml.R %}
 
-# Data type mapping between R and Spark
+# R和Spark之间的数据类型映射
 <table class="table">
 <tr><th>R</th><th>Spark</th></tr>
 <tr>
@@ -565,17 +566,16 @@ The following example shows how to save/load a MLlib model by SparkR.
 
 # Structured Streaming
 
-SparkR supports the Structured Streaming API (experimental). Structured Streaming is a scalable and fault-tolerant stream processing engine built on the Spark SQL engine. For more information see the R API on the [Structured Streaming Programming Guide](structured-streaming-programming-guide.html)
+SparkR 支持 Structured Streaming API (测试阶段). Structured Streaming 是一个 构建于SparkSQL引擎之上的易拓展、可容错的流式处理引擎. 更多信息请参考 R API [Structured Streaming Programming Guide](structured-streaming-programming-guide.html)
 
-# R Function Name Conflicts
+# R 函数名冲突
 
-When loading and attaching a new package in R, it is possible to have a name [conflict](https://stat.ethz.ch/R-manual/R-devel/library/base/html/library.html), where a
-function is masking another function.
+当在R中加载或引入(attach)一个新package时, 可能会发生函数名[冲突](https://stat.ethz.ch/R-manual/R-devel/library/base/html/library.html),一个函数掩盖了另一个函数
 
-The following functions are masked by the SparkR package:
+下列函数是被SparkR所掩盖的:
 
 <table class="table">
-  <tr><th>Masked function</th><th>How to Access</th></tr>
+  <tr><th>被掩盖函数</th><th>如何获取</th></tr>
   <tr>
     <td><code>cov</code> in <code>package:stats</code></td>
     <td><code><pre>stats::cov(x, y = NULL, use = "everything",
@@ -592,37 +592,37 @@ The following functions are masked by the SparkR package:
   </tr>
 </table>
 
-Since part of SparkR is modeled on the `dplyr` package, certain functions in SparkR share the same names with those in `dplyr`. Depending on the load order of the two packages, some functions from the package loaded first are masked by those in the package loaded after. In such case, prefix such calls with the package name, for instance, `SparkR::cume_dist(x)` or `dplyr::cume_dist(x)`.
+由于SparkR的一部分是在`dplyr`软件包上建模的，因此SparkR中的某些函数与`dplyr`中同名. 根据两个包的加载顺序, 后加载的包会掩盖先加载的包的部分函数. 在这种情况下, 可以在函数名前指定包名前缀, 例如: `SparkR::cume_dist(x)` or `dplyr::cume_dist(x)`.
 
-You can inspect the search path in R with [`search()`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/search.html)
+你可以在 R 中使用[`search()`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/search.html)检查搜索路径
 
 
-# Migration Guide
+# 迁移指南
 
-## Upgrading From SparkR 1.5.x to 1.6.x
+## SparkR 1.5.x 升级至 1.6.x
 
- - Before Spark 1.6.0, the default mode for writes was `append`. It was changed in Spark 1.6.0 to `error` to match the Scala API.
- - SparkSQL converts `NA` in R to `null` and vice-versa.
+ - 在Spark 1.6.0 之前, 写入模式默认值为 `append`. 在 Spark 1.6.0 改为 `error` 匹配 Scala API.
+ - SparkSQL 将R 中的 `NA` 转换为 `null`,反之亦然.
 
-## Upgrading From SparkR 1.6.x to 2.0
+## SparkR 1.6.x 升级至 2.0
 
- - The method `table` has been removed and replaced by `tableToDF`.
- - The class `DataFrame` has been renamed to `SparkDataFrame` to avoid name conflicts.
- - Spark's `SQLContext` and `HiveContext` have been deprecated to be replaced by `SparkSession`. Instead of `sparkR.init()`, call `sparkR.session()` in its place to instantiate the SparkSession. Once that is done, that currently active SparkSession will be used for SparkDataFrame operations.
- - The parameter `sparkExecutorEnv` is not supported by `sparkR.session`. To set environment for the executors, set Spark config properties with the prefix "spark.executorEnv.VAR_NAME", for example, "spark.executorEnv.PATH"
- - The `sqlContext` parameter is no longer required for these functions: `createDataFrame`, `as.DataFrame`, `read.json`, `jsonFile`, `read.parquet`, `parquetFile`, `read.text`, `sql`, `tables`, `tableNames`, `cacheTable`, `uncacheTable`, `clearCache`, `dropTempTable`, `read.df`, `loadDF`, `createExternalTable`.
- - The method `registerTempTable` has been deprecated to be replaced by `createOrReplaceTempView`.
- - The method `dropTempTable` has been deprecated to be replaced by `dropTempView`.
- - The `sc` SparkContext parameter is no longer required for these functions: `setJobGroup`, `clearJobGroup`, `cancelJobGroup`
+ -  `table` 方法已经移除并替换为 `tableToDF`.
+ - 类 `DataFrame` 已改名为 `SparkDataFrame` 避免名称冲突.
+ - Spark的 `SQLContext` 和 `HiveContext` 已经过时并替换为 `SparkSession`. 相应的摒弃 `sparkR.init()`而通过调用 `sparkR.session()` 来实例化SparkSession. 一旦实例化完成, 当前的SparkSession即可用于SparkDataFrame 操作(注释:spark2.0开始所有的driver实例通过sparkSession来进行构建).
+ - `sparkR.session` 不支持 `sparkExecutorEnv` 参数.要为executors设置环境，请使用前缀"spark.executorEnv.VAR_NAME"设置Spark配置属性，例如"spark.executorEnv.PATH", 
+ -`sqlContext` 不再需要下列函数: `createDataFrame`, `as.DataFrame`, `read.json`, `jsonFile`, `read.parquet`, `parquetFile`, `read.text`, `sql`, `tables`, `tableNames`, `cacheTable`, `uncacheTable`, `clearCache`, `dropTempTable`, `read.df`, `loadDF`, `createExternalTable`.
+ -  `registerTempTable` 方法已经过期并且替换为`createOrReplaceTempView`.
+ -  `dropTempTable` 方法已经过期并且替换为 `dropTempView`.
+ - `sc` SparkContext 参数不再需要下列函数: `setJobGroup`, `clearJobGroup`, `cancelJobGroup`
 
-## Upgrading to SparkR 2.1.0
+## 升级至 SparkR 2.1.0
 
- - `join` no longer performs Cartesian Product by default, use `crossJoin` instead.
+ - `join` 不再执行笛卡尔积计算, 使用 `crossJoin` 来进行笛卡尔积计算.
 
-## Upgrading to SparkR 2.2.0
+## 升级至 SparkR 2.2.0
 
- - A `numPartitions` parameter has been added to `createDataFrame` and `as.DataFrame`. When splitting the data, the partition position calculation has been made to match the one in Scala.
- - The method `createExternalTable` has been deprecated to be replaced by `createTable`. Either methods can be called to create external or managed table. Additional catalog methods have also been added.
- - By default, derby.log is now saved to `tempdir()`. This will be created when instantiating the SparkSession with `enableHiveSupport` set to `TRUE`.
- - `spark.lda` was not setting the optimizer correctly. It has been corrected.
- - Several model summary outputs are updated to have `coefficients` as `matrix`. This includes `spark.logit`, `spark.kmeans`, `spark.glm`. Model summary outputs for `spark.gaussianMixture` have added log-likelihood as `loglik`.
+ - `createDataFrame` 和 `as.DataFrame` 添加`numPartitions`参数. 数据分割时, 分区位置计算已经与scala计算相一致.
+ - 方法 `createExternalTable` 已经过期并且替换为`createTable`. 可以调用这两种方法来创建外部或托管表. 已经添加额外的 catalog 方法.
+ - 默认情况下，derby.log现在已保存到`tempdir()`目录中. 当实例化SparkSession且选项enableHiveSupport 为TRUE,会创建derby.log .
+ - 更正`spark.lda` 错误设置优化器的bug.
+ - 更新模型概况输出 `coefficients` as `matrix`. 更新的模型概况包括 `spark.logit`, `spark.kmeans`, `spark.glm`. `spark.gaussianMixture` 的模型概况已经添加对数概度(log-likelihood)  `loglik`.
