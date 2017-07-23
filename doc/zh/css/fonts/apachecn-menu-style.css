@@ -105,10 +105,19 @@ body{
 .nav .nav-item .nav-itme__list li{
     display: block;
     width: 200px;
-    padding: 0 20px;
     color: #1ABC9C;
     height: 52px;
     line-height: 52px;
+    padding: 0 20px;
+}
+
+.nav .nav-item .nav-itme__list li.second-level{
+    padding: 0;
+}
+
+.nav .nav-item .nav-itme__list li,
+.nav .nav-item .nav-itme__list li.second-level label{
+    padding: 0 20px;
 }
 
 .nav .nav-item>label {
@@ -198,8 +207,8 @@ body{
     position: inherit;
     margin-bottom: 0;
 }
-.nav-apachecn .second-level label:hover{
-    color: white;
+.nav-apachecn .second-level:hover{
+    /*color: white;*/
 }
 .nav-apachecn .second-level label >i{
     right: 0;
