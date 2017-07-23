@@ -31,31 +31,32 @@
     margin-bottom: 0;
 }
 
+.nav-apachecn a,
+.nav-apachecn a:hover{
+    text-decoration: none;
+}
+
 .navbar-fixed-top{
     position: relative;
-    /*z-index: 10;*/
 }
 
 .nav-apachecn{
     width: 100%;
-    /*position: fixed;*/
-    /*top: 0;*/
     z-index: 10;
     background: #fff;
 }
-.navbar.navbar-fixed-top{
-    /*top: 52px;*/
+.navbar-fixed-top{
     z-index: 8;
 }
 body{
     padding-top: 120px;
 }
 
-.nav .container{
+.nav-apachecn .container{
     height: 52px;
 }
 
-.nav .container:after{
+.nav-apachecn .container:after{
     content: "";
     display: block;
     clear: both;
@@ -83,7 +84,7 @@ body{
 }
 
 
-.nav-item{
+.nav-apachecn .nav-item{
    display: inline-block;
    width: 240px;
    height: 48px;
@@ -91,98 +92,106 @@ body{
    float: left;
    text-decoration: none;
 }
-
-.nav-item label, 
-.nav-item .nav-itme__list li{
-   display: block; 
-  width: 200px;
-  background: #ECF0F1;
-  /* height: 52px; */
-  /* line-height: 52px; */
-   padding: 15px 20px; 
-  color: #1ABC9C;
+.nav-apachecn .nav-item label{
+    position: relative;
+}
+.nav-apachecn .nav-item label>i{
+    position: absolute;
+    top:50%;
+    right:20px;
+    -webkit-transform: translate3d(0,-50%, 0);
+    -o-transform: translate3d(0,-50%, 0);
+    transform: translate3d(0,-50%, 0);
 }
 
-.nav-item label:hover, 
-.nav-item .nav-itme__list li:hover{
-  background: #1ABC9C;
-  color: white;
-  cursor: pointer;
+.nav-apachecn .nav-item label,
+.nav-apachecn .nav-item .nav-itme__list li{
+    display: block;
+    width: 200px;
+    background: #ECF0F1;
+    padding: 0 20px;
+    color: #1ABC9C;
 }
-.nav-item label:hover{
-  border-left: 0; 
+
+.nav-apachecn .nav-item label:hover,
+.nav-apachecn .nav-item .nav-itme__list li:hover{
+    background: #1ABC9C;
+    color: white;
+    cursor: pointer;
 }
-.nav-item label{
-    color: #1ABC9C; 
-    /* border-left: 4px solid #1ABC9C;  */
+.nav-apachecn .nav-item label:hover{
+    border-left: 0;
+}
+.nav-apachecn .nav-item label{
+    color: #1ABC9C;
     position: absolute;
     top:0;
     z-index: 2;
 }
 
-.nav-itme__list.animate{
-  position: relative;
-  margin-top: 52px;
+.nav-apachecn .nav-itme__list.animate{
+    position: relative;
+    margin-top: 52px;
 }
 
-.nav-itme__list.animate.active{
+.nav-apachecn .nav-itme__list.animate.active{
     visibility: visible;
     opacity: 1;
     top: 0;
     height: auto;
 }
 
-.nav-item .nav-itme__list,
-.second-level .nav-itme__list{
+.nav-apachecn .nav-item .nav-itme__list,
+.nav-apachecn .second-level .nav-itme__list{
     height: 0;
-    position: relative; 
-      visibility: hidden;      
-      opacity: 0;        
-    top: -20px;  
+    position: relative;
+    visibility: hidden;
+    opacity: 0;
+    top: -20px;
     z-index: 1;
-    
-} 
+    margin-left: 0;
+}
 
-.nav-itme__list li{
+.nav-apachecn .nav-itme__list li{
  border-bottom: 1px dashed #1ABC9C;
 }
 
-.nav-itme__list li:last-child{
+.nav-apachecn .nav-itme__list li:last-child{
   border-bottom: none;
 }
 
-.animate{
+.nav-apachecn .animate{
   -webkit-transition: all .3s;
   -moz-transition: all .3s;
   -ms-transition: all .3s;
   -ms-transition: all .3s;
-  transition: all .3s;  
+  transition: all .3s;
   backface-visibility:hidden;
   -webkit-backface-visibility:hidden; /* Chrome and Safari */
   -moz-backface-visibility:hidden; /* Firefox */
   -ms-backface-visibility:hidden; /* Internet Explorer */
 }
 
-.second-level .nav-itme__list{
-      position: absolute;
-        visibility: hidden;       
-        opacity: 0;       
-      top: 0; 
-      left: -20px; 
-      margin: 0;
-      z-index: -1;
-} 
+.nav-apachecn .second-level .nav-itme__list{
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    top: 0;
+    left: -20px;
+    margin: 0;
+    z-index: -1;
+}
 
-.second-level label{
+.nav-apachecn .second-level label{
   padding: 0;
   border-left:0;
   position: inherit;
 }
 
-.second-level .nav-itme__list.animate.active{
-  left: 240px; 
+.nav-apachecn .second-level .nav-itme__list.animate.active{
+  left: 240px;
 }
 
-.second-level .nav-itme__list li{
+.nav-apachecn .second-level .nav-itme__list li{
   padding-left: 10px
 }
