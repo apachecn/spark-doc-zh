@@ -112,22 +112,24 @@ body{
     background: #ECF0F1;
 }
 
-.nav .nav-item .nav-itme__list li.second-level{
+.nav-item .nav-itme__list li.second-level{
     padding: 0;
     border-bottom: 0;
 }
 
-.nav .nav-item .nav-itme__list li,
-.nav .nav-item .nav-itme__list li.second-level label{
+.nav .nav-item .nav-itme__list >li,
+.nav .nav-item .nav-itme__list >li.second-level label{
     padding: 0 20px;
     border-bottom: 1px dashed #1ABC9C;
 }
 
+.nav .nav-item .nav-itme__list li.second-level:hover label{
+    background: #1ABC9C;
+    color: #fff;
+}
+
 .nav .nav-item>label {
     /*background: #ECF0F1;*/
-}
-.nav .nav-item .nav-itme__list li{
-    background: #ECF0F1;
 }
 
 .nav-item .nav-itme__list li:hover{
@@ -175,7 +177,7 @@ body{
  /*border-bottom: 1px dashed #1ABC9C;*/
 }
 
-.nav-itme__list li:last-child{
+.nav-apachecn .nav-item  .nav-itme__list li:last-child{
   border-bottom: none;
 }
 
