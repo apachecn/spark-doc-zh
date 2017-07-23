@@ -197,6 +197,9 @@ body{
     position: inherit;
     margin-bottom: 0;
 }
+.nav-apachecn .second-level label:hover{
+    color: white;
+}
 .nav-apachecn .second-level label >i{
     right: 0;
 }
