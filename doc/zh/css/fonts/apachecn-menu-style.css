@@ -30,9 +30,7 @@
     background: #fff;
     margin-bottom: 0;
 }
-
-.nav-apachecn a,
-.nav-apachecn a:hover{
+.nav-apachecn a{
     text-decoration: none;
 }
 
@@ -52,11 +50,11 @@ body{
     padding-top: 120px;
 }
 
-.nav-apachecn .container{
+.nav .container{
     height: 52px;
 }
 
-.nav-apachecn .container:after{
+.nav .container:after{
     content: "";
     display: block;
     clear: both;
@@ -84,7 +82,7 @@ body{
 }
 
 
-.nav-apachecn .nav-item{
+.nav-item{
    display: inline-block;
    width: 240px;
    height: 48px;
@@ -92,20 +90,19 @@ body{
    float: left;
    text-decoration: none;
 }
-.nav-apachecn .nav-item label{
+
+.nav-item label{
     position: relative;
 }
-.nav-apachecn .nav-item label>i{
+.nav-item label>i{
     position: absolute;
     top:50%;
     right:20px;
-    -webkit-transform: translate3d(0,-50%, 0);
-    -o-transform: translate3d(0,-50%, 0);
     transform: translate3d(0,-50%, 0);
 }
 
-.nav-apachecn .nav-item label,
-.nav-apachecn .nav-item .nav-itme__list li{
+.nav .nav-item label,
+.nav .nav-item .nav-itme__list li{
     display: block;
     width: 200px;
     background: #ECF0F1;
@@ -119,30 +116,30 @@ body{
     color: white;
     cursor: pointer;
 }
-.nav-apachecn .nav-item label:hover{
+.nav-item label:hover{
     border-left: 0;
 }
-.nav-apachecn .nav-item label{
+.nav-item label{
     color: #1ABC9C;
     position: absolute;
     top:0;
     z-index: 2;
 }
 
-.nav-apachecn .nav-itme__list.animate{
+.nav-itme__list.animate{
     position: relative;
     margin-top: 52px;
 }
 
-.nav-apachecn .nav-itme__list.animate.active{
+.nav-itme__list.animate.active{
     visibility: visible;
     opacity: 1;
     top: 0;
     height: auto;
 }
 
-.nav-apachecn .nav-item .nav-itme__list,
-.nav-apachecn .second-level .nav-itme__list{
+.nav-item .nav-itme__list,
+.second-level .nav-itme__list{
     height: 0;
     position: relative;
     visibility: hidden;
@@ -150,13 +147,14 @@ body{
     top: -20px;
     z-index: 1;
     margin-left: 0;
+
 }
 
-.nav-apachecn .nav-itme__list li{
+.nav-itme__list li{
  border-bottom: 1px dashed #1ABC9C;
 }
 
-.nav-apachecn .nav-itme__list li:last-child{
+.nav-itme__list li:last-child{
   border-bottom: none;
 }
 
@@ -172,7 +170,7 @@ body{
   -ms-backface-visibility:hidden; /* Internet Explorer */
 }
 
-.nav-apachecn .second-level .nav-itme__list{
+.second-level .nav-itme__list{
     position: absolute;
     visibility: hidden;
     opacity: 0;
@@ -182,16 +180,16 @@ body{
     z-index: -1;
 }
 
-.nav-apachecn .second-level label{
+.second-level label{
   padding: 0;
   border-left:0;
   position: inherit;
 }
 
-.nav-apachecn .second-level .nav-itme__list.animate.active{
+.second-level .nav-itme__list.animate.active{
   left: 240px;
 }
 
-.nav-apachecn .second-level .nav-itme__list li{
+.second-level .nav-itme__list li{
   padding-left: 10px
 }
