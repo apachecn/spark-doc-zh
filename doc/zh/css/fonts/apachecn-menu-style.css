@@ -15,16 +15,9 @@
   line-height: 22px !important;
 }
 
-
-.spark-top__nav{
-    position: fixed;
-    z-index:10;
-    width:100%;
-    top:0;
-}
-
 .nav-apachecn{
     width: 100%;
+<<<<<<< HEAD
     position: relative;
     z-index: 10;
     background: #fff;
@@ -40,6 +33,10 @@
 
 .nav-apachecn{
     width: 100%;
+=======
+    position: fixed;
+    top: 0;
+>>>>>>> parent of fcbc65f... add
     z-index: 10;
     background: #fff;
 }
