@@ -43,12 +43,8 @@
     z-index: 10;
     background: #fff;
 }
-<<<<<<< HEAD
+
 .navbar-fixed-top{
-=======
-.navbar.navbar-fixed-top{
-    top: 52px;
->>>>>>> parent of bbc2f05... feat: add test
     z-index: 8;
 }
 body{
