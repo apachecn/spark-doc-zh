@@ -33,6 +33,9 @@ body{
     position: relative;
     margin-bottom:0;
 }
+.nav-apachecn a{
+    text-decoration: none;
+}
 
 .navbar-fixed-top{
     position: static;
@@ -54,10 +57,10 @@ body{
 #apachecn-spark-menu.slideUp {
     /* -webkit-transform: translateY(-100px);
      transform: translateY(-100px);*/
-    -webkit-transform: translateY(-100px);
-    -ms-transform: translateY(-100px);
-    -o-transform: translateY(-100px);
-    transform: translateY(-100px);
+    -webkit-transform: translateY(-52px);
+    -ms-transform: translateY(-52px);
+    -o-transform: translateY(-52px);
+    transform: translateY(-52px);
     /*transition: transform .5s ease-out;*/
     -webkit-transition: transform .5s ease-out;
     -o-transition: transform .5s ease-out;
@@ -106,6 +109,10 @@ body{
     color: #1ABC9C;
     height: 52px;
     line-height: 52px;
+}
+
+.nav .nav-item>label {
+    background: #ECF0F1;
 }
 .nav .nav-item .nav-itme__list li{
     background: #ECF0F1;
@@ -189,6 +196,9 @@ body{
     border-left:0;
     position: inherit;
     margin-bottom: 0;
+}
+.nav-apachecn .second-level label >i{
+    right: 0;
 }
 
 .nav-apachecn .second-level .nav-itme__list.animate.active{
