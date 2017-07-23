@@ -31,7 +31,7 @@ body{
     z-index: 10;
     background: #fff;
     position: relative;
-    margin-bottom: 0;
+    margin-bottom:0;
 }
 
 .navbar-fixed-top{
@@ -102,15 +102,15 @@ body{
 .nav .nav-item .nav-itme__list li{
     display: block;
     width: 200px;
-    background: #ECF0F1;
     padding: 0 20px;
     color: #1ABC9C;
     height: 52px;
     line-height: 52px;
 }
+.nav .nav-item .nav-itme__list li{
+    background: #ECF0F1;
+}
 
-
-.nav-item label:hover,
 .nav-item .nav-itme__list li:hover{
     background: #1ABC9C;
     color: white;
@@ -181,10 +181,14 @@ body{
     z-index: -1;
 }
 
+.nav-apachecn .second-level{
+    position: relative;
+}
 .nav-apachecn .second-level label{
-  padding: 0;
-  border-left:0;
-  position: inherit;
+    padding: 0;
+    border-left:0;
+    position: inherit;
+    margin-bottom: 0;
 }
 
 .nav-apachecn .second-level .nav-itme__list.animate.active{
