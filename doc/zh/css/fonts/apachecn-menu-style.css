@@ -125,6 +125,7 @@ body{
 }
 .nav-item label:hover{
     border-left: 0;
+    cursor: pointer;
 }
 .nav-item label{
     color: #1ABC9C;
