@@ -15,28 +15,15 @@
   line-height: 22px !important;
 }
 
-.nav-apachecn{
-    width: 100%;
-<<<<<<< HEAD
-    position: relative;
-    z-index: 10;
-    background: #fff;
-    margin-bottom: 0;
-}
-.nav-apachecn a{
-    text-decoration: none;
-}
-
-.navbar-fixed-top{
-    position: relative;
-}
-
-.nav-apachecn{
-    width: 100%;
-=======
+.spark-top__nav{
     position: fixed;
-    top: 0;
->>>>>>> parent of fcbc65f... add
+    z-index:10;
+    width:100%;
+    top:0;
+}
+
+.nav-apachecn{
+    width: 100%;
     z-index: 10;
     background: #fff;
 }
