@@ -109,6 +109,7 @@ body{
     height: 52px;
     line-height: 52px;
     padding: 0 20px;
+    background: #ECF0F1;
 }
 
 .nav .nav-item .nav-itme__list li.second-level{
@@ -121,7 +122,7 @@ body{
 }
 
 .nav .nav-item>label {
-    background: #ECF0F1;
+    /*background: #ECF0F1;*/
 }
 .nav .nav-item .nav-itme__list li{
     background: #ECF0F1;
