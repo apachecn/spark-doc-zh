@@ -7,27 +7,26 @@ title: SparkR (R on Spark)
 * This will become a table of contents (this text will be scraped).
 {:toc}
 
-# Overview
-SparkR is an R package that provides a light-weight frontend to use Apache Spark from R.
-In Spark {{site.SPARK_VERSION}}, SparkR provides a distributed data frame implementation that
-supports operations like selection, filtering, aggregation etc. (similar to R data frames,
-[dplyr](https://github.com/hadley/dplyr)) but on large datasets. SparkR also supports distributed
-machine learning using MLlib.
+# 概述
+
+SparkR 是一个 R package, 它提供了一个轻量级的前端以从 R 中使用 Apache Spark.
+在 Spark {{site.SPARK_VERSION}} 中, SparkR 提供了一个分布式的 data frame, 它实现了像 selection, filtering, aggregation etc 一系列所支持的操作.（[dplyr](https://github.com/hadley/dplyr) 与 R data frames 相似) ）, 除了可用于海量数据上之外. SparkR 还支持使用 MLlib 来进行分布式的 machine learning（机器学习）.
 
 # SparkDataFrame
 
-A SparkDataFrame is a distributed collection of data organized into named columns. It is conceptually
-equivalent to a table in a relational database or a data frame in R, but with richer
-optimizations under the hood. SparkDataFrames can be constructed from a wide array of sources such as:
-structured data files, tables in Hive, external databases, or existing local R data frames.
+SparkDataFrame 是一个分布式的, 将数据映射到有名称的 colums（列）的集合. 在概念上
+相当于关系数据库中的 `table` 表或 R 中的 data frame，但在该引擎下有更多的优化.
+SparkDataFrames 可以从各种来源构造，例如:
+结构化的数据文件，Hive 中的表，外部数据库或现有的本地 R data frames.
 
 All of the examples on this page use sample data included in R or the Spark distribution and can be run using the `./bin/sparkR` shell.
 
-## Starting Up: SparkSession
+## 启动: SparkSession
 
 <div data-lang="r"  markdown="1">
-The entry point into SparkR is the `SparkSession` which connects your R program to a Spark cluster.
-You can create a `SparkSession` using `sparkR.session` and pass in options such as the application name, any spark packages depended on, etc. Further, you can also work with SparkDataFrames via `SparkSession`. If you are working from the `sparkR` shell, the `SparkSession` should already be created for you, and you would not need to call `sparkR.session`.
+SparkR 的入口点是 `SparkSession`, 它会连接您的 R 程序到 Spark 集群中.
+您可以使用 `sparkR.session` 来创建 `SparkSession`, 并传递诸如应用程序名称, 依赖的任何 spark 软件包等选项, 等等. 
+此外，还可以通过 `SparkSession` 来与 `SparkDataFrames` 一起工作。 如果您正在使用 `sparkR` shell，那么 `SparkSession` 应该已经被创建了，你不需要再调用 `sparkR.session`.
 
 <div data-lang="r" markdown="1">
 {% highlight r %}
@@ -35,20 +34,17 @@ sparkR.session()
 {% endhighlight %}
 </div>
 
-## Starting Up from RStudio
+## 从 RStudio 来启动
 
-You can also start SparkR from RStudio. You can connect your R program to a Spark cluster from
-RStudio, R shell, Rscript or other R IDEs. To start, make sure SPARK_HOME is set in environment
-(you can check [Sys.getenv](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Sys.getenv.html)),
-load the SparkR package, and call `sparkR.session` as below. It will check for the Spark installation, and, if not found, it will be downloaded and cached automatically. Alternatively, you can also run `install.spark` manually.
+您可以从 RStudio 中来启动 SparkR.
+您可以从 RStudio, R shell, Rscript 或者 R IDEs 中连接你的 R 程序到 Spark 集群中去.
+要开始, 确保已经在环境变量中设置好 SPARK_HOME (您可以检测下 [Sys.getenv](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Sys.getenv.html)), 加载 SparkR package, 并且像下面一样调用 `sparkR.session`. 
+它将检测 Spark 的安装, 并且, 如果没有发现, 它将自动的下载并且缓存起来. 当然，您也可以手动的运行 `install.spark`.
 
-In addition to calling `sparkR.session`,
- you could also specify certain Spark driver properties. Normally these
-[Application properties](configuration.html#application-properties) and
-[Runtime Environment](configuration.html#runtime-environment) cannot be set programmatically, as the
-driver JVM process would have been started, in this case SparkR takes care of this for you. To set
-them, pass them as you would other configuration properties in the `sparkConfig` argument to
-`sparkR.session()`.
+为了调用 `sparkR.session`, 您也可以指定某些 Spark driver 的属性.
+通常哪些 [应用程序属性](configuration.html#application-properties) 和
+[运行时环境](configuration.html#runtime-environment) 不能以编程的方式来设置, 这是因为 driver 的 JVM 进程早就已经启动了, 在这种情况下 SparkR 会帮你做好准备.
+要设置它们, 可以像在 `sparkConfig` 参数中的其它属性一样传递它们到 `sparkR.session()` 中去.
 
 <div data-lang="r" markdown="1">
 {% highlight r %}
@@ -60,10 +56,10 @@ sparkR.session(master = "local[*]", sparkConfig = list(spark.driver.memory = "2g
 {% endhighlight %}
 </div>
 
-The following Spark driver properties can be set in `sparkConfig` with `sparkR.session` from RStudio:
+下面的 Spark driver 属性可以 从 RStudio 的 sparkR.session 的 sparkConfig 中进行设置:
 
 <table class="table">
-  <tr><th>Property Name</th><th>Property group</th><th><code>spark-submit</code> equivalent</th></tr>
+  <tr><th>Property Name<（属性名称）/th><th>Property group（属性分组）</th><th><code>spark-submit</code> equivalent</th></tr>
   <tr>
     <td><code>spark.master</code></td>
     <td>Application Properties</td>
@@ -103,17 +99,21 @@ The following Spark driver properties can be set in `sparkConfig` with `sparkR.s
 
 </div>
 
-## Creating SparkDataFrames
-With a `SparkSession`, applications can create `SparkDataFrame`s from a local R data frame, from a [Hive table](sql-programming-guide.html#hive-tables), or from other [data sources](sql-programming-guide.html#data-sources).
+## 创建 SparkDataFrames
 
-### From local data frames
-The simplest way to create a data frame is to convert a local R data frame into a SparkDataFrame. Specifically we can use `as.DataFrame` or `createDataFrame` and pass in the local R data frame to create a SparkDataFrame. As an example, the following creates a `SparkDataFrame` based using the `faithful` dataset from R.
+有了一个 `SparkSession` 之后, 可以从一个本地的 R data frame, [Hive 表](sql-programming-guide.html#hive-tables), 或者其它的  [data sources](sql-programming-guide.html#data-sources) 中来创建 `SparkDataFrame` 应用程序. 
+
+### 从本地的 data frames 来创建 SparkDataFrames
+
+要创建一个 data frame 最简单的方式是去转换一个本地的 R data frame 成为一个 SparkDataFrame.
+我们明确的使用 `as.DataFrame` 或 `createDataFrame` 并且经过本地的 R data frame 中以创建一个 SparkDataFrame.
+例如, 下面的例子基于 R 中已有的 `faithful` 来创建一个 `SparkDataFrame`.
 
 <div data-lang="r"  markdown="1">
 {% highlight r %}
 df <- as.DataFrame(faithful)
 
-# Displays the first part of the SparkDataFrame
+# 展示第一个 SparkDataFrame 的内容
 head(df)
 ##  eruptions waiting
 ##1     3.600      79
@@ -123,13 +123,16 @@ head(df)
 {% endhighlight %}
 </div>
 
-### From Data Sources
+### 从 Data Sources（数据源）创建 SparkDataFrame
 
-SparkR supports operating on a variety of data sources through the `SparkDataFrame` interface. This section describes the general methods for loading and saving data using Data Sources. You can check the Spark SQL programming guide for more [specific options](sql-programming-guide.html#manually-specifying-options) that are available for the built-in data sources.
+SparkR 支持通过 `SparkDataFrame` 接口对各种 data sources（数据源）进行操作.
+本节介绍使用数据源加载和保存数据的常见方法.
+您可以查看 Spark Sql 编程指南的 [specific options](sql-programming-guide.html#manually-specifying-options) 部分以了解更多可用于内置的 data sources（数据源）内容.
 
-The general method for creating SparkDataFrames from data sources is `read.df`. This method takes in the path for the file to load and the type of data source, and the currently active SparkSession will be used automatically.
-SparkR supports reading JSON, CSV and Parquet files natively, and through packages available from sources like [Third Party Projects](http://spark.apache.org/third-party-projects.html), you can find data source connectors for popular file formats like Avro. These packages can either be added by
-specifying `--packages` with `spark-submit` or `sparkR` commands, or if initializing SparkSession with `sparkPackages` parameter when in an interactive R shell or from RStudio.
+从数据源创建 SparkDataFrames 常见的方法是 `read.df`.
+此方法将加载文件的路径和数据源的类型，并且将自动使用当前活动的 SparkSession.
+SparkR 天生就支持读取 JSON, CSV 和 Parquet 文件, 并且通过可靠来源的软件包 [第三方项目](http://spark.apache.org/third-party-projects.html), 您可以找到 Avro 等流行文件格式的 data source connectors（数据源连接器）.
+可以用 `spark-submit` 或 `sparkR` 命令指定 `--packages` 来添加这些包, 或者在交互式 R shell 或从 RStudio 中使用`sparkPackages` 参数初始化 `SparkSession`.
 
 <div data-lang="r" markdown="1">
 {% highlight r %}
@@ -138,6 +141,11 @@ sparkR.session(sparkPackages = "com.databricks:spark-avro_2.11:3.0.0")
 </div>
 
 We can see how to use data sources using an example JSON input file. Note that the file that is used here is _not_ a typical JSON file. Each line in the file must contain a separate, self-contained valid JSON object. For more information, please see [JSON Lines text format, also called newline-delimited JSON](http://jsonlines.org/). As a consequence, a regular multi-line JSON file will most often fail.
+
+我们可以看看如何使用 JSON input file 的例子来使用数据源.
+注意, 这里使用的文件是 _not_ 一个经典的 JSON 文件.
+文件中的每行都必须包含一个单独的，独立的有效的JSON对象
+
 
 <div data-lang="r"  markdown="1">
 {% highlight r %}
@@ -148,19 +156,19 @@ head(people)
 ##2  30    Andy
 ##3  19  Justin
 
-# SparkR automatically infers the schema from the JSON file
+# SparkR 自动从 JSON 文件推断出 schema（模式）
 printSchema(people)
 # root
 #  |-- age: long (nullable = true)
 #  |-- name: string (nullable = true)
 
-# Similarly, multiple files can be read with read.json
+# 同样, 使用  read.json 读取多个文件
 people <- read.json(c("./examples/src/main/resources/people.json", "./examples/src/main/resources/people2.json"))
 
 {% endhighlight %}
 </div>
 
-The data sources API natively supports CSV formatted input files. For more information please refer to SparkR [read.df](api/R/read.df.html) API documentation.
+该 data sources API 原生支持 CSV 格式的 input files（输入文件）. 要了解更多信息请参阅 SparkR [read.df](api/R/read.df.html) API 文档.
 
 <div data-lang="r"  markdown="1">
 {% highlight r %}
@@ -169,8 +177,8 @@ df <- read.df(csvPath, "csv", header = "true", inferSchema = "true", na.strings 
 {% endhighlight %}
 </div>
 
-The data sources API can also be used to save out SparkDataFrames into multiple file formats. For example we can save the SparkDataFrame from the previous example
-to a Parquet file using `write.df`.
+该 data sources API 也可用于将 SparkDataFrames 存储为多个 file formats（文件格式）.
+例如, 我们可以使用 `write.df` 把先前的示例的 SparkDataFrame 存储为一个 Parquet 文件.
 
 <div data-lang="r"  markdown="1">
 {% highlight r %}
@@ -178,9 +186,11 @@ write.df(people, path = "people.parquet", source = "parquet", mode = "overwrite"
 {% endhighlight %}
 </div>
 
-### From Hive tables
+### 从 Hive tables 来创建 SparkDataFrame
 
-You can also create SparkDataFrames from Hive tables. To do this we will need to create a SparkSession with Hive support which can access tables in the Hive MetaStore. Note that Spark should have been built with [Hive support](building-spark.html#building-with-hive-and-jdbc-support) and more details can be found in the [SQL programming guide](sql-programming-guide.html#starting-point-sparksession). In SparkR, by default it will attempt to create a SparkSession with Hive support enabled (`enableHiveSupport = TRUE`).
+您也可以从 Hive tables（表）来创建 SparkDataFrames.
+为此，我们需要创建一个具有 Hive 支持的 SparkSession，它可以访问 Hive MetaStore 中的 tables（表）.
+请注意, Spark 应该使用 [Hive support](building-spark.html#building-with-hive-and-jdbc-support) 来构建，更多细节可以在  [SQL 编程指南](sql-programming-guide.html#starting-point-sparksession) 中查阅.
 
 <div data-lang="r" markdown="1">
 {% highlight r %}
@@ -202,19 +212,19 @@ head(results)
 {% endhighlight %}
 </div>
 
-## SparkDataFrame Operations
+## SparkDataFrame 操作
 
-SparkDataFrames support a number of functions to do structured data processing.
-Here we include some basic examples and a complete list can be found in the [API](api/R/index.html) docs:
+SparkDataFrames 支持一些用于结构化数据处理的 functions（函数）.
+这里我们包括一些基本的例子，一个完整的列表可以在 [API](api/R/index.html) 文档中找到:
 
-### Selecting rows, columns
+### Selecting rows（行）, columns（列）
 
 <div data-lang="r"  markdown="1">
 {% highlight r %}
 # Create the SparkDataFrame
 df <- as.DataFrame(faithful)
 
-# Get basic information about the SparkDataFrame
+# 获取关于 SparkDataFrame 基础信息
 df
 ## SparkDataFrame[eruptions:double, waiting:double]
 
@@ -239,9 +249,10 @@ head(filter(df, df$waiting < 50))
 
 </div>
 
-### Grouping, Aggregation
+### Grouping, Aggregation（分组, 聚合）
 
-SparkR data frames support a number of commonly used functions to aggregate data after grouping. For example we can compute a histogram of the `waiting` time in the `faithful` dataset as shown below
+SparkR data frames 支持一些常见的, 用于在 grouping（分组）数据后进行 aggregate（聚合）的函数.
+例如, 我们可以在 `faithful` dataset 中计算 `waiting` 时间的直方图, 如下所示.
 
 <div data-lang="r"  markdown="1">
 {% highlight r %}
@@ -264,9 +275,10 @@ head(arrange(waiting_counts, desc(waiting_counts$count)))
 {% endhighlight %}
 </div>
 
-### Operating on Columns
+### Operating on Columns（列上的操作）
 
-SparkR also provides a number of functions that can directly applied to columns for data processing and during aggregation. The example below shows the use of basic arithmetic functions.
+SparkR 还提供了一些可以直接应用于列进行数据处理和 aggregatation（聚合）的函数.
+下面的例子展示了使用基本的算术函数.
 
 <div data-lang="r"  markdown="1">
 {% highlight r %}
@@ -283,14 +295,17 @@ head(df)
 {% endhighlight %}
 </div>
 
-### Applying User-Defined Function
-In SparkR, we support several kinds of User-Defined Functions:
+### 应用 User-Defined Function（UDF 用户自定义函数）
+在 SparkR 中, 我们支持几种 User-Defined Functions:
 
 #### Run a given function on a large dataset using `dapply` or `dapplyCollect`
 
 ##### dapply
-Apply a function to each partition of a `SparkDataFrame`. The function to be applied to each partition of the `SparkDataFrame`
-and should have only one parameter, to which a `data.frame` corresponds to each partition will be passed. The output of function should be a `data.frame`. Schema specifies the row format of the resulting a `SparkDataFrame`. It must match to [data types](#data-type-mapping-between-r-and-spark) of returned value.
+应用一个 function（函数）到 `SparkDataFrame` 的每个 partition（分区）.
+应用于 `SparkDataFrame` 每个 partition（分区）的 function（函数）应该只有一个参数, 它中的 `data.frame` 对应传递的每个分区.
+函数的输出应该是一个 `data.frame`.
+Schema 指定生成的 `SparkDataFrame` row format.
+它必须匹配返回值的 [data types](#data-type-mapping-between-r-and-spark).
 
 <div data-lang="r"  markdown="1">
 {% highlight r %}
@@ -312,8 +327,10 @@ head(collect(df1))
 </div>
 
 ##### dapplyCollect
-Like `dapply`, apply a function to each partition of a `SparkDataFrame` and collect the result back. The output of function
-should be a `data.frame`. But, Schema is not required to be passed. Note that `dapplyCollect` can fail if the output of UDF run on all the partition cannot be pulled to the driver and fit in driver memory.
+像 `dapply` 那样, 应用一个函数到 `SparkDataFrame` 的每个分区并且手机返回结果.
+函数的输出应该是一个 `data.frame`.
+但是, 不需要传递 Schema.
+注意, 如果运行在所有分区上的函数的输出不能 pulled（拉）到 driver 的内存中过去, 则 `dapplyCollect` 会失败.
 
 <div data-lang="r"  markdown="1">
 {% highlight r %}
@@ -334,13 +351,16 @@ head(ldf, 3)
 {% endhighlight %}
 </div>
 
-#### Run a given function on a large dataset grouping by input column(s) and using `gapply` or `gapplyCollect`
+#### Run a given function on a large dataset grouping by input column(s) and using `gapply` or `gapplyCollect`（在一个大的 dataset 上通过 input colums（输入列）来进行 grouping（分组）并且使用 `gapply` or `gapplyCollect` 来运行一个指定的函数）
 
 ##### gapply
-Apply a function to each group of a `SparkDataFrame`. The function is to be applied to each group of the `SparkDataFrame` and should have only two parameters: grouping key and R `data.frame` corresponding to
-that key. The groups are chosen from `SparkDataFrame`s column(s).
-The output of function should be a `data.frame`. Schema specifies the row format of the resulting
-`SparkDataFrame`. It must represent R function's output schema on the basis of Spark [data types](#data-type-mapping-between-r-and-spark). The column names of the returned `data.frame` are set by user.
+应用给一个函数到 `SparkDataFrame` 的每个 group.
+该函数被应用到 `SparkDataFrame` 的每个 group, 并且应该只有两个参数: grouping key 和 R `data.frame` 对应的 key.
+该 groups 从 `SparkDataFrame` 的 columns（列）中选择.
+函数的输出应该是 `data.frame`.
+Schema 指定生成的 `SparkDataFrame` row format.
+它必须在 Spark [data types 数据类型](#data-type-mapping-between-r-and-spark) 的基础上表示 R 函数的输出 schema（模式）.
+用户可以设置返回的 `data.frame` 列名.
 
 <div data-lang="r"  markdown="1">
 {% highlight r %}
@@ -367,7 +387,10 @@ head(collect(arrange(result, "max_eruption", decreasing = TRUE)))
 </div>
 
 ##### gapplyCollect
-Like `gapply`, applies a function to each partition of a `SparkDataFrame` and collect the result back to R data.frame. The output of the function should be a `data.frame`. But, the schema is not required to be passed. Note that `gapplyCollect` can fail if the output of UDF run on all the partition cannot be pulled to the driver and fit in driver memory.
+像 `gapply` 那样, 将函数应用于 `SparkDataFrame` 的每个分区，并将结果收集回 R data.frame.
+函数的输出应该是一个 `data.frame`.
+但是，不需要传递 schema（模式）.
+请注意，如果在所有分区上运行的 UDF 的输出无法 pull（拉）到 driver 的内存, 那么 `gapplyCollect` 可能会失败.
 
 <div data-lang="r"  markdown="1">
 {% highlight r %}
@@ -394,13 +417,13 @@ head(result[order(result$max_eruption, decreasing = TRUE), ])
 {% endhighlight %}
 </div>
 
-#### Run local R functions distributed using `spark.lapply`
+#### 使用 `spark.lapply` 分发运行一个本地的 R 函数
 
 ##### spark.lapply
-Similar to `lapply` in native R, `spark.lapply` runs a function over a list of elements and distributes the computations with Spark.
-Applies a function in a manner that is similar to `doParallel` or `lapply` to elements of a list. The results of all the computations
-should fit in a single machine. If that is not the case they can do something like `df <- createDataFrame(list)` and then use
-`dapply`
+类似于本地 R 中的 `lapply`, `spark.lapply` 在元素列表中运行一个函数，并使用 Spark 分发计算.
+以类似于 `doParallel` 或 `lapply` 的方式应用于列表的元素.
+所有计算的结果应该放在一台机器上.
+如果不是这样, 他们可以像 `df < - createDataFrame(list)` 这样做, 然后使用 `dapply`.
 
 <div data-lang="r"  markdown="1">
 {% highlight r %}
@@ -420,7 +443,7 @@ print(model.summaries)
 {% endhighlight %}
 </div>
 
-## Running SQL Queries from SparkR
+## SparkR 中运行 SQL 查询
 A SparkDataFrame can also be registered as a temporary view in Spark SQL and that allows you to run SQL queries over its data.
 The `sql` function enables applications to run SQL queries programmatically and returns the result as a `SparkDataFrame`.
 
