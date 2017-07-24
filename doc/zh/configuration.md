@@ -993,7 +993,7 @@ Apart from these, the following properties are also available, and may be useful
   </td>
 </tr>
 <tr>
-  <td><code>spark.storage.replication.proactive<code></td>
+  <td><code>spark.storage.replication.proactive</code></td>
   <td>false</td>
   <td>
     Enables proactive block replication for RDD blocks. Cached RDD block replicas lost due to
@@ -1257,84 +1257,64 @@ Apart from these, the following properties are also available, and may be useful
   <td><code>spark.cores.max</code></td>
   <td>(not set)</td>
   <td>
-    When running on a <a href="spark-standalone.html">standalone deploy cluster</a> or a
-    <a href="running-on-mesos.html#mesos-run-modes">Mesos cluster in "coarse-grained"
-    sharing mode</a>, the maximum amount of CPU cores to request for the application from
-    across the cluster (not from each machine). If not set, the default will be
-    <code>spark.deploy.defaultCores</code> on Spark's standalone cluster manager, or
-    infinite (all available cores) on Mesos.
+    当以 “coarse-grained（粗粒度）” 共享模式在 <a href="spark-standalone.html">standalone deploy cluster</a> 或 <a href="running-on-mesos.html#mesos-run-modes">Mesos cluster in "coarse-grained"
+    sharing mode</a> 上运行时, 从集群（而不是每台计算机）请求应用程序的最大 CPU 内核数量.  如果未设置, 默认值将是 Spar k的 standalone deploy 管理器上的 <code>spark.deploy.defaultCores</code> , 或者 Mesos上的无限（所有可用核心）. 
   </td>
 </tr>
 <tr>
   <td><code>spark.locality.wait</code></td>
   <td>3s</td>
   <td>
-    How long to wait to launch a data-local task before giving up and launching it
-    on a less-local node. The same wait will be used to step through multiple locality levels
-    (process-local, node-local, rack-local and then any). It is also possible to customize the
-    waiting time for each level by setting <code>spark.locality.wait.node</code>, etc.
-    You should increase this setting if your tasks are long and see poor locality, but the
-    default usually works well.
+    等待启动本地数据任务多长时间, 然后在较少本地节点上放弃并启动它.  相同的等待将用于跨越多个地点级别（process-local, node-local, rack-local 等所有）.  也可以通过设置 <code>spark.locality.wait.node</code> 等来自定义每个级别的等待时间. 如果任务很长并且局部性较差, 则应该增加此设置, 但是默认值通常很好. 
   </td>
 </tr>
 <tr>
   <td><code>spark.locality.wait.node</code></td>
   <td>spark.locality.wait</td>
   <td>
-    Customize the locality wait for node locality. For example, you can set this to 0 to skip
-    node locality and search immediately for rack locality (if your cluster has rack information).
+    自定义 node locality 等待时间.  例如, 您可以将其设置为 0 以跳过 node locality, 并立即搜索机架位置（如果群集具有机架信息）. 
   </td>
 </tr>
 <tr>
   <td><code>spark.locality.wait.process</code></td>
   <td>spark.locality.wait</td>
   <td>
-    Customize the locality wait for process locality. This affects tasks that attempt to access
-    cached data in a particular executor process.
+    自定义 process locality 等待时间. 这会影响尝试访问特定执行程序进程中的缓存数据的任务. 
   </td>
 </tr>
 <tr>
   <td><code>spark.locality.wait.rack</code></td>
   <td>spark.locality.wait</td>
   <td>
-    Customize the locality wait for rack locality.
+    自定义 rack locality 等待时间. 
   </td>
 </tr>
 <tr>
   <td><code>spark.scheduler.maxRegisteredResourcesWaitingTime</code></td>
   <td>30s</td>
   <td>
-    Maximum amount of time to wait for resources to register before scheduling begins.
+    在调度开始之前等待资源注册的最大时间量. 
   </td>
 </tr>
 <tr>
   <td><code>spark.scheduler.minRegisteredResourcesRatio</code></td>
   <td>0.8 for YARN mode; 0.0 for standalone mode and Mesos coarse-grained mode</td>
   <td>
-    The minimum ratio of registered resources (registered resources / total expected resources)
-    (resources are executors in yarn mode, CPU cores in standalone mode and Mesos coarsed-grained
-     mode ['spark.cores.max' value is total expected resources for Mesos coarse-grained mode] )
-    to wait for before scheduling begins. Specified as a double between 0.0 and 1.0.
-    Regardless of whether the minimum ratio of resources has been reached,
-    the maximum amount of time it will wait before scheduling begins is controlled by config
-    <code>spark.scheduler.maxRegisteredResourcesWaitingTime</code>.
+    注册资源（注册资源/总预期资源）的最小比率（资源是 yarn 模式下的执行程序, standalone 模式下的 CPU 核心和 Mesos coarsed-grained 模式 'spark.cores.max' 值是 Mesos  coarse-grained 模式下的总体预期资源]）在调度开始之前等待.  指定为 0.0 和 1.0 之间的双精度.  无论是否已达到资源的最小比率, 在调度开始之前将等待的最大时间量由配置<code>spark.scheduler.maxRegisteredResourcesWaitingTime</code> 控制. 
   </td>
 </tr>
 <tr>
   <td><code>spark.scheduler.mode</code></td>
   <td>FIFO</td>
   <td>
-    The <a href="job-scheduling.html#scheduling-within-an-application">scheduling mode</a> between
-    jobs submitted to the same SparkContext. Can be set to <code>FAIR</code>
-    to use fair sharing instead of queueing jobs one after another. Useful for
-    multi-user services.
+    作业之间的 <a href="job-scheduling.html#scheduling-within-an-application">scheduling mode （调度模式）</a> 提交到同一个 SparkContext.  可以设置为 <code>FAIR</code> 使用公平共享, 而不是一个接一个排队作业.  对多用户服务有用. 
   </td>
 </tr>
 <tr>
   <td><code>spark.scheduler.revive.interval</code></td>
   <td>1s</td>
   <td>
-    The interval length for the scheduler to revive the worker resource offers to run tasks.
+    调度程序复活工作资源去运行任务的间隔长度. 
   </td>
 </tr>
 <tr>
@@ -1423,46 +1403,42 @@ Apart from these, the following properties are also available, and may be useful
   <td><code>spark.speculation</code></td>
   <td>false</td>
   <td>
-    If set to "true", performs speculative execution of tasks. This means if one or more tasks are
-    running slowly in a stage, they will be re-launched.
+    如果设置为 "true" , 则执行任务的推测执行.  这意味着如果一个或多个任务在一个阶段中运行缓慢, 则将重新启动它们. 
   </td>
 </tr>
 <tr>
   <td><code>spark.speculation.interval</code></td>
   <td>100ms</td>
   <td>
-    How often Spark will check for tasks to speculate.
+   Spark 检查要推测的任务的时间间隔. 
   </td>
 </tr>
 <tr>
   <td><code>spark.speculation.multiplier</code></td>
   <td>1.5</td>
   <td>
-    How many times slower a task is than the median to be considered for speculation.
+    一个任务的速度可以比推测的平均值慢多少倍. 
   </td>
 </tr>
 <tr>
   <td><code>spark.speculation.quantile</code></td>
   <td>0.75</td>
   <td>
-    Fraction of tasks which must be complete before speculation is enabled for a particular stage.
+    对特定阶段启用推测之前必须完成的任务的分数. 
   </td>
 </tr>
 <tr>
   <td><code>spark.task.cpus</code></td>
   <td>1</td>
   <td>
-    Number of cores to allocate for each task.
+    要为每个任务分配的核心数. 
   </td>
 </tr>
 <tr>
   <td><code>spark.task.maxFailures</code></td>
   <td>4</td>
   <td>
-    Number of failures of any particular task before giving up on the job.
-    The total number of failures spread across different tasks will not cause the job
-    to fail; a particular task has to fail this number of attempts.
-    Should be greater than or equal to 1. Number of allowed retries = this value - 1.
+    放弃作业之前任何特定任务的失败次数.  分散在不同任务中的故障总数不会导致作业失败; 一个特定的任务允许失败这个次数.  应大于或等于 1. 允许重试次数=此值 - 1. 
   </td>
 </tr>
 <tr>
@@ -1524,76 +1500,60 @@ Apart from these, the following properties are also available, and may be useful
   <td><code>spark.dynamicAllocation.enabled</code></td>
   <td>false</td>
   <td>
-    Whether to use dynamic resource allocation, which scales the number of executors registered
-    with this application up and down based on the workload.
-    For more detail, see the description
-    <a href="job-scheduling.html#dynamic-resource-allocation">here</a>.
+    是否使用动态资源分配, 它根据工作负载调整为此应用程序注册的执行程序数量.  有关更多详细信息, 请参阅 <a href="job-scheduling.html#dynamic-resource-allocation">here</a> 的说明. 
     <br><br>
-    This requires <code>spark.shuffle.service.enabled</code> to be set.
-    The following configurations are also relevant:
-    <code>spark.dynamicAllocation.minExecutors</code>,
-    <code>spark.dynamicAllocation.maxExecutors</code>, and
-    <code>spark.dynamicAllocation.initialExecutors</code>
+    这需要设置 <code>spark.shuffle.service.enabled</code> .  以下配置也相关 : <code>spark.dynamicAllocation.minExecutors</code>, <code>spark.dynamicAllocation.maxExecutors</code> 和<code>spark.dynamicAllocation.initialExecutors</code> . 
   </td>
 </tr>
 <tr>
   <td><code>spark.dynamicAllocation.executorIdleTimeout</code></td>
   <td>60s</td>
   <td>
-    If dynamic allocation is enabled and an executor has been idle for more than this duration,
-    the executor will be removed. For more detail, see this
-    <a href="job-scheduling.html#resource-allocation-policy">description</a>.
+    如果启用动态分配, 并且执行程序已空闲超过此持续时间, 则将删除执行程序.  有关更多详细信息, 请参阅此<a href="job-scheduling.html#resource-allocation-policy">description</a>.
   </td>
 </tr>
 <tr>
   <td><code>spark.dynamicAllocation.cachedExecutorIdleTimeout</code></td>
   <td>infinity</td>
   <td>
-    If dynamic allocation is enabled and an executor which has cached data blocks has been idle for more than this duration,
-    the executor will be removed. For more details, see this
-    <a href="job-scheduling.html#resource-allocation-policy">description</a>.
+    如果启用动态分配, 并且已缓存数据块的执行程序已空闲超过此持续时间, 则将删除执行程序.  有关详细信息, 请参阅此 <a href="job-scheduling.html#resource-allocation-policy">description</a> . 
   </td>
 </tr>
 <tr>
   <td><code>spark.dynamicAllocation.initialExecutors</code></td>
   <td><code>spark.dynamicAllocation.minExecutors</code></td>
   <td>
-    Initial number of executors to run if dynamic allocation is enabled.
+    启用动态分配时要运行的执行程序的初始数. 
     <br /><br />
-    If `--num-executors` (or `spark.executor.instances`) is set and larger than this value, it will
-    be used as the initial number of executors.
+    如果 `--num-executors`（或 `spark.executor.instances` ）被设置并大于此值, 它将被用作初始执行器数. 
   </td>
 </tr>
 <tr>
   <td><code>spark.dynamicAllocation.maxExecutors</code></td>
   <td>infinity</td>
   <td>
-    Upper bound for the number of executors if dynamic allocation is enabled.
+    启用动态分配的执行程序数量的上限. 
   </td>
 </tr>
 <tr>
   <td><code>spark.dynamicAllocation.minExecutors</code></td>
   <td>0</td>
   <td>
-    Lower bound for the number of executors if dynamic allocation is enabled.
+    启用动态分配的执行程序数量的下限. 
   </td>
 </tr>
 <tr>
   <td><code>spark.dynamicAllocation.schedulerBacklogTimeout</code></td>
   <td>1s</td>
   <td>
-    If dynamic allocation is enabled and there have been pending tasks backlogged for more than
-    this duration, new executors will be requested. For more detail, see this
-    <a href="job-scheduling.html#resource-allocation-policy">description</a>.
+    如果启用动态分配, 并且有超过此持续时间的挂起任务积压, 则将请求新的执行者.  有关更多详细信息, 请参阅此 <a href="job-scheduling.html#resource-allocation-policy">description</a> . 
   </td>
 </tr>
 <tr>
   <td><code>spark.dynamicAllocation.sustainedSchedulerBacklogTimeout</code></td>
   <td><code>schedulerBacklogTimeout</code></td>
   <td>
-    Same as <code>spark.dynamicAllocation.schedulerBacklogTimeout</code>, but used only for
-    subsequent executor requests. For more detail, see this
-    <a href="job-scheduling.html#resource-allocation-policy">description</a>.
+    与 <code>spark.dynamicAllocation.schedulerBacklogTimeout</code> 相同, 但仅用于后续执行者请求.  有关更多详细信息, 请参阅此 <a href="job-scheduling.html#resource-allocation-policy">description</a> .
   </td>
 </tr>
 </table>
@@ -1606,61 +1566,44 @@ Apart from these, the following properties are also available, and may be useful
   <td><code>spark.acls.enable</code></td>
   <td>false</td>
   <td>
-    Whether Spark acls should be enabled. If enabled, this checks to see if the user has
-    access permissions to view or modify the job.  Note this requires the user to be known,
-    so if the user comes across as null no checks are done. Filters can be used with the UI
-    to authenticate and set the user.
+    是否开启 Spark acls. 如果开启了, 它检查用户是否有权限去查看或修改 job.  Note this requires the user to be known, so if the user comes across as null no checks are done. UI 利用使用过滤器验证和设置用户. 
   </td>
 </tr>
 <tr>
   <td><code>spark.admin.acls</code></td>
   <td>Empty</td>
   <td>
-    Comma separated list of users/administrators that have view and modify access to all Spark jobs.
-    This can be used if you run on a shared cluster and have a set of administrators or devs who
-    help debug when things do not work. Putting a "*" in the list means any user can have the
-    privilege of admin.
+    逗号分隔的用户或者管理员列表, 列表中的用户或管理员有查看和修改所有 Spark job 的权限. 如果你运行在一个共享集群, 有一组管理员或开发者帮助 debug, 这个选项有用. 
   </td>
 </tr>
 <tr>
   <td><code>spark.admin.acls.groups</code></td>
   <td>Empty</td>
   <td>
-    Comma separated list of groups that have view and modify access to all Spark jobs.
-    This can be used if you have a set of administrators or developers who help maintain and debug
-    the underlying infrastructure. Putting a "*" in the list means any user in any group can have
-    the privilege of admin. The user groups are obtained from the instance of the groups mapping
-    provider specified by <code>spark.user.groups.mapping</code>. Check the entry
-    <code>spark.user.groups.mapping</code> for more details.
+    具有查看和修改对所有Spark作业的访问权限的组的逗号分隔列表. 如果您有一组帮助维护和调试的 administrators 或 developers 可以使用此功能基础设施.  在列表中输入 "*" 表示任何组中的任何用户都可以使用 admin 的特权.  用户组是从 groups mapping provider 的实例获得的. 由 <code>spark.user.groups.mapping</code> 指定.  检查 entry <code> spark.user.groups.mapping</code> 了解更多详细信息. 
   </td>
 </tr>
 <tr>
   <td><code>spark.user.groups.mapping</code></td>
   <td><code>org.apache.spark.security.ShellBasedGroupsMappingProvider</code></td>
   <td>
-    The list of groups for a user are determined by a group mapping service defined by the trait
-    org.apache.spark.security.GroupMappingServiceProvider which can configured by this property.
-    A default unix shell based implementation is provided <code>org.apache.spark.security.ShellBasedGroupsMappingProvider</code>
-    which can be specified to resolve a list of groups for a user.
-    <em>Note:</em> This implementation supports only a Unix/Linux based environment. Windows environment is
-    currently <b>not</b> supported. However, a new platform/protocol can be supported by implementing
-    the trait <code>org.apache.spark.security.GroupMappingServiceProvider</code>.
+    用户的组列表由特征定义的 group mapping service 决定可以通过此属性配置的org.apache.spark.security.GroupMappingServiceProvider. 提供了基于 unix shell 的默认实现 <code>org.apache.spark.security.ShellBasedGroupsMappingProvider</code> 可以指定它来解析用户的组列表. 
+     <em>注意:</em> 此实现仅支持基于 Unix/Linux 的环境.  Windows 环境是
+     目前 <b>不</b> 支持.  但是, 通过实现可以支持新的 platform/protocol （平台/协议） trait <code>org.apache.spark.security.GroupMappingServiceProvider</code> . 
   </td>
 </tr>
 <tr>
   <td><code>spark.authenticate</code></td>
   <td>false</td>
   <td>
-    Whether Spark authenticates its internal connections. See
-    <code>spark.authenticate.secret</code> if not running on YARN.
+    是否 Spark 验证其内部连接. 如果不是运行在 YARN 上, 请看 <code>spark.authenticate.secret</code> . 
   </td>
 </tr>
 <tr>
   <td><code>spark.authenticate.secret</code></td>
   <td>None</td>
   <td>
-    Set the secret key used for Spark to authenticate between components. This needs to be set if
-    not running on YARN and authentication is enabled.
+    设置密钥用于 spark 组件之间进行身份验证.  这需要设置 不启用运行在 yarn 和身份验证. 
   </td>
 </tr>
 <tr>
@@ -1709,58 +1652,46 @@ Apart from these, the following properties are also available, and may be useful
   <td><code>spark.authenticate.enableSaslEncryption</code></td>
   <td>false</td>
   <td>
-    Enable encrypted communication when authentication is
-    enabled. This is supported by the block transfer service and the
-    RPC endpoints.
+    身份验证时启用加密通信.  这是 block transfer service （块传输服务）和支持 RPC 的端点. 
   </td>
 </tr>
 <tr>
   <td><code>spark.network.sasl.serverAlwaysEncrypt</code></td>
   <td>false</td>
   <td>
-    Disable unencrypted connections for services that support SASL authentication.
+    禁用未加密的连接服务, 支持 SASL 验证.  这是目前支持的外部转移服务. 
   </td>
 </tr>
 <tr>
   <td><code>spark.core.connection.ack.wait.timeout</code></td>
   <td><code>spark.network.timeout</code></td>
   <td>
-    How long for the connection to wait for ack to occur before timing
-    out and giving up. To avoid unwilling timeout caused by long pause like GC,
-    you can set larger value.
+    连接在 timing out （超时）和 giving up （放弃）之前等待 ack occur 的时间. 为了避免长时间 pause （暂停）, 如 GC, 导致的不希望的超时, 你可以设置较大的值. 
   </td>
 </tr>
 <tr>
   <td><code>spark.modify.acls</code></td>
   <td>Empty</td>
   <td>
-    Comma separated list of users that have modify access to the Spark job. By default only the
-    user that started the Spark job has access to modify it (kill it for example). Putting a "*" in
-    the list means any user can have access to modify it.
+    逗号分隔的用户列表, 列表中的用户有查看 Spark web UI 的权限. 默认情况下, 只有启动 Spark job 的用户有修改（比如杀死它）权限. 在列表中加入 "*" 意味着任何用户可以访问以修改它. 
   </td>
 </tr>
 <tr>
   <td><code>spark.modify.acls.groups</code></td>
   <td>Empty</td>
   <td>
-    Comma separated list of groups that have modify access to the Spark job. This can be used if you
-    have a set of administrators or developers from the same team to have access to control the job.
-    Putting a "*" in the list means any user in any group has the access to modify the Spark job.
-    The user groups are obtained from the instance of the groups mapping provider specified by
-    <code>spark.user.groups.mapping</code>. Check the entry <code>spark.user.groups.mapping</code>
-    for more details.
+    具有对 Spark job 的修改访问权限的组的逗号分隔列表.  如果你可以使用这个有一组来自同一个 team 的 administrators 或 developers 可以访问控制工作. 在列表中放置 "*" 表示任何组中的任何用户都有权修改 Spark job . 用户组是从 <code>spark.user.groups.mapping</code> 指定的 groups mapping 提供者的实例获得的.  查看 entry <code>spark.user.groups.mapping</code> 来了解更多细节. 
   </td>
 </tr>
 <tr>
   <td><code>spark.ui.filters</code></td>
   <td>None</td>
   <td>
-    Comma separated list of filter class names to apply to the Spark web UI. The filter should be a
-    standard <a href="http://docs.oracle.com/javaee/6/api/javax/servlet/Filter.html">
-    javax servlet Filter</a>. Parameters to each filter can also be specified by setting a
-    java system property of: <br />
+    应用到 Spark web UI 的用于 filter class （过滤类）名的逗号分隔的列表. 过滤器必须是标准的 <a href="http://docs.oracle.com/javaee/6/api/javax/servlet/Filter.html">
+    javax servlet Filter</a> .  每个过滤器的参数也可以通过设置一个 java 系统属性来指定 spark .
+    java 系统属性: <br />
     <code>spark.&lt;class name of filter&gt;.params='param1=value1,param2=value2'</code><br />
-    For example: <br />
+    例如: <br />
     <code>-Dspark.ui.filters=com.test.filter1</code> <br />
     <code>-Dspark.com.test.filter1.params='param1=foo,param2=testing'</code>
   </td>
@@ -1769,21 +1700,14 @@ Apart from these, the following properties are also available, and may be useful
   <td><code>spark.ui.view.acls</code></td>
   <td>Empty</td>
   <td>
-    Comma separated list of users that have view access to the Spark web ui. By default only the
-    user that started the Spark job has view access. Putting a "*" in the list means any user can
-    have view access to this Spark job.
+    逗号分隔的可以访问 Spark web ui 的用户列表.  默认情况下只有启动 Spark job 的用户具有 view 访问权限.  在列表中放入 "*" 表示任何用户都可以具有访问此 Spark job 的 view . 
   </td>
 </tr>
 <tr>
   <td><code>spark.ui.view.acls.groups</code></td>
   <td>Empty</td>
   <td>
-    Comma separated list of groups that have view access to the Spark web ui to view the Spark Job
-    details. This can be used if you have a set of administrators or developers or users who can
-    monitor the Spark job submitted. Putting a "*" in the list means any user in any group can view
-    the Spark job details on the Spark web ui. The user groups are obtained from the instance of the
-    groups mapping provider specified by <code>spark.user.groups.mapping</code>. Check the entry
-    <code>spark.user.groups.mapping</code> for more details.
+    逗号分隔的列表, 可以查看访问 Spark web ui 的组, 以查看 Spark Job 细节.  如果您有一组 administrators 或 developers 或可以使用的用户, 则可以使用此功能 monitor （监控）提交的 Spark job .  在列表中添加 "*" 表示任何组中的任何用户都可以查看 Spark web ui 上的 Spark 工作详细信息.  用户组是从 由<code> spark.user.groups.mapping</code> 指定的 groups mapping provider （组映射提供程序）实例获得的. 查看 entry <code>spark.user.groups.mapping</code> 来了解更多细节. 
   </td>
 </tr>
 </table>
@@ -1797,15 +1721,12 @@ Apart from these, the following properties are also available, and may be useful
         <td>false</td>
         <td>
             Whether to enable SSL connections on all supported protocols.
-
             <br />When <code>spark.ssl.enabled</code> is configured, <code>spark.ssl.protocol</code>
             is required.
-
             <br />All the SSL settings like <code>spark.ssl.xxx</code> where <code>xxx</code> is a
             particular configuration property, denote the global configuration for all the supported
             protocols. In order to override the global configuration for the particular protocol,
             the properties must be overwritten in the protocol-specific namespace.
-
             <br />Use <code>spark.ssl.YYY.XXX</code> settings to overwrite the global configuration for
             particular protocol denoted by <code>YYY</code>. Example values for <code>YYY</code>
             include <code>fs</code>, <code>ui</code>, <code>standalone</code>, and
@@ -1818,11 +1739,9 @@ Apart from these, the following properties are also available, and may be useful
         <td>None</td>
         <td>
             The port where the SSL service will listen on.
-
             <br />The port must be defined within a namespace configuration; see
             <a href="security.html#ssl-configuration">SSL Configuration</a> for the available
             namespaces.
-
             <br />When not set, the SSL port will be derived from the non-SSL port for the
             same service. A value of "0" will make the service bind to an ephemeral port.
         </td>
@@ -1910,7 +1829,7 @@ Apart from these, the following properties are also available, and may be useful
 
 ### Spark SQL
 
-Running the <code>SET -v</code> command will show the entire list of the SQL configuration.
+运行 <code>SET -v</code> 命令将显示 SQL 配置的整个列表.
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -1954,121 +1873,90 @@ showDF(properties, numRows = 200, truncate = FALSE)
 ### Spark Streaming
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.streaming.backpressure.enabled</code></td>
   <td>false</td>
   <td>
-    Enables or disables Spark Streaming's internal backpressure mechanism (since 1.5).
-    This enables the Spark Streaming to control the receiving rate based on the
-    current batch scheduling delays and processing times so that the system receives
-    only as fast as the system can process. Internally, this dynamically sets the
-    maximum receiving rate of receivers. This rate is upper bounded by the values
-    <code>spark.streaming.receiver.maxRate</code> and <code>spark.streaming.kafka.maxRatePerPartition</code>
-    if they are set (see below).
+    开启或关闭 Spark Streaming 内部的 backpressure mecheanism（自 1.5 开始）. 基于当前批次调度延迟和处理时间, 这使得 Spark Streaming 能够控制数据的接收率, 因此, 系统接收数据的速度会和系统处理的速度一样快. 从内部来说, 这动态地设置了 receivers 的最大接收率. 这个速率上限通过 <code>spark.streaming.receiver.maxRate</code> 和 <code>spark.streaming.kafka.maxRatePerPartition</code> 两个参数设定（如下）. 
   </td>
 </tr>
 <tr>
   <td><code>spark.streaming.backpressure.initialRate</code></td>
   <td>not set</td>
   <td>
-    This is the initial maximum receiving rate at which each receiver will receive data for the
-    first batch when the backpressure mechanism is enabled.
+    当 backpressure mecheanism 开启时, 每个 receiver 接受数据的初始最大值. 
   </td>
 </tr>
 <tr>
   <td><code>spark.streaming.blockInterval</code></td>
   <td>200ms</td>
   <td>
-    Interval at which data received by Spark Streaming receivers is chunked
-    into blocks of data before storing them in Spark. Minimum recommended - 50 ms. See the
-    <a href="streaming-programming-guide.html#level-of-parallelism-in-data-receiving">performance
-     tuning</a> section in the Spark Streaming programing guide for more details.
+    在这个时间间隔（ms）内, 通过 Spark Streaming receivers 接收的数据在保存到 Spark 之前, chunk 为数据块. 推荐的最小值为 50ms. 具体细节见 Spark Streaming 指南的 <a href="streaming-programming-guide.html#level-of-parallelism-in-data-receiving">performance
+     tuning</a> 一节. 
   </td>
 </tr>
 <tr>
   <td><code>spark.streaming.receiver.maxRate</code></td>
   <td>not set</td>
   <td>
-    Maximum rate (number of records per second) at which each receiver will receive data.
-    Effectively, each stream will consume at most this number of records per second.
-    Setting this configuration to 0 or a negative number will put no limit on the rate.
-    See the <a href="streaming-programming-guide.html#deploying-applications">deployment guide</a>
-    in the Spark Streaming programing guide for mode details.
+    每秒钟每个 receiver 将接收的数据的最大速率（每秒钟的记录数目）. 有效的情况下, 每个流每秒将最多消耗这个数目的记录. 设置这个配置为 0 或者 -1 将会不作限制. 细节参见 Spark Streaming 编程指南的 <a href="streaming-programming-guide.html#deploying-applications">deployment guide</a> 一节. 
   </td>
 </tr>
 <tr>
   <td><code>spark.streaming.receiver.writeAheadLog.enable</code></td>
   <td>false</td>
   <td>
-    Enable write ahead logs for receivers. All the input data received through receivers
-    will be saved to write ahead logs that will allow it to be recovered after driver failures.
-    See the <a href="streaming-programming-guide.html#deploying-applications">deployment guide</a>
-    in the Spark Streaming programing guide for more details.
+    为 receiver 启用 write ahead logs. 所有通过接收器接收输入的数据将被保存到 write ahead logs, 以便它在驱动程序故障后进行恢复. 见星火流编程指南部署指南了解更多详情. 细节参见 Spark Streaming 编程指南的 <a href="streaming-programming-guide.html#deploying-applications">deployment guide</a> 一节. 
   </td>
 </tr>
 <tr>
   <td><code>spark.streaming.unpersist</code></td>
   <td>true</td>
   <td>
-    Force RDDs generated and persisted by Spark Streaming to be automatically unpersisted from
-    Spark's memory. The raw input data received by Spark Streaming is also automatically cleared.
-    Setting this to false will allow the raw data and persisted RDDs to be accessible outside the
-    streaming application as they will not be cleared automatically. But it comes at the cost of
-    higher memory usage in Spark.
+    强制通过 Spark Streaming 生成并持久化的 RDD 自动从 Spark 内存中非持久化. 通过 Spark Streaming 接收的原始输入数据也将清除. 设置这个属性为 false 允许流应用程序访问原始数据和持久化 RDD, 因为它们没有被自动清除. 但是它会造成更高的内存花费.
   </td>
 </tr>
 <tr>
   <td><code>spark.streaming.stopGracefullyOnShutdown</code></td>
   <td>false</td>
   <td>
-    If <code>true</code>, Spark shuts down the <code>StreamingContext</code> gracefully on JVM
-    shutdown rather than immediately.
+    如果为 <code>true</code> , Spark 将 gracefully （缓慢地）关闭在 JVM 运行的 StreamingContext , 而非立即执行. 
   </td>
 </tr>
 <tr>
   <td><code>spark.streaming.kafka.maxRatePerPartition</code></td>
   <td>not set</td>
   <td>
-    Maximum rate (number of records per second) at which data will be read from each Kafka
-    partition when using the new Kafka direct stream API. See the
-    <a href="streaming-kafka-integration.html">Kafka Integration guide</a>
-    for more details.
+    在使用新的 Kafka direct stream API 时, 从每个 kafka 分区读到的最大速率（每秒的记录数目）. 详见 <a href="streaming-kafka-integration.html">Kafka Integration guide</a> . 
   </td>
 </tr>
 <tr>
   <td><code>spark.streaming.kafka.maxRetries</code></td>
   <td>1</td>
   <td>
-    Maximum number of consecutive retries the driver will make in order to find
-    the latest offsets on the leader of each partition (a default value of 1
-    means that the driver will make a maximum of 2 attempts). Only applies to
-    the new Kafka direct stream API.
+    driver 连续重试的最大次数, 以此找到每个分区 leader 的最近的（latest）的偏移量（默认为 1 意味着 driver 将尝试最多两次）. 仅应用于新的 kafka direct stream API. 
   </td>
 </tr>
 <tr>
   <td><code>spark.streaming.ui.retainedBatches</code></td>
   <td>1000</td>
   <td>
-    How many batches the Spark Streaming UI and status APIs remember before garbage collecting.
+    在垃圾回收之前, Spark Streaming UI 和状态API 所能记得的 批处理（batches）数量. 
   </td>
 </tr>
 <tr>
   <td><code>spark.streaming.driver.writeAheadLog.closeFileAfterWrite</code></td>
   <td>false</td>
   <td>
-    Whether to close the file after writing a write ahead log record on the driver. Set this to 'true'
-    when you want to use S3 (or any file system that does not support flushing) for the metadata WAL
-    on the driver.
+   在写入一条 driver 中的 write ahead log 记录 之后, 是否关闭文件. 如果你想为 driver 中的元数据 WAL 使用 S3（或者任何文件系统而不支持 flushing）, 设定为 true. 
   </td>
 </tr>
 <tr>
   <td><code>spark.streaming.receiver.writeAheadLog.closeFileAfterWrite</code></td>
   <td>false</td>
   <td>
-    Whether to close the file after writing a write ahead log record on the receivers. Set this to 'true'
-    when you want to use S3 (or any file system that does not support flushing) for the data WAL
-    on the receivers.
+    在写入一条 reveivers 中的 write ahead log 记录 之后, 是否关闭文件. 如果你想为 reveivers 中的元数据 WAL 使用 S3（或者任何文件系统而不支持 flushing）, 设定为 true. 
   </td>
 </tr>
 </table>
@@ -2081,21 +1969,21 @@ showDF(properties, numRows = 200, truncate = FALSE)
   <td><code>spark.r.numRBackendThreads</code></td>
   <td>2</td>
   <td>
-    Number of threads used by RBackend to handle RPC calls from SparkR package.
+    使用 RBackend 处理来自 SparkR 包中的 RPC 调用的线程数.
   </td>
 </tr>
 <tr>
   <td><code>spark.r.command</code></td>
   <td>Rscript</td>
   <td>
-    Executable for executing R scripts in cluster modes for both driver and workers.
+    在 driver 和 worker 两种集群模式下可执行的 R 脚本.
   </td>
 </tr>
 <tr>
   <td><code>spark.r.driver.command</code></td>
   <td>spark.r.command</td>
   <td>
-    Executable for executing R scripts in client modes for driver. Ignored in cluster modes.
+    在 driver 的 client 模式下可执行的 R 脚本. 在集群模式下被忽略.
   </td>
 </tr>
 <tr>
@@ -2144,18 +2032,17 @@ showDF(properties, numRows = 200, truncate = FALSE)
   <tr>
     <td><code>spark.deploy.recoveryMode</code></td>
     <td>NONE</td>
-    <td>The recovery mode setting to recover submitted Spark jobs with cluster mode when it failed and relaunches.
-    This is only applicable for cluster mode when running with Standalone or Mesos.</td>
+    <td>集群模式下, Spark jobs 执行失败或者重启时, 恢复提交 Spark jobs 的恢复模式设定.</td>
   </tr>
   <tr>
     <td><code>spark.deploy.zookeeper.url</code></td>
     <td>None</td>
-    <td>When `spark.deploy.recoveryMode` is set to ZOOKEEPER, this configuration is used to set the zookeeper URL to connect to.</td>
+    <td>当 `spark.deploy.recoveryMode` 被设定为 ZOOKEEPER , 这一配置被用来连接 zookeeper URL.</td>
   </tr>
   <tr>
     <td><code>spark.deploy.zookeeper.dir</code></td>
     <td>None</td>
-    <td>When `spark.deploy.recoveryMode` is set to ZOOKEEPER, this configuration is used to set the zookeeper directory to store recovery state.</td>
+    <td>当 `spark.deploy.recoveryMode` 被设定为 ZOOKEEPER, 这一配置被用来设定 zookeeper 目录为 store recovery state.</td>
   </tr>
 </table>
 
@@ -2181,30 +2068,27 @@ Spark 中的每个集群管理器都有额外的配置选项, 这些配置可以
   <tr><th style="width:21%">Environment Variable （环境变量）</th><th>Meaning （含义）</th></tr>
   <tr>
     <td><code>JAVA_HOME</code></td>
-    <td>Location where Java is installed (if it's not on your default <code>PATH</code>).</td>
+    <td>Java 的安装路径（如果不在你的默认 <code>PATH</code> 下）.</td>
   </tr>
   <tr>
     <td><code>PYSPARK_PYTHON</code></td>
-    <td>Python binary executable to use for PySpark in both driver and workers (default is <code>python2.7</code> if available, otherwise <code>python</code>).
-    Property <code>spark.pyspark.python</code> take precedence if it is set</td>
+    <td>在 driver 和 worker 中 PySpark 用到的 Python 二进制可执行文件（如何有默认为 <code>python2.7</code>, 否则为 <code>python</code> ）. 如果设置了属性 <code>spark.pyspark.python</code>, 则会优先考虑.</td>
   </tr>
   <tr>
     <td><code>PYSPARK_DRIVER_PYTHON</code></td>
-    <td>Python binary executable to use for PySpark in driver only (default is <code>PYSPARK_PYTHON</code>).
-    Property <code>spark.pyspark.driver.python</code> take precedence if it is set</td>
+    <td>只在 driver 中 PySpark 用到的 Python 二进制可执行文件（默认为 <code>PYSPARK_PYTHON</code> ）. 如果设置了属性 <code>spark.pyspark.driver.python</code> ,则优先考虑.</td>
   </tr>
   <tr>
     <td><code>SPARKR_DRIVER_R</code></td>
-    <td>R binary executable to use for SparkR shell (default is <code>R</code>).
-    Property <code>spark.r.shell.command</code> take precedence if it is set</td>
+    <td>SparkR shell 用到的 R 二进制可执行文件（默认为 <code>R</code> ）. 如果设置了属性 <code>spark.r.shell.command</code> 则会优先考虑.</td>
   </tr>
   <tr>
     <td><code>SPARK_LOCAL_IP</code></td>
-    <td>IP address of the machine to bind to.</td>
+    <td>机器绑定的 IP 地址.</td>
   </tr>
   <tr>
     <td><code>SPARK_PUBLIC_DNS</code></td>
-    <td>Hostname your Spark program will advertise to other machines.</td>
+    <td>你的 Spark 程序通知其他机器的 Hostname.</td>
   </tr>
 </table>
 
@@ -2221,7 +2105,7 @@ Spark 用 [log4j](http://logging.apache.org/log4j/) 生成日志, 你可以通�
 
 # Overriding configuration directory （覆盖配置目录）
 
-如果你想指定不同的配置目录, 而不是默认的 "SPARK_HOME/conf" ，你可以设置 SPARK_CONF_DIR. Spark 将从这一目录下读取文件（ spark-defaults.conf, spark-env.sh, log4j.properties 等）
+如果你想指定不同的配置目录, 而不是默认的 "SPARK_HOME/conf" , 你可以设置 SPARK_CONF_DIR. Spark 将从这一目录下读取文件（ spark-defaults.conf, spark-env.sh, log4j.properties 等）
 
 # Inheriting Hadoop Cluster Configuration （继承 Hadoop 集群配置）
 
@@ -2230,6 +2114,6 @@ Spark 用 [log4j](http://logging.apache.org/log4j/) 生成日志, 你可以通�
 * `hdfs-site.xml`, 为 HDFS client 提供 default behaviors （默认的行为）.
 * `core-site.xml`, 设定默认的文件系统名称.
 
-这些配置文件的位置因 Hadoop 版本而异, 但是一个常见的位置在 `/etc/hadoop/conf` 内.  一些工具创建配置 on-the-fly, 但提供了一种机制来下载它们的副本。
+这些配置文件的位置因 Hadoop 版本而异, 但是一个常见的位置在 `/etc/hadoop/conf` 内.  一些工具创建配置 on-the-fly, 但提供了一种机制来下载它们的副本. 
 
 为了使这些文件对 Spark 可见, 需要设定 `$SPARK_HOME/spark-env.sh` 中的 `HADOOP_CONF_DIR` 到一个包含配置文件的位置.
