@@ -1,31 +1,22 @@
 ---
 layout: global
-displayTitle: Spark Configuration
-title: Configuration
+displayTitle: Spark 配置
+title: 配置
 ---
 * This will become a table of contents (this text will be scraped).
 {:toc}
 
-Spark provides three locations to configure the system:
+Spark 提供了三个位置来配置系统:
 
-* [Spark properties](#spark-properties) control most application parameters and can be set by using
-  a [SparkConf](api/scala/index.html#org.apache.spark.SparkConf) object, or through Java
-  system properties.
-* [Environment variables](#environment-variables) can be used to set per-machine settings, such as
-  the IP address, through the `conf/spark-env.sh` script on each node.
-* [Logging](#configuring-logging) can be configured through `log4j.properties`.
+* [Spark 属性](#spark-properties) 控制着大多数应用参数, 并且可以通过使用一个 [SparkConf](api/scala/index.html#org.apache.spark.SparkConf) 对象来设置, 或者通过 Java 系统属性来设置. 
+* [环境变量](#environment-variables) 可用于在每个节点上通过 `conf/spark-env.sh` 脚本来设置每台机器设置, 例如 IP 地址. 
+* [Logging](#configuring-logging) 可以通过 `log4j.properties` 来设置. 
 
-# Spark Properties
+# Spark 属性
 
-Spark properties control most application settings and are configured separately for each
-application. These properties can be set directly on a
-[SparkConf](api/scala/index.html#org.apache.spark.SparkConf) passed to your
-`SparkContext`. `SparkConf` allows you to configure some of the common properties
-(e.g. master URL and application name), as well as arbitrary key-value pairs through the
-`set()` method. For example, we could initialize an application with two threads as follows:
+Spark 属性控制大多数应用程序设置, 并为每个应用程序单独配置.  这些属性可以直接在 [SparkConf](api/scala/index.html#org.apache.spark.SparkConf) 上设置并传递给您的 `SparkContext` .  `SparkConf` 可以让你配置一些常见的属性（例如 master URL 和应用程序名称）, 以及通过 `set()` 方法来配置任意 key-value pairs （键值对）.  例如, 我们可以使用两个线程初始化一个应用程序, 如下所示：
 
-Note that we run with local[2], meaning two threads - which represents "minimal" parallelism,
-which can help detect bugs that only exist when we run in a distributed context.
+请注意, 我们运行 local[2] , 意思是两个线程 - 代表 "最小" 并行性, 这可以帮助检测在只存在于分布式环境中运行时的错误. 
 
 {% highlight scala %}
 val conf = new SparkConf()
@@ -34,11 +25,8 @@ val conf = new SparkConf()
 val sc = new SparkContext(conf)
 {% endhighlight %}
 
-Note that we can have more than 1 thread in local mode, and in cases like Spark Streaming, we may
-actually require more than 1 thread to prevent any sort of starvation issues.
-
-Properties that specify some time duration should be configured with a unit of time.
-The following format is accepted:
+注意, 本地模式下, 我们可以使用多个线程, 而且在像 Spark Streaming 这样的场景下, 我们可能需要多个线程来防止任一类型的类似 starvation issues （线程饿死） 这样的问题. 
+配置时间段的属性应该写明时间单位, 如下格式都是可接受的:  
 
     25ms (milliseconds)
     5s (seconds)
@@ -48,8 +36,8 @@ The following format is accepted:
     1y (years)
 
 
-Properties that specify a byte size should be configured with a unit of size.
-The following format is accepted:
+指定 byte size （字节大小）的属性应该写明单位. 
+如下格式都是可接受的：
 
     1b (bytes)
     1k or 1kb (kibibytes = 1024 bytes)
@@ -58,59 +46,43 @@ The following format is accepted:
     1t or 1tb (tebibytes = 1024 gibibytes)
     1p or 1pb (pebibytes = 1024 tebibytes)
 
-## Dynamically Loading Spark Properties
+## 动态加载 Spark 属性
 
-In some cases, you may want to avoid hard-coding certain configurations in a `SparkConf`. For
-instance, if you'd like to run the same application with different masters or different
-amounts of memory. Spark allows you to simply create an empty conf:
+在某些场景下, 你可能想避免将属性值写死在 SparkConf 中. 例如, 你可能希望在同一个应用上使用不同的 master 或不同的内存总量.  Spark 允许你简单地创建一个空的 conf : 
 
 {% highlight scala %}
 val sc = new SparkContext(new SparkConf())
 {% endhighlight %}
 
-Then, you can supply configuration values at runtime:
+然后在运行时设置这些属性 : 
 {% highlight bash %}
 ./bin/spark-submit --name "My app" --master local[4] --conf spark.eventLog.enabled=false
   --conf "spark.executor.extraJavaOptions=-XX:+PrintGCDetails -XX:+PrintGCTimeStamps" myApp.jar
 {% endhighlight %}
 
-The Spark shell and [`spark-submit`](submitting-applications.html)
-tool support two ways to load configurations dynamically. The first are command line options,
-such as `--master`, as shown above. `spark-submit` can accept any Spark property using the `--conf`
-flag, but uses special flags for properties that play a part in launching the Spark application.
-Running `./bin/spark-submit --help` will show the entire list of these options.
+Spark shell 和 [`spark-submit`](submitting-applications.html) 工具支持两种动态加载配置的方法. 第一种, 通过命令行选项, 如 : 上面提到的 `--master` .  `spark-submit` 可以使用 `--conf` flag 来接受任何 Spark 属性标志, 但对于启动 Spark 应用程序的属性使用 special flags （特殊标志）.  运行 `./bin/spark-submit --help` 可以展示这些选项的完整列表. 
 
-`bin/spark-submit` will also read configuration options from `conf/spark-defaults.conf`, in which
-each line consists of a key and a value separated by whitespace. For example:
+`bin/spark-submit` 也支持从 `conf/spark-defaults.conf` 中读取配置选项, 其中每行由一个 key （键）和一个由 whitespace （空格）分隔的 value （值）组成, 如下:
 
     spark.master            spark://5.6.7.8:7077
     spark.executor.memory   4g
     spark.eventLog.enabled  true
     spark.serializer        org.apache.spark.serializer.KryoSerializer
 
-Any values specified as flags or in the properties file will be passed on to the application
-and merged with those specified through SparkConf. Properties set directly on the SparkConf
-take highest precedence, then flags passed to `spark-submit` or `spark-shell`, then options
-in the `spark-defaults.conf` file. A few configuration keys have been renamed since earlier
-versions of Spark; in such cases, the older key names are still accepted, but take lower
-precedence than any instance of the newer key.
+指定为 flags （标志）或属性文件中的任何值都将传递给应用程序并与通过 SparkConf 指定的那些值 merge （合并）.  属性直接在 SparkConf 上设置采取最高优先级, 然后 flags （标志）传递给 `spark-submit` 或 `spark-shell` , 然后选项在 `spark-defaults.conf` 文件中.  自从 Spark 版本的早些时候, 一些 configuration keys （配置键）已被重命名 ; 在这种情况下, 旧的 key names （键名）仍然被接受, 但要比较新的 key 优先级都要低一些. 
 
-## Viewing Spark Properties
+## 查看 Spark 属性
 
-The application web UI at `http://<driver>:4040` lists Spark properties in the "Environment" tab.
-This is a useful place to check to make sure that your properties have been set correctly. Note
-that only values explicitly specified through `spark-defaults.conf`, `SparkConf`, or the command
-line will appear. For all other configuration properties, you can assume the default value is used.
+在应用程序的 web UI `http://<driver>:4040` 中,  "Environment" tab （“环境”选项卡）中列出了 Spark 的属性. 这是一个检查您是否正确设置了您的属性的一个非常有用的地方. 注意, 只有显示地通过 `spark-defaults.conf` ,  `SparkConf` 或者命令行设置的值将会出现. 对于所有其他配置属性, 您可以认为使用的都是默认值. 
 
-## Available Properties
+## 可用属性
 
-Most of the properties that control internal settings have reasonable default values. Some
-of the most common options to set are:
+大多数控制 internal settings （内部设置） 的属性具有合理的默认值. 一些常见的选项是：
 
-### Application Properties
+### 应用程序属性
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.app.name</code></td>
   <td>(none)</td>
@@ -225,10 +197,10 @@ of the most common options to set are:
 
 Apart from these, the following properties are also available, and may be useful in some situations:
 
-### Runtime Environment
+### 运行环境
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.driver.extraClassPath</code></td>
   <td>(none)</td>
@@ -496,10 +468,10 @@ Apart from these, the following properties are also available, and may be useful
 </tr>
 </table>
 
-### Shuffle Behavior
+### Shuffle Behavior （Shuffle 行为）
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.reducer.maxSizeInFlight</code></td>
   <td>48m</td>
@@ -650,7 +622,7 @@ Apart from these, the following properties are also available, and may be useful
 ### Spark UI
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.eventLog.compress</code></td>
   <td>false</td>
@@ -782,10 +754,10 @@ Apart from these, the following properties are also available, and may be useful
 </tr>
 </table>
 
-### Compression and Serialization
+### Compression and Serialization （压缩和序列化）
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.broadcast.compress</code></td>
   <td>true</td>
@@ -931,10 +903,10 @@ Apart from these, the following properties are also available, and may be useful
 </tr>
 </table>
 
-### Memory Management
+### Memory Management （内存管理）
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.memory.fraction</code></td>
   <td>0.6</td>
@@ -1031,10 +1003,10 @@ Apart from these, the following properties are also available, and may be useful
 </tr>
 </table>
 
-### Execution Behavior
+### Execution Behavior （执行行为）
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （属性名称）</th><th>Default （默认行为）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.broadcast.blockSize</code></td>
   <td>4m</td>
@@ -1168,10 +1140,9 @@ Apart from these, the following properties are also available, and may be useful
 </tr>
 </table>
 
-### Networking
+### Networking （网络）
 
-<table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<table class="table"><tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.rpc.message.maxSize</code></td>
   <td>128</td>
@@ -1278,10 +1249,10 @@ Apart from these, the following properties are also available, and may be useful
 </tr>
 </table>
 
-### Scheduling
+### Scheduling （调度）
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.cores.max</code></td>
   <td>(not set)</td>
@@ -1545,10 +1516,10 @@ Apart from these, the following properties are also available, and may be useful
 </tr>
 </table>
 
-### Dynamic Allocation
+### Dynamic Allocation （动态分配）
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.dynamicAllocation.enabled</code></td>
   <td>false</td>
@@ -1627,10 +1598,10 @@ Apart from these, the following properties are also available, and may be useful
 </tr>
 </table>
 
-### Security
+### Security （安全）
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.acls.enable</code></td>
   <td>false</td>
@@ -2105,7 +2076,7 @@ showDF(properties, numRows = 200, truncate = FALSE)
 ### SparkR
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
 <tr>
   <td><code>spark.r.numRBackendThreads</code></td>
   <td>2</td>
@@ -2166,10 +2137,10 @@ showDF(properties, numRows = 200, truncate = FALSE)
 </tr>
 </table>
 
-### Deploy
+### Deploy （部署）
 
 <table class="table">
-  <tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+  <tr><th>Property Name （属性名称）</th><th>Default （默认值）</th><th>Meaning （含义）</th></tr>
   <tr>
     <td><code>spark.deploy.recoveryMode</code></td>
     <td>NONE</td>
@@ -2189,10 +2160,9 @@ showDF(properties, numRows = 200, truncate = FALSE)
 </table>
 
 
-### Cluster Managers
+### Cluster Managers （集群管理器）
 
-Each cluster manager in Spark has additional configuration options. Configurations
-can be found on the pages for each mode:
+Spark 中的每个集群管理器都有额外的配置选项, 这些配置可以在每个模式的页面中找到:
 
 #### [YARN](running-on-yarn.html#configuration)
 
@@ -2200,21 +2170,15 @@ can be found on the pages for each mode:
 
 #### [Standalone Mode](spark-standalone.html#cluster-launch-scripts)
 
-# Environment Variables
+# Environment Variables （环境变量）
 
-Certain Spark settings can be configured through environment variables, which are read from the
-`conf/spark-env.sh` script in the directory where Spark is installed (or `conf/spark-env.cmd` on
-Windows). In Standalone and Mesos modes, this file can give machine specific information such as
-hostnames. It is also sourced when running local Spark applications or submission scripts.
-
-Note that `conf/spark-env.sh` does not exist by default when Spark is installed. However, you can
-copy `conf/spark-env.sh.template` to create it. Make sure you make the copy executable.
-
-The following variables can be set in `spark-env.sh`:
+通过环境变量配置特定的 Spark 设置. 环境变量从 Spark 安装目录下的 `conf/spark-env.sh` 脚本读取（或者是 window 环境下的 `conf/spark-env.cmd` ）. 在 Standalone 和 Mesos 模式下, 这个文件可以指定机器的特定信息, 比如 hostnames . 它也可以为正在运行的 Spark Application 或者提交脚本提供 sourced （来源）.  
+注意, 当 Spark 被安装, 默认情况下 `conf/spark-env.sh` 是不存在的. 但是, 你可以通过拷贝 `conf/spark-env.sh.template` 来创建它. 确保你的拷贝文件时可执行的. 
+`spark-env.sh` : 中有有以下变量可以被设置 :
 
 
 <table class="table">
-  <tr><th style="width:21%">Environment Variable</th><th>Meaning</th></tr>
+  <tr><th style="width:21%">Environment Variable （环境变量）</th><th>Meaning （含义）</th></tr>
   <tr>
     <td><code>JAVA_HOME</code></td>
     <td>Location where Java is installed (if it's not on your default <code>PATH</code>).</td>
@@ -2244,38 +2208,28 @@ The following variables can be set in `spark-env.sh`:
   </tr>
 </table>
 
-In addition to the above, there are also options for setting up the Spark
-[standalone cluster scripts](spark-standalone.html#cluster-launch-scripts), such as number of cores
-to use on each machine and maximum memory.
+除了以上参数, [standalone cluster scripts](spark-standalone.html#cluster-launch-scripts) 也可以设置其他选项, 比如每个机器使用的 CPU 核数和最大内存. 
 
-Since `spark-env.sh` is a shell script, some of these can be set programmatically -- for example, you might
-compute `SPARK_LOCAL_IP` by looking up the IP of a specific network interface.
+因为 `spark-env.sh` 是 shell 脚本, 一些可以通过程序的方式来设置, 比如你可以通过特定的网络接口来计算 `SPARK_LOCAL_IP` . 
 
-Note: When running Spark on YARN in `cluster` mode, environment variables need to be set using the `spark.yarn.appMasterEnv.[EnvironmentVariableName]` property in your `conf/spark-defaults.conf` file.  Environment variables that are set in `spark-env.sh` will not be reflected in the YARN Application Master process in `cluster` mode.  See the [YARN-related Spark Properties](running-on-yarn.html#spark-properties) for more information.
+注意 : 当以 `cluster` mode （集群模式）运行 Spark on YARN 时 , 环境变量需要通过在您的 `conf/spark-defaults.conf` 文件中 `spark.yarn.appMasterEnv.[EnvironmentVariableName]` 来设定.
+`cluster` mode （集群模式）下, `spark-env.sh` 中设定的环境变量将不会在 YARN Application Master 过程中反应出来. 详见 [YARN-related Spark Properties](running-on-yarn.html#spark-properties). 
 
-# Configuring Logging
+# Configuring Logging （配置 Logging）
 
-Spark uses [log4j](http://logging.apache.org/log4j/) for logging. You can configure it by adding a
-`log4j.properties` file in the `conf` directory. One way to start is to copy the existing
-`log4j.properties.template` located there.
+Spark 用 [log4j](http://logging.apache.org/log4j/) 生成日志, 你可以通过在 `conf` 目录下添加 `log4j.properties` 文件来配置.一种方法是拷贝 `log4j.properties.template` 文件.
 
-# Overriding configuration directory
+# Overriding configuration directory （覆盖配置目录）
 
-To specify a different configuration directory other than the default "SPARK_HOME/conf",
-you can set SPARK_CONF_DIR. Spark will use the configuration files (spark-defaults.conf, spark-env.sh, log4j.properties, etc)
-from this directory.
+如果你想指定不同的配置目录, 而不是默认的 "SPARK_HOME/conf" ，你可以设置 SPARK_CONF_DIR. Spark 将从这一目录下读取文件（ spark-defaults.conf, spark-env.sh, log4j.properties 等）
 
-# Inheriting Hadoop Cluster Configuration
+# Inheriting Hadoop Cluster Configuration （继承 Hadoop 集群配置）
 
-If you plan to read and write from HDFS using Spark, there are two Hadoop configuration files that
-should be included on Spark's classpath:
+如果你想用 Spark 来读写 HDFS, 在 Spark 的 classpath 就需要包括两个 Hadoop 配置文件:
 
-* `hdfs-site.xml`, which provides default behaviors for the HDFS client.
-* `core-site.xml`, which sets the default filesystem name.
+* `hdfs-site.xml`, 为 HDFS client 提供 default behaviors （默认的行为）.
+* `core-site.xml`, 设定默认的文件系统名称.
 
-The location of these configuration files varies across Hadoop versions, but
-a common location is inside of `/etc/hadoop/conf`. Some tools create
-configurations on-the-fly, but offer a mechanisms to download copies of them.
+这些配置文件的位置因 Hadoop 版本而异, 但是一个常见的位置在 `/etc/hadoop/conf` 内.  一些工具创建配置 on-the-fly, 但提供了一种机制来下载它们的副本。
 
-To make these files visible to Spark, set `HADOOP_CONF_DIR` in `$SPARK_HOME/spark-env.sh`
-to a location containing the configuration files.
+为了使这些文件对 Spark 可见, 需要设定 `$SPARK_HOME/spark-env.sh` 中的 `HADOOP_CONF_DIR` 到一个包含配置文件的位置.
