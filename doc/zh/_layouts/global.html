@@ -36,6 +36,10 @@
 
         <link rel="stylesheet" href="css/pygments-default.css">
 
+        <!-- <link rel="stylesheet" href="../css/fonts/font-awesome.css"> -->
+        <link rel="stylesheet" href="../css/fonts/apachecn-menu-style.css" type="text/css" />
+        <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+
         {% production %}
         <!-- Google analytics script -->
         <script type="text/javascript">
@@ -59,74 +63,111 @@
 
         <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
 
-        <div class="navbar navbar-fixed-top" id="topbar">
-            <div class="navbar-inner">
+        <div class="spark-top__nav" id="apachecn-spark-menu">
+            <div class="nav nav-apachecn">
                 <div class="container">
-                    <div class="brand"><a href="index.html">
-                      <img src="img/spark-logo-hd.png" style="height:50px;"/></a><span class="version">{{site.SPARK_VERSION_SHORT}}</span>
+                    <a href="javascript:;" class="nav-item">
+                        <label  class="animate">Menu1<i class="fa fa-bars float-right"></i></label>
+                        <ul class="nav-itme__list animate">
+                            <li href="javascript:;" class="animate">Code </li>
+                            <li href="javascript:;"  class="animate">Zoom </li>
+                            <li href="javascript:;"  class="animate">Settings</li>
+                        </ul>
+                    </a>
+
+                    <a href="javascript:;" class="nav-item">
+                        <label  class="animate">Menu1<i class="fa fa-bars float-right"></i></label>
+                        <ul class="nav-itme__list animate">
+                            <li href="javascript:;" class="animate second-level">
+                                <label  class="animate">Menu1 22222 <i class="fa fa-chevron-right"></i></label>
+                                <ul class="nav-itme__list animate">
+                                <li href="javascript:;" class="animate">111 </li>
+                                <li href="javascript:;"  class="animate">222 </li>
+                                <li href="javascript:;"  class="animate">333</li>
+                            </ul>
+                            </li>
+                            <li href="javascript:;" class="animate second-level">
+                                <label  class="animate">Menu1 333 <i class="fa fa-chevron-right"></i></label>
+                                <ul class="nav-itme__list animate">
+                                <li href="javascript:;" class="animate">111 </li>
+                                <li href="javascript:;"  class="animate">222 </li>
+                                <li href="javascript:;"  class="animate">333</li>
+                            </ul>
+                            </li>
+                            <li href="javascript:;"  class="animate">2222</li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+
+            <div class="navbar navbar-fixed-top" id="topbar">
+                <div class="navbar-inner">
+                    <div class="container">
+                        <div class="brand"><a href="index.html">
+                          <img src="img/spark-logo-hd.png" style="height:50px;"/></a><span class="version">{{site.SPARK_VERSION_SHORT}}</span>
+                        </div>
+                        <ul class="nav">
+                            <!--TODO(andyk): Add class="active" attribute to li some how.-->
+                            <li><a href="index.html">概述</a></li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">编程指南<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="quick-start.html">快速入门</a></li>
+                                    <li><a href="rdd-programming-guide.html">Spark 编程指南</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="streaming-programming-guide.html">Spark Streaming</a></li>
+                                    <li><a href="sql-programming-guide.html">DataFrames, Datasets 和 SQL</a></li>
+                                    <li><a href="structured-streaming-programming-guide.html">Structured Streaming</a></li>
+                                    <li><a href="ml-guide.html">MLlib (机器学习)</a></li>
+                                    <li><a href="graphx-programming-guide.html">GraphX (图形处理)</a></li>
+                                    <li><a href="sparkr.html">SparkR (R on Spark)</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">API Docs<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="api/scala/index.html#org.apache.spark.package">Scala</a></li>
+                                    <li><a href="api/java/index.html">Java</a></li>
+                                    <li><a href="api/python/index.html">Python</a></li>
+                                    <li><a href="api/R/index.html">R</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">部署<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="cluster-overview.html">概述</a></li>
+                                    <li><a href="submitting-applications.html">提交应用</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="spark-standalone.html">Spark Standalone</a></li>
+                                    <li><a href="running-on-mesos.html">Mesos</a></li>
+                                    <li><a href="running-on-yarn.html">YARN</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="api.html" class="dropdown-toggle" data-toggle="dropdown">更多<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="configuration.html">配置</a></li>
+                                    <li><a href="monitoring.html">监控</a></li>
+                                    <li><a href="tuning.html">优化指南</a></li>
+                                    <li><a href="job-scheduling.html">Job 调度</a></li>
+                                    <li><a href="security.html">安全</a></li>
+                                    <li><a href="hardware-provisioning.html">硬件推荐</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="building-spark.html">构建 Spark</a></li>
+                                    <li><a href="http://spark.apache.org/contributing.html">给 Spark 贡献</a></li>
+                                    <li><a href="http://spark.apache.org/third-party-projects.html">第三方项目</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!--<p class="navbar-text pull-right"><span class="version-text">v{{site.SPARK_VERSION_SHORT}}</span></p>-->
                     </div>
-                    <ul class="nav">
-                        <!--TODO(andyk): Add class="active" attribute to li some how.-->
-                        <li><a href="index.html">概述</a></li>
-
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">编程指南<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="quick-start.html">快速入门</a></li>
-                                <li><a href="rdd-programming-guide.html">Spark 编程指南</a></li>
-                                <li class="divider"></li>
-                                <li><a href="streaming-programming-guide.html">Spark Streaming</a></li>
-                                <li><a href="sql-programming-guide.html">DataFrames, Datasets 和 SQL</a></li>
-                                <li><a href="structured-streaming-programming-guide.html">Structured Streaming</a></li>
-                                <li><a href="ml-guide.html">MLlib (机器学习)</a></li>
-                                <li><a href="graphx-programming-guide.html">GraphX (图形处理)</a></li>
-                                <li><a href="sparkr.html">SparkR (R on Spark)</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">API Docs<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="api/scala/index.html#org.apache.spark.package">Scala</a></li>
-                                <li><a href="api/java/index.html">Java</a></li>
-                                <li><a href="api/python/index.html">Python</a></li>
-                                <li><a href="api/R/index.html">R</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">部署<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="cluster-overview.html">概述</a></li>
-                                <li><a href="submitting-applications.html">提交应用</a></li>
-                                <li class="divider"></li>
-                                <li><a href="spark-standalone.html">Spark Standalone</a></li>
-                                <li><a href="running-on-mesos.html">Mesos</a></li>
-                                <li><a href="running-on-yarn.html">YARN</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="api.html" class="dropdown-toggle" data-toggle="dropdown">更多<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="configuration.html">配置</a></li>
-                                <li><a href="monitoring.html">监控</a></li>
-                                <li><a href="tuning.html">优化指南</a></li>
-                                <li><a href="job-scheduling.html">Job 调度</a></li>
-                                <li><a href="security.html">安全</a></li>
-                                <li><a href="hardware-provisioning.html">硬件推荐</a></li>
-                                <li class="divider"></li>
-                                <li><a href="building-spark.html">构建 Spark</a></li>
-                                <li><a href="http://spark.apache.org/contributing.html">给 Spark 贡献</a></li>
-                                <li><a href="http://spark.apache.org/third-party-projects.html">第三方项目</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <!--<p class="navbar-text pull-right"><span class="version-text">v{{site.SPARK_VERSION_SHORT}}</span></p>-->
                 </div>
             </div>
         </div>
-
         <div class="container-wrapper">
 
             {% if page.url contains "/ml" %}
@@ -162,6 +203,43 @@
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/vendor/anchor.min.js"></script>
         <script src="js/main.js"></script>
+
+        <!-- apachecn menu script -->
+        <script>
+            $("a.nav-item").on('mouseover', function () {
+                $(this).children(".nav-itme__list.animate").addClass('active')
+            });
+
+            $("a.nav-item").on('mouseout', function () {
+            $(this).children(".nav-itme__list.animate").removeClass('active')
+            })
+
+            $(".second-level").on('mouseover', function () {
+                $(this).children(".nav-itme__list.animate").addClass('active')
+            });
+
+            $(".second-level").on('mouseout', function () {
+                $(this).children(".nav-itme__list.animate").removeClass('active')
+            });
+
+            //scroll top menu hide;
+            var init_scroll_position = 0;
+            var scroll_top;
+            $(document).scroll(function() {
+                var scroll_top = $(document).scrollTop();
+                console.log(scroll_top, "scroll_top==>>>")
+
+                if(init_scroll_position < scroll_top && scroll_top > 52){
+                    $("#apachecn-spark-menu").removeClass('slideDown');
+                    $("#apachecn-spark-menu").addClass('slideUp');
+                }
+                else if (init_scroll_position > scroll_top){
+                    $("#apachecn-spark-menu").removeClass('slideUp');
+                    $("#apachecn-spark-menu").addClass('slideDown');
+                }
+                init_scroll_position = scroll_top;
+            });
+        </script>
 
         <!-- MathJax Section -->
         <script type="text/x-mathjax-config">
