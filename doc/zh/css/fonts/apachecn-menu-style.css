@@ -1,0 +1,232 @@
+*{
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  border:0;
+  /* font-family: 'Lato', sans-serif; */
+  /* box-sizing: border-box; */
+}
+
+body{
+    padding-top: 120px;
+}
+.fa{
+  float: right;
+}
+
+.fa{
+ font-size: .8em;
+  line-height: 22px !important;
+}
+
+.spark-top__nav{
+    position: fixed;
+    z-index:10;
+    width:100%;
+    top:0;
+}
+
+.nav-apachecn{
+    width: 100%;
+    z-index: 10;
+    background: #fff;
+    position: relative;
+    margin-bottom:0;
+}
+.nav-apachecn a{
+    text-decoration: none;
+}
+
+.navbar-fixed-top{
+    position: static;
+    z-index: 8;
+ }
+
+
+.nav-apachecn .container{
+    height: 52px;
+}
+
+.nav-apachecn .container:after{
+    content: "";
+    display: block;
+    clear: both;
+    height: 0;
+}
+
+#apachecn-spark-menu.slideUp {
+    /* -webkit-transform: translateY(-100px);
+     transform: translateY(-100px);*/
+    -webkit-transform: translateY(-52px);
+    -ms-transform: translateY(-52px);
+    -o-transform: translateY(-52px);
+    transform: translateY(-52px);
+    /*transition: transform .5s ease-out;*/
+    -webkit-transition: transform .5s ease-out;
+    -o-transition: transform .5s ease-out;
+    transition: transform .5s ease-out;
+}
+
+#apachecn-spark-menu.slideDown {
+    /*-webkit-transform: translateY(0);
+    transform: translateY(0);*/
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+    /*transition: transform .5s ease-out;*/
+    -webkit-transition: transform .5s ease-out;
+    -o-transition: transform .5s ease-out;
+    transition: transform .5s ease-out;
+}
+
+
+.nav-item{
+   display: inline-block;
+   width: 240px;
+   height: 48px;
+   position: relative;
+   float: left;
+   text-decoration: none;
+}
+
+.nav-item label{
+    position: relative;
+
+}
+.nav-item label>i{
+    position: absolute;
+    top:50%;
+    right:20px;
+    transform: translate3d(0,-50%, 0);
+}
+
+.nav .nav-item label,
+.nav .nav-item .nav-itme__list li{
+    display: block;
+    width: 200px;
+    color: #1ABC9C;
+    height: 52px;
+    line-height: 52px;
+    padding: 0 20px;
+    background: #ECF0F1;
+}
+
+.nav-item .nav-itme__list li.second-level{
+    padding: 0;
+    border-bottom: 0;
+}
+
+.nav .nav-item .nav-itme__list >li,
+.nav .nav-item .nav-itme__list >li.second-level label{
+    padding: 0 20px;
+    border-bottom: 1px dashed #1ABC9C;
+}
+.nav .nav-item .nav-itme__list >li.second-level label{
+    padding: 0;
+}
+
+.nav .nav-item .nav-itme__list li.second-level:hover label{
+    background: #1ABC9C;
+    color: #fff;
+}
+
+.nav .nav-item>label {
+    /*background: #ECF0F1;*/
+}
+
+.nav-item .nav-itme__list li:hover{
+    background: #1ABC9C;
+    color: white;
+    cursor: pointer;
+}
+.nav-item label:hover{
+    border-left: 0;
+    cursor: pointer;
+}
+.nav-item label{
+    color: #1ABC9C;
+    position: absolute;
+    top:0;
+    z-index: 2;
+    height:52px;
+}
+
+.nav-itme__list.animate{
+    position: relative;
+    margin-top: 52px;
+}
+
+.nav-itme__list.animate.active{
+    visibility: visible;
+    opacity: 1;
+    top: 0;
+    height: auto;
+}
+
+.nav-item .nav-itme__list,
+.second-level .nav-itme__list{
+    height: 0;
+    position: relative;
+    visibility: hidden;
+    opacity: 0;
+    top: -20px;
+    z-index: 1;
+    margin-left: 0;
+
+}
+
+.nav-itme__list li{
+ /*border-bottom: 1px dashed #1ABC9C;*/
+}
+
+.nav-apachecn .nav-item  .nav-itme__list li:last-child{
+  border-bottom: none;
+}
+
+.nav-apachecn .animate{
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -ms-transition: all .3s;
+  transition: all .3s;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden; /* Chrome and Safari */
+  -moz-backface-visibility:hidden; /* Firefox */
+  -ms-backface-visibility:hidden; /* Internet Explorer */
+}
+
+.second-level .nav-itme__list{
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    top: 0;
+    left: -20px;
+    margin: 0;
+    z-index: -1;
+    
+}
+
+.nav-apachecn .second-level{
+    position: relative;
+}
+.nav-apachecn .second-level label{
+    padding: 0;
+    border-left:0;
+    position: inherit;
+    margin-bottom: 0;
+}
+.nav-apachecn .second-level:hover{
+    /*color: white;*/
+}
+.nav-apachecn .second-level label >i{
+    right: 0;
+}
+
+.nav-apachecn .second-level .nav-itme__list.animate.active{
+  left: 240px;
+}
+
+.nav-apachecn .second-level .nav-itme__list li{
+  padding-left: 10px
+}
