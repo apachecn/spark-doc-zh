@@ -219,7 +219,7 @@ body{
     /*color: white;*/
 }
 .nav-apachecn .second-level label >i{
-    /*right: 0;*/
+    right: 0;
 }
 
 .nav-apachecn .second-level .nav-itme__list.animate.active{
