@@ -37,81 +37,79 @@ Java, [Python](api/python/pyspark.sql.html#pyspark.sql.DataFrame), 和 [R](api/R
 
 在此文档中, 我们将常常会引用 Scala/Java Datasets 的 `Row`s 作为 DataFrames.
 
-# Getting Started
+# 开始入门
 
-## Starting Point: SparkSession
+## 起始点: SparkSession
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
 
-The entry point into all functionality in Spark is the [`SparkSession`](api/scala/index.html#org.apache.spark.sql.SparkSession) class. To create a basic `SparkSession`, just use `SparkSession.builder()`:
+Spark SQL中所有功能的入口点是 [`SparkSession`](api/scala/index.html#org.apache.spark.sql.SparkSession) 类. 要创建一个 `SparkSession`, 仅使用 `SparkSession.builder()`就可以了:
 
 {% include_example init_session scala/org/apache/spark/examples/sql/SparkSQLExample.scala %}
 </div>
 
 <div data-lang="java" markdown="1">
 
-The entry point into all functionality in Spark is the [`SparkSession`](api/java/index.html#org.apache.spark.sql.SparkSession) class. To create a basic `SparkSession`, just use `SparkSession.builder()`:
+Spark SQL中所有功能的入口点是 [`SparkSession`](api/java/index.html#org.apache.spark.sql.SparkSession) 类. 要创建一个 `SparkSession`, 仅使用 `SparkSession.builder()`就可以了:
 
 {% include_example init_session java/org/apache/spark/examples/sql/JavaSparkSQLExample.java %}
 </div>
 
 <div data-lang="python"  markdown="1">
 
-The entry point into all functionality in Spark is the [`SparkSession`](api/python/pyspark.sql.html#pyspark.sql.SparkSession) class. To create a basic `SparkSession`, just use `SparkSession.builder`:
+Spark SQL中所有功能的入口点是 [`SparkSession`](api/python/pyspark.sql.html#pyspark.sql.SparkSession) 类. 要穿件一个 `SparkSession`, 仅使用 `SparkSession.builder`就可以了:
 
 {% include_example init_session python/sql/basic.py %}
 </div>
 
 <div data-lang="r"  markdown="1">
 
-The entry point into all functionality in Spark is the [`SparkSession`](api/R/sparkR.session.html) class. To initialize a basic `SparkSession`, just call `sparkR.session()`:
+Spark SQL中所有功能的入口点是 [`SparkSession`](api/R/sparkR.session.html) 类. 要初始化一个基本的 `SparkSession`, 仅调用 `sparkR.session()`即可:
 
 {% include_example init_session r/RSparkSQLExample.R %}
 
-Note that when invoked for the first time, `sparkR.session()` initializes a global `SparkSession` singleton instance, and always returns a reference to this instance for successive invocations. In this way, users only need to initialize the `SparkSession` once, then SparkR functions like `read.df` will be able to access this global instance implicitly, and users don't need to pass the `SparkSession` instance around.
+注意第一次调用时, `sparkR.session()` 初始化一个全局的 `SparkSession` 单实例, 并且总是返回一个引用此实例，可以连续的调用. 通过这种方式, 用户仅需要创建一次 `SparkSession` , 然后像 `read.df` SparkR函数就能够立即获取全局的实例,用户不需要再 `SparkSession` 之间进行实例的传递.
 </div>
 </div>
 
-`SparkSession` in Spark 2.0 provides builtin support for Hive features including the ability to
-write queries using HiveQL, access to Hive UDFs, and the ability to read data from Hive tables.
-To use these features, you do not need to have an existing Hive setup.
+Spark 2.0 中的`SparkSession` 为 Hive 特性提供了内嵌的支持，包括使用 HiveQL 编写查询的能力，访问 Hive UDF,以及从 Hive 表中读取数据的能力。为了使用这些特性，你不需要去有一个已存在的 Hive 设置。
 
-## Creating DataFrames
+## 创建 DataFrames
 
 <div class="codetabs">
-<div data-lang="scala"  markdown="1">
-With a `SparkSession`, applications can create DataFrames from an [existing `RDD`](#interoperating-with-rdds),
-from a Hive table, or from [Spark data sources](#data-sources).
+<div data-lang="scala"  markdown="1">
+在一个 `SparkSession`中, 应用程序可以从一个 [已经存在的 `RDD`](#interoperating-with-rdds),
+从hive表, 或者从 [Spark数据源](#data-sources)中创建一个DataFrames.
 
-As an example, the following creates a DataFrame based on the content of a JSON file:
+举个例子, 下面就是基于一个JSON文件创建一个DataFrame:
 
 {% include_example create_df scala/org/apache/spark/examples/sql/SparkSQLExample.scala %}
 </div>
 
 <div data-lang="java" markdown="1">
-With a `SparkSession`, applications can create DataFrames from an [existing `RDD`](#interoperating-with-rdds),
-from a Hive table, or from [Spark data sources](#data-sources).
+在一个 `SparkSession`中, 应用程序可以从一个 [已经存在的 `RDD`](#interoperating-with-rdds),
+从hive表, 或者从 [Spark数据源](#data-sources)中创建一个DataFrames.
 
-As an example, the following creates a DataFrame based on the content of a JSON file:
+举个例子, 下面就是基于一个JSON文件创建一个DataFrame:
 
 {% include_example create_df java/org/apache/spark/examples/sql/JavaSparkSQLExample.java %}
 </div>
 
 <div data-lang="python"  markdown="1">
-With a `SparkSession`, applications can create DataFrames from an [existing `RDD`](#interoperating-with-rdds),
-from a Hive table, or from [Spark data sources](#data-sources).
+在一个 `SparkSession`中, 应用程序可以从一个 [已经存在的 `RDD`](#interoperating-with-rdds),
+从hive表, 或者从 [Spark数据源](#data-sources)中创建一个DataFrames.
 
-As an example, the following creates a DataFrame based on the content of a JSON file:
+举个例子, 下面就是基于一个JSON文件创建一个DataFrame:
 
 {% include_example create_df python/sql/basic.py %}
 </div>
 
-<div data-lang="r"  markdown="1">
-With a `SparkSession`, applications can create DataFrames from a local R data.frame,
-from a Hive table, or from [Spark data sources](#data-sources).
+<div data-lang="r"  markdown="1">
+在一个 `SparkSession`中, 应用程序可以从一个本地的R frame 数据,
+从hive表, 或者从[Spark数据源](#data-sources).
 
-As an example, the following creates a DataFrame based on the content of a JSON file:
+举个例子, 下面就是基于一个JSON文件创建一个DataFrame:
 
 {% include_example create_df r/RSparkSQLExample.R %}
 
@@ -119,13 +117,13 @@ As an example, the following creates a DataFrame based on the content of a JSON 
 </div>
 
 
-## Untyped Dataset Operations (aka DataFrame Operations)
+## 无类型的Dataset操作 (aka DataFrame 操作)
 
-DataFrames provide a domain-specific language for structured data manipulation in [Scala](api/scala/index.html#org.apache.spark.sql.Dataset), [Java](api/java/index.html?org/apache/spark/sql/Dataset.html), [Python](api/python/pyspark.sql.html#pyspark.sql.DataFrame) and [R](api/R/SparkDataFrame.html).
+DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org.apache.spark.sql.Dataset), [Java](api/java/index.html?org/apache/spark/sql/Dataset.html), [Python](api/python/pyspark.sql.html#pyspark.sql.DataFrame) and [R](api/R/SparkDataFrame.html)中机构化数据的操作.
 
-As mentioned above, in Spark 2.0, DataFrames are just Dataset of `Row`s in Scala and Java API. These operations are also referred as "untyped transformations" in contrast to "typed transformations" come with strongly typed Scala/Java Datasets.
+正如上面提到的一样, Spark 2.0中, DataFrames在Scala 和 Java API中，仅仅是多个 `Row`s的Dataset. 这些操作也参考了与强类型的Scala/Java Datasets中的"类型转换" 对应的"无类型转换" 。
 
-Here we include some basic examples of structured data processing using Datasets:
+这里包括一些使用 Dataset 进行结构化数据处理的示例 :
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
