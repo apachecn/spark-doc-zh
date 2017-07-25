@@ -90,11 +90,16 @@ body{
    text-decoration: none;
 }
 
+.nav-apachecn .nav-item a{
+    color: #1ABC9C;
+    display: block;
+}
+
 .nav-item label{
     position: relative;
 
 }
-.nav-item label>i{
+.nav-item label i{
     position: absolute;
     top:50%;
     right:20px;
@@ -139,6 +144,9 @@ body{
     background: #1ABC9C;
     color: white;
     cursor: pointer;
+}
+.nav-item .nav-itme__list li:hover >a{
+    color: white;
 }
 .nav-item label:hover{
     border-left: 0;
@@ -219,7 +227,7 @@ body{
 .nav-apachecn .second-level:hover{
     /*color: white;*/
 }
-.nav-apachecn .second-level label >i{
+.nav-apachecn .second-level label i{
     right: 0;
 }
 
