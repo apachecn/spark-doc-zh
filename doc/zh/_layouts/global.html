@@ -66,37 +66,38 @@
         <div class="spark-top__nav" id="apachecn-spark-menu">
             <div class="nav nav-apachecn">
                 <div class="container">
-                    <a href="javascript:;" class="nav-item">
+                    <div class="nav-item">
                         <label  class="animate">一级菜单<i class="fa fa-bars float-right"></i></label>
                         <ul class="nav-itme__list animate">
-                            <li href="javascript:;" class="animate">二级菜单 </li>
-                            <li href="javascript:;"  class="animate">二级菜单 </li>
-                            <li href="javascript:;"  class="animate">二级菜单</li>
+                            <li class="animate"><a href="">二级菜单</a> </li>
+                            <li class="animate"><a href="">二级菜单</a> </li>
+                            <li class="animate"><a href="">二级菜单</a> </li>
                         </ul>
-                    </a>
+                    </div>
 
-                    <a href="javascript:;" class="nav-item">
+                    <div class="nav-item">
                         <label  class="animate">一级菜单<i class="fa fa-bars float-right"></i></label>
                         <ul class="nav-itme__list animate">
                             <li class="animate second-level">
                                 <label  class="animate">二级菜单 <i class="fa fa-chevron-right"></i></label>
                                 <ul class="nav-itme__list animate">
-                                    <a href="//www.baidu.com"><li class="animate">三级菜单2 </li></a>>
-                                    <a href="//www.baidu.com"><li class="animate">三级菜单2 </li></a>
-                                    <a href="//www.baidu.com"><li class="animate">三级菜单2 </li></a>
+                                    <li class="animate"><a href="//www.baidu.com">三级菜单2</a></li>
                                 </ul>
                             </li>
                             <li class="animate second-level">
                                 <label  class="animate">二级菜单 <i class="fa fa-chevron-right"></i></label>
                                 <ul class="nav-itme__list animate">
-                                    <a href="//www.baidu.com"><li class="animate">三级菜单 3</li></a>
-                                    <a href="//www.baidu.com"><li class="animate">三级菜单 3</li></a>
-                                    <a href="//www.baidu.com"><li class="animate">三级菜单 3</li></a>
+                                    <li class="animate"><a href="//www.baidu.com">三级菜单2</a></li>
                                 </ul>
                             </li>
-                            <li href="javascript:;"  class="animate">2222</li>
+
+                            <li class="animate"><a href="//www.baidu.com">二级菜单</a></li>
                         </ul>
-                    </a>
+                    </div>
+
+                    <div class="nav-item">
+                        <label class="animate"><a href="//www.baidu.com">一级菜单<i class="fa fa-bars float-right"></i></a></label>
+                    </div>
                 </div>
             </div>
 
@@ -206,19 +207,20 @@
 
         <!-- apachecn menu script -->
         <script>
-            $("a.nav-item").on('mouseover', function () {
+
+            $("#apachecn-spark-menu .nav-item").on('mouseover', function () {
                 $(this).children(".nav-itme__list.animate").addClass('active')
             });
 
-            $("a.nav-item").on('mouseout', function () {
-            $(this).children(".nav-itme__list.animate").removeClass('active')
+            $("#apachecn-spark-menu .nav-item").on('mouseout', function () {
+                $(this).children(".nav-itme__list.animate").removeClass('active')
             })
 
-            $(".second-level").on('mouseover', function () {
+            $("#apachecn-spark-menu .second-level").on('mouseover', function () {
                 $(this).children(".nav-itme__list.animate").addClass('active')
             });
 
-            $(".second-level").on('mouseout', function () {
+            $("#apachecn-spark-menu .second-level").on('mouseout', function () {
                 $(this).children(".nav-itme__list.animate").removeClass('active')
             });
 
