@@ -700,7 +700,7 @@ Apart from these, the following properties are also available, and may be useful
   <td><code>spark.kryo.referenceTracking</code></td>
   <td>true</td>
   <td>
-    当使用Kryo序列化数据时，是否跟踪对同一对象的引用，如果对象图具有循环，并且如果它们包含同一对象的多个副本对效率有用，则这是必需的。 如果您知道这不是这样，可以禁用此功能来提高性能。
+    当使用 Kryo 序列化数据时，是否跟踪对同一对象的引用，如果对象图具有循环，并且如果它们包含同一对象的多个副本对效率有用，则这是必需的。 如果您知道这不是这样，可以禁用此功能来提高性能。
   </td>
 </tr>
 <tr>
@@ -753,8 +753,8 @@ Apart from these, the following properties are also available, and may be useful
     org.apache.spark.serializer.<br />JavaSerializer
   </td>
   <td>
-    用于序列化将通过网络发送或需要以序列化形式缓存的对象的类。 Java序列化的默认值与任何Serializable Java对象一起使用，但速度相当慢，所以我们建议您在需要速度时使用  <a href="tuning.html">using
-    <code>org.apache.spark.serializer.KryoSerializer</code> 并配置Kryo序列化。 可以是 <a href="api/scala/index.html#org.apache.spark.serializer.Serializer">
+    用于序列化将通过网络发送或需要以序列化形式缓存的对象的类。 Java 序列化的默认值与任何Serializable Java对象一起使用，但速度相当慢，所以我们建议您在需要速度时使用  <a href="tuning.html">使用
+    <code>org.apache.spark.serializer.KryoSerializer</code> 并配置 Kryo 序列化 </a>。 可以是 <a href="api/scala/index.html#org.apache.spark.serializer.Serializer">
     <code>org.apache.spark.Serializer</code></a> 的任何子类。
   </td>
 </tr>
