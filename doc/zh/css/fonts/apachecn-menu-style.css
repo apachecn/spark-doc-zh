@@ -193,11 +193,11 @@ body{
 }
 
 .nav-apachecn .animate{
-  -webkit-transition: all .15s;
-  -moz-transition: all .15s;
-  -ms-transition: all .15s;
-  -ms-transition: all .15s;
-  transition: all .15s;
+  -webkit-transition: all .21s;
+  -moz-transition: all .21s;
+  -ms-transition: all .21s;
+  -ms-transition: all .21s;
+  transition: all .21s;
   backface-visibility:hidden;
   -webkit-backface-visibility:hidden; /* Chrome and Safari */
   -moz-backface-visibility:hidden; /* Firefox */
