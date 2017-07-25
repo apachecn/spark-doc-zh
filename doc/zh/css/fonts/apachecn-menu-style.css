@@ -84,7 +84,7 @@ body{
 .nav-item{
    display: inline-block;
    width: 240px;
-   height: 48px;
+   height: 52px;
    position: relative;
    float: left;
    text-decoration: none;
@@ -237,4 +237,9 @@ body{
 
 .nav-apachecn .second-level .nav-itme__list li{
   padding-left: 10px
+}
+
+.nav-apachecn .nav-logo{
+   line-height:52px;
+   text-align:center;
 }
