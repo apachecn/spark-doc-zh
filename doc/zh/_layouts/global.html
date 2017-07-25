@@ -65,6 +65,7 @@
         <div class="spark-top__nav" id="apachecn-spark-menu">
             <div class="nav nav-apachecn">
                 <div class="container">
+<<<<<<< HEAD
                     <a href="javascript:;" class="nav-item">
                         <img src="img/apachecn-logo.png"/>
                     </a>
@@ -141,6 +142,43 @@
                     <a href="http://cwiki.apachecn.org/pages/viewpage.action?pageId=2887240" class="nav-item">
                         <label  class="animate">关于我们</label>
                     </a>
+=======
+                    <div class="nav-item">
+                        <label  class="animate">一级菜单<i class="fa fa-bars float-right"></i></label>
+                        <ul class="nav-itme__list animate">
+                            <li class="animate"><a href="">二级菜单</a> </li>
+                            <li class="animate"><a href="">二级菜单</a> </li>
+                            <li class="animate"><a href="">二级菜单</a> </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-item">
+                        <label  class="animate">一级菜单<i class="fa fa-bars float-right"></i></label>
+                        <ul class="nav-itme__list animate">
+                            <li class="animate second-level">
+                                <label  class="animate">二级菜单 <i class="fa fa-chevron-right"></i></label>
+                                <ul class="nav-itme__list animate">
+                                    <li class="animate"><a href="//www.baidu.com">三级菜单1</a></li>
+                                    <li class="animate"><a href="//www.baidu.com">三级菜单2</a></li>
+                                    <li class="animate"><a href="//www.baidu.com">三级菜单3</a></li>
+                                    <li class="animate"><a href="//www.baidu.com">三级菜单4</a></li>
+                                </ul>
+                            </li>
+                            <li class="animate second-level">
+                                <label  class="animate">二级菜单 <i class="fa fa-chevron-right"></i></label>
+                                <ul class="nav-itme__list animate">
+                                    <li class="animate"><a href="//www.baidu.com">三级菜单2</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="animate"><a href="//www.baidu.com">二级菜单</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-item">
+                        <label class="animate"><a href="//www.baidu.com">一级菜单<i class="fa fa-bars float-right"></i></a></label>
+                    </div>
+>>>>>>> dc2e6a16234fc802eaf9b243e6b70f954ea55a2d
                 </div>
             </div>
 
@@ -250,19 +288,20 @@
 
         <!-- apachecn menu script -->
         <script>
-            $("a.nav-item").on('mouseover', function () {
+
+            $("#apachecn-spark-menu .nav-item").on('mouseover', function () {
                 $(this).children(".nav-itme__list.animate").addClass('active')
             });
 
-            $("a.nav-item").on('mouseout', function () {
-            $(this).children(".nav-itme__list.animate").removeClass('active')
+            $("#apachecn-spark-menu .nav-item").on('mouseout', function () {
+                $(this).children(".nav-itme__list.animate").removeClass('active')
             })
 
-            $(".second-level").on('mouseover', function () {
+            $("#apachecn-spark-menu .second-level").on('mouseover', function () {
                 $(this).children(".nav-itme__list.animate").addClass('active')
             });
 
-            $(".second-level").on('mouseout', function () {
+            $("#apachecn-spark-menu .second-level").on('mouseout', function () {
                 $(this).children(".nav-itme__list.animate").removeClass('active')
             });
 
