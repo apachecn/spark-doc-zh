@@ -59,7 +59,7 @@ sparkR.session(master = "local[*]", sparkConfig = list(spark.driver.memory = "2g
 下面的 Spark driver 属性可以 从 RStudio 的 sparkR.session 的 sparkConfig 中进行设置:
 
 <table class="table">
-  <tr><th>Property Name<（属性名称）/th><th>Property group（属性分组）</th><th><code>spark-submit</code> equivalent</th></tr>
+  <tr><th>Property Name<（属性名称）</th><th>Property group（属性分组）</th><th><code>spark-submit</code> equivalent</th></tr>
   <tr>
     <td><code>spark.master</code></td>
     <td>Application Properties</td>

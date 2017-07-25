@@ -35,10 +35,9 @@
         <script src="js/vendor/modernizr-2.6.1-respond-1.1.0.min.js"></script>
 
         <link rel="stylesheet" href="css/pygments-default.css">
-
-        <!-- <link rel="stylesheet" href="../css/fonts/font-awesome.css"> -->
-        <link rel="stylesheet" href="../css/fonts/apachecn-menu-style.css" type="text/css" />
-        <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+        <link rel="stylesheet" href="css/fonts/font-awesome.css">
+        <link rel="stylesheet" href="css/fonts/apachecn-menu-style.css" type="text/css" />
+        <!-- <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css"> -->
 
         {% production %}
         <!-- Google analytics script -->
@@ -66,40 +65,65 @@
         <div class="spark-top__nav" id="apachecn-spark-menu">
             <div class="nav nav-apachecn">
                 <div class="container">
+                    <div class="nav-item nav-logo">
+                        <a href="http://www.apachecn.org"><img src="img/apachecn-logo.png"></a>
+                    </div>
+
                     <div class="nav-item">
-                        <label  class="animate">一级菜单<i class="fa fa-bars float-right"></i></label>
+                        <label  class="animate">中文文档<i class="fa fa-chevron-down float-right"></i></label>
                         <ul class="nav-itme__list animate">
-                            <li class="animate"><a href="">二级菜单</a> </li>
-                            <li class="animate"><a href="">二级菜单</a> </li>
-                            <li class="animate"><a href="">二级菜单</a> </li>
+                            <li class="animate second-level">
+                                <label  class="animate">TensorFlow<i class="fa fa-chevron-right"></i></label>
+                                <ul class="nav-itme__list animate">
+                                    <li class="animate"><a href="//cwiki.apachecn.org/pages/viewpage.action?pageId=10030122">TensorFlow R1.2 中文文档</a></li>
+                                </ul>
+                            </li>
+                            <li class="animate second-level">
+                                <label  class="animate">sklearn<i class="fa fa-chevron-right"></i></label>
+                                <ul class="nav-itme__list animate">
+                                    <li class="animate"><a href="//cwiki.apachecn.org/pages/viewpage.action?pageId=10030181">sklearn 0.18 中文文档</a></li>
+                                </ul>
+                            </li>
+                            <li class="animate second-level">
+                                <label  class="animate">Apache Spark<i class="fa fa-chevron-right"></i></label>
+                                <ul class="nav-itme__list animate">
+                                    <li class="animate"><a href="//spark.apache.org/docs/2.2.0/">Spark 2.2.0 中文文档</a></li>
+                                    <li class="animate"><a href="//cwiki.apachecn.org/pages/viewpage.action?pageId=2883613">Spark 2.0.2 中文文档</a></li>
+                                </ul>
+                            </li>
+                            <li class="animate second-level">
+                                <label  class="animate">Apache Kudu<i class="fa fa-chevron-right"></i></label>
+                                <ul class="nav-itme__list animate">
+                                    <li class="animate"><a href="//cwiki.apachecn.org/pages/viewpage.action?pageId=10813594">Kudu 1.4.0 中文文档</a></li>
+                                </ul>
+                            </li>
+                            <li class="animate second-level">
+                                <label  class="animate">Apache Zeppelin<i class="fa fa-chevron-right"></i></label>
+                                <ul class="nav-itme__list animate">
+                                    <li class="animate"><a href="//cwiki.apachecn.org/pages/viewpage.action?pageId=10030467">Zeppelin 0.7.2 中文文档</a></li>
+                                </ul>
+                            </li>
+                            <li class="animate second-level">
+                                <label  class="animate">Elastic Elasticsearch<i class="fa fa-chevron-right"></i></label>
+                                <ul class="nav-itme__list animate">
+                                    <li class="animate"><a href="//cwiki.apachecn.org/pages/viewpage.action?pageId=4260364">Elasticsearch 5.4 中文文档</a></li>
+                                </ul>
+                            </li>
+                            <li class="animate second-level">
+                                <label  class="animate">Elastic Kibana<i class="fa fa-chevron-right"></i></label>
+                                <ul class="nav-itme__list animate">
+                                    <li class="animate"><a href="//cwiki.apachecn.org/pages/viewpage.action?pageId=8159377">Kibana 5.2 中文文档</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
 
                     <div class="nav-item">
-                        <label  class="animate">一级菜单<i class="fa fa-bars float-right"></i></label>
+                        <label  class="animate">关注我们<i class="fa fa-bars float-right"></i></label>
                         <ul class="nav-itme__list animate">
-                            <li class="animate second-level">
-                                <label  class="animate">二级菜单 <i class="fa fa-chevron-right"></i></label>
-                                <ul class="nav-itme__list animate">
-                                    <li class="animate"><a href="//www.baidu.com">三级菜单1</a></li>
-                                    <li class="animate"><a href="//www.baidu.com">三级菜单2</a></li>
-                                    <li class="animate"><a href="//www.baidu.com">三级菜单3</a></li>
-                                    <li class="animate"><a href="//www.baidu.com">三级菜单4</a></li>
-                                </ul>
-                            </li>
-                            <li class="animate second-level">
-                                <label  class="animate">二级菜单 <i class="fa fa-chevron-right"></i></label>
-                                <ul class="nav-itme__list animate">
-                                    <li class="animate"><a href="//www.baidu.com">三级菜单2</a></li>
-                                </ul>
-                            </li>
-
-                            <li class="animate"><a href="//www.baidu.com">二级菜单</a></li>
+                            <li class="animate"><a href="//github.com/apachecn">GitHub</a></li>
+                            <li class="animate"><a href="//www.youku.com">优酷视频</a></li>
                         </ul>
-                    </div>
-
-                    <div class="nav-item">
-                        <label class="animate"><a href="//www.baidu.com">一级菜单<i class="fa fa-bars float-right"></i></a></label>
                     </div>
                 </div>
             </div>
@@ -112,10 +136,10 @@
                         </div>
                         <ul class="nav">
                             <!--TODO(andyk): Add class="active" attribute to li some how.-->
-                            <li><a href="index.html">概述</a></li>
+                            <li><a href="index.html">&nbsp;&nbsp;概述&nbsp;&nbsp;</a></li>
 
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">编程指南<b class="caret"></b></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">&nbsp;&nbsp;编程指南&nbsp;&nbsp;<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="quick-start.html">快速入门</a></li>
                                     <li><a href="rdd-programming-guide.html">Spark 编程指南</a></li>
@@ -140,7 +164,7 @@
                             </li>
 
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">部署<b class="caret"></b></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">&nbsp;&nbsp;部署&nbsp;&nbsp;<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="cluster-overview.html">概述</a></li>
                                     <li><a href="submitting-applications.html">提交应用</a></li>
@@ -152,7 +176,7 @@
                             </li>
 
                             <li class="dropdown">
-                                <a href="api.html" class="dropdown-toggle" data-toggle="dropdown">更多<b class="caret"></b></a>
+                                <a href="api.html" class="dropdown-toggle" data-toggle="dropdown">&nbsp;&nbsp;更多&nbsp;&nbsp;<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="configuration.html">配置</a></li>
                                     <li><a href="monitoring.html">监控</a></li>
@@ -165,6 +189,10 @@
                                     <li><a href="http://spark.apache.org/contributing.html">给 Spark 贡献</a></li>
                                     <li><a href="http://spark.apache.org/third-party-projects.html">第三方项目</a></li>
                                 </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="https://github.com/apachecn/spark-doc-zh/" class="dropdown-toggle" data-toggle="dropdown" target="_blank">发现错误&参与编辑&nbsp;&nbsp;<b class="caret"></b></a>
                             </li>
                         </ul>
                         <!--<p class="navbar-text pull-right"><span class="version-text">v{{site.SPARK_VERSION_SHORT}}</span></p>-->
@@ -201,6 +229,12 @@
             </div>
             {% endif %}
              <!-- /container -->
+        </div>
+        
+        <br/><hr class="container-wrapper" style="height:1px;border:none;border-top:1px solid #00FFFF;"/>
+        <div class="container-wrapper"> 
+            <font color="#FF0000">欢迎参与一起维护迭代更新. if you want to go fast, go alone. if you want to go far, go together.</font><br/>
+            github: <a href="https://github.com/apachecn/spark-doc-zh/">https://github.com/apachecn/spark-doc-zh/</a><br/>
         </div>
 
         <script src="js/vendor/jquery-1.8.0.min.js"></script>
