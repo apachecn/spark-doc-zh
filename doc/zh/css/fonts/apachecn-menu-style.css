@@ -145,7 +145,7 @@ body{
     color: white;
     cursor: pointer;
 }
-.nav-item .nav-itme__list li:hover a{
+.nav-item .nav-itme__list li:hover >a{
     color: white;
 }
 .nav-item label:hover{
