@@ -129,23 +129,22 @@ DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org
 <div data-lang="scala"  markdown="1">
 {% include_example untyped_ops scala/org/apache/spark/examples/sql/SparkSQLExample.scala %}
 
-For a complete list of the types of operations that can be performed on a Dataset refer to the [API Documentation](api/scala/index.html#org.apache.spark.sql.Dataset).
+能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/scala/index.html#org.apache.spark.sql.Dataset).
 
-In addition to simple column references and expressions, Datasets also have a rich library of functions including string manipulation, date arithmetic, common math operations and more. The complete list is available in the [DataFrame Function Reference](api/scala/index.html#org.apache.spark.sql.functions$).
+除了简单的列引用和表达式之外，DataFrame 也有丰富的函数库，包括 string 操作，date 算术，常见的 math 操作以及更多。可用的完整列表请参考  [DataFrame 函数指南](api/scala/index.html#org.apache.spark.sql.functions$).
 </div>
 
 <div data-lang="java" markdown="1">
 
 {% include_example untyped_ops java/org/apache/spark/examples/sql/JavaSparkSQLExample.java %}
 
-For a complete list of the types of operations that can be performed on a Dataset refer to the [API Documentation](api/java/org/apache/spark/sql/Dataset.html).
+能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/java/org/apache/spark/sql/Dataset.html).
 
-In addition to simple column references and expressions, Datasets also have a rich library of functions including string manipulation, date arithmetic, common math operations and more. The complete list is available in the [DataFrame Function Reference](api/java/org/apache/spark/sql/functions.html).
+除了简单的列引用和表达式之外，DataFrame 也有丰富的函数库，包括 string 操作，date 算术，常见的 math 操作以及更多。可用的完整列表请参考  [DataFrame 函数指南](api/java/org/apache/spark/sql/functions.html).
 </div>
 
-<div data-lang="python"  markdown="1">
-In Python it's possible to access a DataFrame's columns either by attribute
-(`df.age`) or by indexing (`df['age']`). While the former is convenient for
+<div data-lang="python"  markdown="1">
+在Python中，可以通过(`df.age`) 或者(`df['age']`)来获取DataFrame的列. While the former is convenient for
 interactive data exploration, users are highly encouraged to use the
 latter form, which is future proof and won't break with column names that
 are also attributes on the DataFrame class.
