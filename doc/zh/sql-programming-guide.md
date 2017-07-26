@@ -138,21 +138,18 @@ DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org
 
 {% include_example untyped_ops java/org/apache/spark/examples/sql/JavaSparkSQLExample.java %}
 
-能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/java/org/apache/spark/sql/Dataset.html).
+为了能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/java/org/apache/spark/sql/Dataset.html).
 
 除了简单的列引用和表达式之外，DataFrame 也有丰富的函数库，包括 string 操作，date 算术，常见的 math 操作以及更多。可用的完整列表请参考  [DataFrame 函数指南](api/java/org/apache/spark/sql/functions.html).
 </div>
 
 <div data-lang="python"  markdown="1">
-在Python中，可以通过(`df.age`) 或者(`df['age']`)来获取DataFrame的列. While the former is convenient for
-interactive data exploration, users are highly encouraged to use the
-latter form, which is future proof and won't break with column names that
-are also attributes on the DataFrame class.
+在Python中，可以通过(`df.age`) 或者(`df['age']`)来获取DataFrame的列. 虽然前者便于交互式操作, 但是还是建议用户使用后者, 这样不会破坏列名，也能引用DataFrame的类.
 
 {% include_example untyped_ops python/sql/basic.py %}
-For a complete list of the types of operations that can be performed on a DataFrame refer to the [API Documentation](api/python/pyspark.sql.html#pyspark.sql.DataFrame).
+为了能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/python/pyspark.sql.html#pyspark.sql.DataFrame).
 
-In addition to simple column references and expressions, DataFrames also have a rich library of functions including string manipulation, date arithmetic, common math operations and more. The complete list is available in the [DataFrame Function Reference](api/python/pyspark.sql.html#module-pyspark.sql.functions).
+除了简单的列引用和表达式之外，DataFrame 也有丰富的函数库，包括 string 操作，date 算术，常见的 math 操作以及更多。可用的完整列表请参考  [DataFrame 函数指南](api/python/pyspark.sql.html#module-pyspark.sql.functions).
 
 </div>
 
@@ -160,9 +157,9 @@ In addition to simple column references and expressions, DataFrames also have a 
 
 {% include_example untyped_ops r/RSparkSQLExample.R %}
 
-For a complete list of the types of operations that can be performed on a DataFrame refer to the [API Documentation](api/R/index.html).
+为了能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/R/index.html).
 
-In addition to simple column references and expressions, DataFrames also have a rich library of functions including string manipulation, date arithmetic, common math operations and more. The complete list is available in the [DataFrame Function Reference](api/R/SparkDataFrame.html).
+除了简单的列引用和表达式之外，DataFrame 也有丰富的函数库，包括 string 操作，date 算术，常见的 math 操作以及更多。可用的完整列表请参考  [DataFrame 函数指南](api/R/SparkDataFrame.html).
 
 </div>
 
@@ -172,25 +169,24 @@ In addition to simple column references and expressions, DataFrames also have a 
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
-The `sql` function on a `SparkSession` enables applications to run SQL queries programmatically and returns the result as a `DataFrame`.
+`SparkSession`的`sql`函数可以使应用以编程的没事运行SQL查询并且返回一个`DataFrame`.
 
 {% include_example run_sql scala/org/apache/spark/examples/sql/SparkSQLExample.scala %}
 </div>
 
 <div data-lang="java" markdown="1">
-The `sql` function on a `SparkSession` enables applications to run SQL queries programmatically and returns the result as a `Dataset<Row>`.
+`SparkSession`的`sql`函数可以使应用以编程的没事运行SQL查询并且返回一个`Dataset<Row>`.
 
 {% include_example run_sql java/org/apache/spark/examples/sql/JavaSparkSQLExample.java %}
 </div>
 
 <div data-lang="python"  markdown="1">
-The `sql` function on a `SparkSession` enables applications to run SQL queries programmatically and returns the result as a `DataFrame`.
-
+`SparkSession`的`sql`函数可以使应用以编程的没事运行SQL查询并且返回一个`DataFrame`.
 {% include_example run_sql python/sql/basic.py %}
 </div>
 
 <div data-lang="r"  markdown="1">
-The `sql` function enables applications to run SQL queries programmatically and returns the result as a `SparkDataFrame`.
+`SparkSession`的`sql`函数可以使应用以编程的没事运行SQL查询并且返回一个`DataFrame`.
 
 {% include_example run_sql r/RSparkSQLExample.R %}
 
