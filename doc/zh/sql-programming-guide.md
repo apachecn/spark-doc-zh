@@ -194,13 +194,9 @@ DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org
 </div>
 
 
-## Global Temporary View
+## 全局临时视图
 
-Temporary views in Spark SQL are session-scoped and will disappear if the session that creates it
-terminates. If you want to have a temporary view that is shared among all sessions and keep alive
-until the Spark application terminates, you can create a global temporary view. Global temporary
-view is tied to a system preserved database `global_temp`, and we must use the qualified name to
-refer it, e.g. `SELECT * FROM global_temp.view1`.
+Spark SQL中的临时视图是session级别的，也就是会随着session的消失而消失. 如果你想让一个临时视图在所有session中相互传递并且可用，直到Spark 应用退出, 你可以建立一个全局的临时视图.全局的临时视图存在于系统数据库 `global_temp`中, 我们必须加上库名去引用它, 比如. `SELECT * FROM global_temp.view1`.
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -229,14 +225,9 @@ SELECT * FROM global_temp.temp_view
 </div>
 
 
-## Creating Datasets
+## 创建Datasets
 
-Datasets are similar to RDDs, however, instead of using Java serialization or Kryo they use
-a specialized [Encoder](api/scala/index.html#org.apache.spark.sql.Encoder) to serialize the objects
-for processing or transmitting over the network. While both encoders and standard serialization are
-responsible for turning an object into bytes, encoders are code generated dynamically and use a format
-that allows Spark to perform many operations like filtering, sorting and hashing without deserializing
-the bytes back into an object.
+Dataset 与 RDD 相似，然而，并不是使用 Java 序列化或者 Kryo [编码器](api/scala/index.html#org.apache.spark.sql.Encoder) 来序列化用于处理或者通过网络进行传输的对象. 虽然编码器和标准的序列化都负责将一个对象序列化成字节，编码器是动态生成的代码，并且使用了一种允许 Spark 去执行许多像 filtering，sorting 以及 hashing 这样的操作，不需要将字节反序列化成对象的格式。
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -248,28 +239,18 @@ the bytes back into an object.
 </div>
 </div>
 
-## Interoperating with RDDs
+## RDD的互操作性
 
-Spark SQL supports two different methods for converting existing RDDs into Datasets. The first
-method uses reflection to infer the schema of an RDD that contains specific types of objects. This
-reflection based approach leads to more concise code and works well when you already know the schema
-while writing your Spark application.
+Spark SQL 支持两种不同的方法用于转换已存在的 RDD 成为 Dataset。第一种方法是使用反射去推断一个包含指定的对象类型的 RDD 的 Schema。在你的 Spark 应用程序中当你已知 Schema 时这个基于方法的反射可以让你的代码更简洁。
 
-The second method for creating Datasets is through a programmatic interface that allows you to
-construct a schema and then apply it to an existing RDD. While this method is more verbose, it allows
-you to construct Datasets when the columns and their types are not known until runtime.
+第二种用于创建 Dataset 的方法是通过一个允许你构造一个 Schema 然后把它应用到一个已存在的 RDD 的编程接口。然而这种方法更繁琐，当列和它们的类型知道运行时都是未知时它允许你去构造 Dataset。
 
-### Inferring the Schema Using Reflection
+### 使用反射推断Schema
 <div class="codetabs">
 
 <div data-lang="scala"  markdown="1">
 
-The Scala interface for Spark SQL supports automatically converting an RDD containing case classes
-to a DataFrame. The case class
-defines the schema of the table. The names of the arguments to the case class are read using
-reflection and become the names of the columns. Case classes can also be nested or contain complex
-types such as `Seq`s or `Array`s. This RDD can be implicitly converted to a DataFrame and then be
-registered as a table. Tables can be used in subsequent SQL statements.
+Spark SQL 的 Scala 接口支持自动转换一个包含 case classes 的 RDD 为 DataFrame。Case class 定义了表的 Schema。Case class 的参数名使用反射读取并且成为了列名。Case class 也可以是嵌套的或者包含像 `Seq` 或者 `Array` 这样的复杂类型。这个 RDD 能够被隐式转换成一个 DataFrame 然后被注册为一个表。表可以用于后续的 SQL 语句。
 
 {% include_example schema_inferring scala/org/apache/spark/examples/sql/SparkSQLExample.scala %}
 </div>
