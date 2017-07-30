@@ -257,45 +257,35 @@ Spark SQL 的 Scala 接口支持自动转换一个包含 case classes 的 RDD �
 
 <div data-lang="java"  markdown="1">
 
-Spark SQL supports automatically converting an RDD of
-[JavaBeans](http://stackoverflow.com/questions/3295496/what-is-a-javabean-exactly) into a DataFrame.
-The `BeanInfo`, obtained using reflection, defines the schema of the table. Currently, Spark SQL
-does not support JavaBeans that contain `Map` field(s). Nested JavaBeans and `List` or `Array`
-fields are supported though. You can create a JavaBean by creating a class that implements
-Serializable and has getters and setters for all of its fields.
+Spark SQL 支持一个[JavaBeans]的RDD(http://stackoverflow.com/questions/3295496/what-is-a-javabean-exactly)自动转换为一个DataFrame.
+`BeanInfo`利用反射定义表的schema. 目前Spark SQL不支持含有`Map`的JavaBeans. 但是支持嵌套`List`或者 `Array`JavaBeans . 
+你可以通过创建一个有getters和setters的序列化的类来创建一个JavaBean。
 
 {% include_example schema_inferring java/org/apache/spark/examples/sql/JavaSparkSQLExample.java %}
 </div>
 
 <div data-lang="python"  markdown="1">
 
-Spark SQL can convert an RDD of Row objects to a DataFrame, inferring the datatypes. Rows are constructed by passing a list of
-key/value pairs as kwargs to the Row class. The keys of this list define the column names of the table,
-and the types are inferred by sampling the whole dataset, similar to the inference that is performed on JSON files.
+Spark SQL能够把RDD 转换为一个DataFrame, 并推断其类型. 这些行由一系列key/value键值对组成. key值代表了表的列名,类型按抽样推断整个数据集, 同样的也适用于JSON文件.
 
 {% include_example schema_inferring python/sql/basic.py %}
 </div>
 
 </div>
 
-### Programmatically Specifying the Schema
+### 以编程的方式指定Schema
 
 <div class="codetabs">
 
 <div data-lang="scala"  markdown="1">
 
-When case classes cannot be defined ahead of time (for example,
-the structure of records is encoded in a string, or a text dataset will be parsed
-and fields will be projected differently for different users),
-a `DataFrame` can be created programmatically with three steps.
+当 case class 不能够在执行之前被定义（例如，records 记录的结构在一个 string 字符串中被编码了，或者一个 text 文本 dataset 将被解析并且不同的用户投影的字段是不一样的）。一个 `DataFrame` 可以使用下面的三步以编程的方式来创建。
 
-1. Create an RDD of `Row`s from the original RDD;
-2. Create the schema represented by a `StructType` matching the structure of
-`Row`s in the RDD created in Step 1.
-3. Apply the schema to the RDD of `Row`s via `createDataFrame` method provided
-by `SparkSession`.
+1. 从原始的 RDD 创建 RDD 的 `Row`（行）;
+2. Step 1 被创建后，创建 Schema 表示一个 `StructType` 匹配 RDD 中的 `Row`（行）的结构.
+3. 通过 `SparkSession` 提供的 `createDataFrame` 方法应用 Schema 到 RDD 的 RowS（行）.
 
-For example:
+例如:
 
 {% include_example programmatic_schema scala/org/apache/spark/examples/sql/SparkSQLExample.scala %}
 </div>
@@ -320,15 +310,12 @@ For example:
 
 <div data-lang="python"  markdown="1">
 
-When a dictionary of kwargs cannot be defined ahead of time (for example,
-the structure of records is encoded in a string, or a text dataset will be parsed and
-fields will be projected differently for different users),
-a `DataFrame` can be created programmatically with three steps.
+当一个字典不能被提前定义 (例如,记录的结构是在一个字符串中, 抑或一个文本中解析，被不同的用户所属),
+一个 `DataFrame` 可以通过以下3步来创建.
 
-1. Create an RDD of tuples or lists from the original RDD;
-2. Create the schema represented by a `StructType` matching the structure of
-tuples or lists in the RDD created in the step 1.
-3. Apply the schema to the RDD via `createDataFrame` method provided by `SparkSession`.
+1. RDD从原始的RDD穿件一个RDD的toples或者一个列表;
+2. Step 1 被创建后，创建 Schema 表示一个 `StructType` 匹配 RDD 中的结构.
+3. 通过 `SparkSession` 提供的 `createDataFrame` 方法应用 Schema 到 RDD .
 
 For example:
 
