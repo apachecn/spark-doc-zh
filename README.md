@@ -7,7 +7,7 @@ Apache Spark™ 是一个快速的, 用于海量数据处理的通用引擎.
 
 ## 正在翻译
 
-[Spark 2.2.0](http://spark.apachecn.org/docs/cn/2.2.0/)（已翻译完成 80%）
+[Apache Spark 2.2.0](http://spark.apachecn.org/docs/cn/2.2.0/)（已翻译完成 80%）
 
 维护地址: [Apache Spark 2.2.0 官方文档中文版](http://spark.apachecn.org/docs/cn/2.2.0/): [http://spark.apachecn.org/docs/cn/2.2.0/](http://spark.apachecn.org/docs/cn/2.2.0/)
 
@@ -63,3 +63,13 @@ Apache Spark™ 是一个快速的, 用于海量数据处理的通用引擎.
 ## 联系方式
 有任何建议反馈, 或想参与文档翻译, 麻烦联系下面的企鹅:
 * 企鹅: 1042658081
+
+## 其它中文文档
+* [TensorFlow R1.2 中文文档](http://cwiki.apachecn.org/pages/viewpage.action?pageId=10030122)
+* [sklearn 0.18 中文文档](http://cwiki.apachecn.org/pages/viewpage.action?pageId=10030181)
+* [Spark 2.2.0 中文文档](http://spark.apachecn.org/docs/cn/2.2.0/)
+* [Spark 2.0.2 中文文档](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2883613)
+* [Kudu 1.4.0 中文文档](http://cwiki.apachecn.org/pages/viewpage.action?pageId=10813594)
+* [Zeppelin 0.7.2 中文文档](http://cwiki.apachecn.org/pages/viewpage.action?pageId=10030467)
+* [Elasticsearch 5.4 中文文档](http://cwiki.apachecn.org/pages/viewpage.action?pageId=4260364)
+* [Kibana 5.2 中文文档](http://cwiki.apachecn.org/pages/viewpage.action?pageId=8159377)
