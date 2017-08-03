@@ -23,10 +23,6 @@ Spark Streaming 是 Spark Core API 的扩展, 它支持弹性的, 高吞吐的, 
   />
 </p>
 
-Internally, it works as follows. Spark Streaming receives live input data streams and divides
-the data into batches, which are then processed by the Spark engine to generate the final
-stream of results in batches.
-
 在内部, 它工作原理如下, Spark Streaming 接收实时输入数据流并将数据切分成多个 batch（批）数据, 然后由 Spark 引擎处理它们以生成最终的 stream of results in batches（分批流结果）.
 
 <p style="text-align: center;">
