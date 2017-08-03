@@ -27,7 +27,9 @@ Apache Spark™ 是一个快速的, 用于海量数据处理的通用引擎.
 
 我这里使用的是 `VSCode` 编辑器.
 
-简易的使用指南请参考: [VSCode Windows 平台入门使用指南](help/vscode-windows-usage.md), 介绍了 `VSCode` 与 `github` 一起搭配的简易使用的方法.
+简易的使用指南请参阅: [VSCode Windows 平台入门使用指南](help/vscode-windows-usage.md), 介绍了 `VSCode` 与 `github` 一起搭配的简易使用的方法.
+
+如果要将 VSCode 的 Markdown 预览风格切换为 github 的风格，请参阅: [VSCode 修改 markdown 的预览风格为 github 的风格](help/vscode-markdown-preview-github-style.md).
 
 ## 角色分配
 目前有如下可分配的角色: 
