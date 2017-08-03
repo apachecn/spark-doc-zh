@@ -1137,69 +1137,54 @@ For the Python API, see [DStream](api/python/pyspark.streaming.html#pyspark.stre
 
 ***
 
-## Output Operations on DStreams
-Output operations allow DStream's data to be pushed out to external systems like a database or a file systems.
-Since the output operations actually allow the transformed data to be consumed by external systems,
-they trigger the actual execution of all the DStream transformations (similar to actions for RDDs).
-Currently, the following output operations are defined:
+## DStreams 上的输出操作
+
+输出操作允许将 DStream 的数据推送到外部系统, 如数据库或文件系统.
+由于输出操作实际上允许外部系统使用变换后的数据, 所以它们触发所有 DStream 变换的实际执行（类似于RDD的动作）.
+目前, 定义了以下输出操作：
 
 <table class="table">
 <tr><th style="width:30%">Output Operation</th><th>Meaning</th></tr>
 <tr>
   <td> <b>print</b>()</td>
-  <td> Prints the first ten elements of every batch of data in a DStream on the driver node running
-  the streaming application. This is useful for development and debugging.
+  <td> 在运行流应用程序的 driver 节点上的DStream中打印每批数据的前十个元素. 这对于开发和调试很有用.
   <br/>
-  <span class="badge" style="background-color: grey">Python API</span> This is called
-  <b>pprint()</b> in the Python API.
+  <span class="badge" style="background-color: grey">Python API</span> 这在 Python API 中称为 <b>pprint()</b>.
   </td>
 </tr>
 <tr>
   <td> <b>saveAsTextFiles</b>(<i>prefix</i>, [<i>suffix</i>]) </td>
-  <td> Save this DStream's contents as text files. The file name at each batch interval is
-  generated based on <i>prefix</i> and <i>suffix</i>: <i>"prefix-TIME_IN_MS[.suffix]"</i>. </td>
+  <td> 将此 DStream 的内容另存为文本文件. 
+  每个批处理间隔的文件名是根据 <i>前缀</i> 和 <i>后缀</i> : <i>"prefix-TIME_IN_MS[.suffix]"</i> 生成的.</td>
 </tr>
 <tr>
   <td> <b>saveAsObjectFiles</b>(<i>prefix</i>, [<i>suffix</i>]) </td>
-  <td> Save this DStream's contents as <code>SequenceFiles</code> of serialized Java objects. The file
-  name at each batch interval is generated based on <i>prefix</i> and
-  <i>suffix</i>: <i>"prefix-TIME_IN_MS[.suffix]"</i>.
+  <td> 将此 DStream 的内容另存为序列化 Java 对象的 <code>SequenceFiles</code>. 
+  每个批处理间隔的文件名是根据 <i>前缀</i> 和 <i>后缀</i> : <i>"prefix-TIME_IN_MS[.suffix]"</i> 生成的.
   <br/>
-  <span class="badge" style="background-color: grey">Python API</span> This is not available in
-  the Python API.
+  <span class="badge" style="background-color: grey">Python API</span> 这在Python API中是不可用的.
   </td>
 </tr>
 <tr>
   <td> <b>saveAsHadoopFiles</b>(<i>prefix</i>, [<i>suffix</i>]) </td>
-  <td> Save this DStream's contents as Hadoop files. The file name at each batch interval is
-  generated based on <i>prefix</i> and <i>suffix</i>: <i>"prefix-TIME_IN_MS[.suffix]"</i>.
+  <td> 将此 DStream 的内容另存为 Hadoop 文件.
+  每个批处理间隔的文件名是根据 <i>前缀</i> 和 <i>后缀</i> : <i>"prefix-TIME_IN_MS[.suffix]"</i> 生成的.
   <br>
-  <span class="badge" style="background-color: grey">Python API</span> This is not available in
-  the Python API.
+  <span class="badge" style="background-color: grey">Python API</span> 这在Python API中是不可用的.
   </td>
 </tr>
 <tr>
   <td> <b>foreachRDD</b>(<i>func</i>) </td>
-  <td> The most generic output operator that applies a function, <i>func</i>, to each RDD generated from
-  the stream. This function should push the data in each RDD to an external system, such as saving the RDD to
-  files, or writing it over the network to a database. Note that the function <i>func</i> is executed
-  in the driver process running the streaming application, and will usually have RDD actions in it
-  that will force the computation of the streaming RDDs.</td>
+  <td> 对从流中生成的每个 RDD 应用函数 <i>func</i> 的最通用的输出运算符. 此功能应将每个 RDD 中的数据推送到外部系统, 例如将 RDD 保存到文件, 或将其通过网络写入数据库. 请注意, 函数 <i>func</i> 在运行流应用程序的 driver 进程中执行, 通常会在其中具有 RDD 动作, 这将强制流式传输 RDD 的计算.</td>
 </tr>
 <tr><td></td><td></td></tr>
 </table>
 
-### Design Patterns for using foreachRDD
+### foreachRDD 设计模式的使用
 {:.no_toc}
-`dstream.foreachRDD` is a powerful primitive that allows data to be sent out to external systems.
-However, it is important to understand how to use this primitive correctly and efficiently.
-Some of the common mistakes to avoid are as follows.
+`dstream.foreachRDD` 是一个强大的原语, 允许将数据发送到外部系统.但是, 了解如何正确有效地使用这个原语很重要. 避免一些常见的错误如下.
 
-Often writing data to external system requires creating a connection object
-(e.g. TCP connection to a remote server) and using it to send data to a remote system.
-For this purpose, a developer may inadvertently try creating a connection object at
-the Spark driver, and then try to use it in a Spark worker to save records in the RDDs.
-For example (in Scala),
+通常向外部系统写入数据需要创建连接对象（例如与远程服务器的 TCP 连接）, 并使用它将数据发送到远程系统.为此, 开发人员可能会无意中尝试在Spark driver 中创建连接对象, 然后尝试在Spark工作人员中使用它来在RDD中保存记录.例如（在 Scala 中）:
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -1234,14 +1219,11 @@ dstream.foreachRDD(sendRecord)
 </div>
 </div>
 
-This is incorrect as this requires the connection object to be serialized and sent from the
-driver to the worker. Such connection objects are rarely transferable across machines. This
-error may manifest as serialization errors (connection object not serializable), initialization
-errors (connection object needs to be initialized at the workers), etc. The correct solution is
-to create the connection object at the worker.
+这是不正确的, 因为这需要将连接对象序列化并从 driver 发送到 worker. 这种连接对象很少能跨机器转移.
+此错误可能会显示为序列化错误（连接对象不可序列化）, 初始化错误（连接对象需要在 worker 初始化）等.
+正确的解决方案是在 worker 创建连接对象.
 
-However, this can lead to another common mistake - creating a new connection for every record.
-For example,
+但是, 这可能会导致另一个常见的错误 - 为每个记录创建一个新的连接. 例如: 
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -1278,11 +1260,9 @@ dstream.foreachRDD(lambda rdd: rdd.foreach(sendRecord))
 </div>
 </div>
 
-Typically, creating a connection object has time and resource overheads. Therefore, creating and
-destroying a connection object for each record can incur unnecessarily high overheads and can
-significantly reduce the overall throughput of the system. A better solution is to use
-`rdd.foreachPartition` - create a single connection object and send all the records in a RDD
-partition using that connection.
+通常, 创建连接对象具有时间和资源开销. 
+因此, 创建和销毁每个记录的连接对象可能会引起不必要的高开销, 并可显着降低系统的总体吞吐量. 
+一个更好的解决方案是使用 `rdd.foreachPartition` - 创建一个连接对象, 并使用该连接在 RDD 分区中发送所有记录.
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -1322,11 +1302,10 @@ dstream.foreachRDD(lambda rdd: rdd.foreachPartition(sendPartition))
 </div>
 </div>
 
-  This amortizes the connection creation overheads over many records.
+  这样可以在多个记录上分摊连接创建开销.
 
-Finally, this can be further optimized by reusing connection objects across multiple RDDs/batches.
-One can maintain a static pool of connection objects than can be reused as
-RDDs of multiple batches are pushed to the external system, thus further reducing the overheads.
+最后, 可以通过跨多个RDD /批次重用连接对象来进一步优化.
+可以维护连接对象的静态池, 而不是将多个批次的 RDD 推送到外部系统时重新使用, 从而进一步减少开销.
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -1341,7 +1320,6 @@ dstream.foreachRDD { rdd =>
 }
 {% endhighlight %}
 </div>
-
 <div data-lang="java" markdown="1">
 {% highlight java %}
 dstream.foreachRDD(rdd -> {
@@ -1371,19 +1349,21 @@ dstream.foreachRDD(lambda rdd: rdd.foreachPartition(sendPartition))
 </div>
 </div>
 
-Note that the connections in the pool should be lazily created on demand and timed out if not used for a while. This achieves the most efficient sending of data to external systems.
+请注意, 池中的连接应根据需要懒惰创建, 如果不使用一段时间, 则会超时.
+这实现了最有效地将数据发送到外部系统.
 
 
-##### Other points to remember:
+##### 其他要记住的要点:
 {:.no_toc}
-- DStreams are executed lazily by the output operations, just like RDDs are lazily executed by RDD actions. Specifically, RDD actions inside the DStream output operations force the processing of the received data. Hence, if your application does not have any output operation, or has output operations like `dstream.foreachRDD()` without any RDD action inside them, then nothing will get executed. The system will simply receive the data and discard it.
+- DStreams 通过输出操作进行延迟执行, 就像 RDD 由 RDD 操作懒惰地执行. 具体来说, DStream 输出操作中的 RDD 动作强制处理接收到的数据.因此, 如果您的应用程序没有任何输出操作, 或者具有 `dstream.foreachRDD()` 等输出操作, 而在其中没有任何 RDD 操作, 则不会执行任何操作.系统将简单地接收数据并将其丢弃.
 
-- By default, output operations are executed one-at-a-time. And they are executed in the order they are defined in the application.
+- 默认情况下, 输出操作是 one-at-a-time 执行的. 它们按照它们在应用程序中定义的顺序执行.
 
 ***
 
-## DataFrame and SQL Operations
-You can easily use [DataFrames and SQL](sql-programming-guide.html) operations on streaming data. You have to create a SparkSession using the SparkContext that the StreamingContext is using. Furthermore this has to done such that it can be restarted on driver failures. This is done by creating a lazily instantiated singleton instance of SparkSession. This is shown in the following example. It modifies the earlier [word count example](#a-quick-example) to generate word counts using DataFrames and SQL. Each RDD is converted to a DataFrame, registered as a temporary table and then queried using SQL.
+## DataFrame 和 SQL 操作
+
+您可以轻松地在流数据上使用 [DataFrames and SQL](sql-programming-guide.html) 和 SQL 操作. 您必须使用 StreamingContext 正在使用的 SparkContext 创建一个 SparkSession.此外, 必须这样做, 以便可以在 driver 故障时重新启动. 这是通过创建一个简单实例化的 SparkSession 单例实例来实现的.这在下面的示例中显示.它使用 DataFrames 和 SQL 来修改早期的字数 [示例以生成单词计数](#a-quick-example).将每个 RDD 转换为 DataFrame, 注册为临时表, 然后使用 SQL 进行查询.
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -1413,7 +1393,7 @@ words.foreachRDD { rdd =>
 
 {% endhighlight %}
 
-See the full [source code]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/scala/org/apache/spark/examples/streaming/SqlNetworkWordCount.scala).
+请参阅完整的 [源代码]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/scala/org/apache/spark/examples/streaming/SqlNetworkWordCount.scala).
 </div>
 <div data-lang="java" markdown="1">
 {% highlight java %}
@@ -1459,7 +1439,7 @@ words.foreachRDD((rdd, time) -> {
 });
 {% endhighlight %}
 
-See the full [source code]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/streaming/JavaSqlNetworkWordCount.java).
+请参阅完整的 [源代码]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/streaming/JavaSqlNetworkWordCount.java).
 </div>
 <div data-lang="python" markdown="1">
 {% highlight python %}
@@ -1501,100 +1481,80 @@ def process(time, rdd):
 words.foreachRDD(process)
 {% endhighlight %}
 
-See the full [source code]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/streaming/sql_network_wordcount.py).
+请参阅完整的 [源代码]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/streaming/sql_network_wordcount.py).
 
 </div>
 </div>
 
-You can also run SQL queries on tables defined on streaming data from a different thread (that is, asynchronous to the running StreamingContext). Just make sure that you set the StreamingContext to remember a sufficient amount of streaming data such that the query can run. Otherwise the StreamingContext, which is unaware of the any asynchronous SQL queries, will delete off old streaming data before the query can complete. For example, if you want to query the last batch, but your query can take 5 minutes to run, then call `streamingContext.remember(Minutes(5))` (in Scala, or equivalent in other languages).
+您还可以对来自不同线程的流数据（即异步运行的 StreamingContext ）上定义的表运行 SQL 查询.
+只需确保您将 StreamingContext 设置为记住足够数量的流数据, 以便查询可以运行.
+否则, 不知道任何异步 SQL 查询的 StreamingContext 将在查询完成之前删除旧的流数据.
+例如, 如果要查询最后一个批次, 但是您的查询可能需要5分钟才能运行, 则可以调用 `streamingContext.remember(Minutes(5))` （以 Scala 或其他语言的等价物）.
 
-See the [DataFrames and SQL](sql-programming-guide.html) guide to learn more about DataFrames.
-
-***
-
-## MLlib Operations
-You can also easily use machine learning algorithms provided by [MLlib](ml-guide.html). First of all, there are streaming machine learning algorithms (e.g. [Streaming Linear Regression](mllib-linear-methods.html#streaming-linear-regression), [Streaming KMeans](mllib-clustering.html#streaming-k-means), etc.) which can simultaneously learn from the streaming data as well as apply the model on the streaming data. Beyond these, for a much larger class of machine learning algorithms, you can learn a learning model offline (i.e. using historical data) and then apply the model online on streaming data. See the [MLlib](ml-guide.html) guide for more details.
+有关DataFrames的更多信息, 请参阅 [DataFrames 和 SQL 指南](sql-programming-guide.html).
 
 ***
 
-## Caching / Persistence
-Similar to RDDs, DStreams also allow developers to persist the stream's data in memory. That is,
-using the `persist()` method on a DStream will automatically persist every RDD of that DStream in
-memory. This is useful if the data in the DStream will be computed multiple times (e.g., multiple
-operations on the same data). For window-based operations like `reduceByWindow` and
-`reduceByKeyAndWindow` and state-based operations like `updateStateByKey`, this is implicitly true.
-Hence, DStreams generated by window-based operations are automatically persisted in memory, without
-the developer calling `persist()`.
+## MLlib 操作
 
-For input streams that receive data over the network (such as, Kafka, Flume, sockets, etc.), the
-default persistence level is set to replicate the data to two nodes for fault-tolerance.
+您还可以轻松使用 [MLlib](ml-guide.html) 提供的机器学习算法.
+首先, 有 streaming 机器学习算法（例如: [Streaming 线性回归](mllib-linear-methods.html#streaming-linear-regression), [Streaming KMeans](mllib-clustering.html#streaming-k-means) 等）, 其可以同时从 streaming 数据中学习, 并将该模型应用于 streaming 数据. 
+除此之外, 对于更大类的机器学习算法, 您可以离线学习一个学习模型（即使用历史数据）, 然后将该模型在线应用于流数据.有关详细信息, 请参阅 [MLlib指南](ml-guide.html).
 
-Note that, unlike RDDs, the default persistence level of DStreams keeps the data serialized in
-memory. This is further discussed in the [Performance Tuning](#memory-tuning) section. More
-information on different persistence levels can be found in the [Spark Programming Guide](programming-guide.html#rdd-persistence).
+***
+
+## 缓存 / 持久性
+
+与 RDD 类似, DStreams 还允许开发人员将流的数据保留在内存中. 
+也就是说, 在 DStream 上使用 `persist()` 方法会自动将该 DStream 的每个 RDD 保留在内存中. 
+如果 DStream 中的数据将被多次计算（例如, 相同数据上的多个操作）, 这将非常有用. 
+对于基于窗口的操作, 如 `reduceByWindow` 和 `reduceByKeyAndWindow` 以及基于状态的操作, 
+如 `updateStateByKey`, 这是隐含的.因此, 基于窗口的操作生成的 DStream 会自动保存在内存中, 而不需要开发人员调用 `persist()`.
+
+对于通过网络接收数据（例如: Kafka, Flume, sockets 等）的输入流, 默认持久性级别被设置为将数据复制到两个节点进行容错.
+
+请注意, 与 RDD 不同, DStreams 的默认持久性级别将数据序列化在内存中. 
+这在 [性能调优](#memory-tuning) 部分进一步讨论. 有关不同持久性级别的更多信息, 请参见 [Spark编程指南](programming-guide.html#rdd-persistence).
 
 ***
 
 ## Checkpointing
-A streaming application must operate 24/7 and hence must be resilient to failures unrelated
-to the application logic (e.g., system failures, JVM crashes, etc.). For this to be possible,
-Spark Streaming needs to *checkpoint* enough information to a fault-
-tolerant storage system such that it can recover from failures. There are two types of data
-that are checkpointed.
 
-- *Metadata checkpointing* - Saving of the information defining the streaming computation to
-  fault-tolerant storage like HDFS. This is used to recover from failure of the node running the
-  driver of the streaming application (discussed in detail later). Metadata includes:
-  +  *Configuration* - The configuration that was used to create the streaming application.
-  +  *DStream operations* - The set of DStream operations that define the streaming application.
-  +  *Incomplete batches* - Batches whose jobs are queued but have not completed yet.
-- *Data checkpointing* - Saving of the generated RDDs to reliable storage. This is necessary
-  in some *stateful* transformations that combine data across multiple batches. In such
-  transformations, the generated RDDs depend on RDDs of previous batches, which causes the length
-  of the dependency chain to keep increasing with time. To avoid such unbounded increases in recovery
-   time (proportional to dependency chain), intermediate RDDs of stateful transformations are periodically
-  *checkpointed* to reliable storage (e.g. HDFS) to cut off the dependency chains.
+ streaming 应用程序必须 24/7 运行, 因此必须对应用逻辑无关的故障（例如, 系统故障, JVM 崩溃等）具有弹性. 为了可以这样做, Spark Streaming 需要 *checkpoint* 足够的信息到容错存储系统, 以便可以从故障中恢复.*checkpoint* 有两种类型的数据.
 
-To summarize, metadata checkpointing is primarily needed for recovery from driver failures,
-whereas data or RDD checkpointing is necessary even for basic functioning if stateful
-transformations are used.
+- *Metadata checkpointing* - 将定义 streaming 计算的信息保存到容错存储（如 HDFS）中.这用于从运行 streaming 应用程序的 driver 的节点的故障中恢复（稍后详细讨论）. 元数据包括:
+  +  *Configuration* - 用于创建流应用程序的配置.
+  +  *DStream operations* - 定义 streaming 应用程序的 DStream 操作集.
+  +  *Incomplete batches* - 批量的job 排队但尚未完成.
+- *Data checkpointing* - 将生成的 RDD 保存到可靠的存储.这在一些将多个批次之间的数据进行组合的 *状态* 变换中是必需的.在这种转换中, 生成的 RDD 依赖于先前批次的 RDD, 这导致依赖链的长度随时间而增加.为了避免恢复时间的这种无限增加（与依赖关系链成比例）, 有状态转换的中间 RDD 会定期 *checkpoint* 到可靠的存储（例如 HDFS）以切断依赖关系链.
 
-#### When to enable Checkpointing
+总而言之, 元数据 checkpoint 主要用于从 driver 故障中恢复, 而数据或 RDD  checkpoint 对于基本功能（如果使用有状态转换）则是必需的.
+
+#### 何时启用 checkpoint 
 {:.no_toc}
 
-Checkpointing must be enabled for applications with any of the following requirements:
+对于具有以下任一要求的应用程序, 必须启用 checkpoint:
 
-- *Usage of stateful transformations* - If either `updateStateByKey` or `reduceByKeyAndWindow` (with
-  inverse function) is used in the application, then the checkpoint directory must be provided to
-  allow for periodic RDD checkpointing.
-- *Recovering from failures of the driver running the application* - Metadata checkpoints are used
-   to recover with progress information.
+- *使用状态转换* - 如果在应用程序中使用 `updateStateByKey`或 `reduceByKeyAndWindow`（具有反向功能）, 则必须提供 checkpoint 目录以允许定期的 RDD checkpoint.
+- *从运行应用程序的 driver 的故障中恢复* - 元数据 checkpoint 用于使用进度信息进行恢复.
 
-Note that simple streaming applications without the aforementioned stateful transformations can be
-run without enabling checkpointing. The recovery from driver failures will also be partial in
-that case (some received but unprocessed data may be lost). This is often acceptable and many run
-Spark Streaming applications in this way. Support for non-Hadoop environments is expected
-to improve in the future.
+请注意, 无需进行上述有状态转换的简单 streaming 应用程序即可运行, 无需启用 checkpoint. 
+在这种情况下, 驱动器故障的恢复也将是部分的（一些接收但未处理的数据可能会丢失）. 
+这通常是可以接受的, 许多运行 Spark Streaming 应用程序. 未来对非 Hadoop 环境的支持预计会有所改善.
 
-#### How to configure Checkpointing
+#### 如何配置 checkpoint
 {:.no_toc}
+可以通过在保存 checkpoint 信息的容错, 可靠的文件系统（例如, HDFS, S3等）中设置目录来启用 checkpoint. 
+这是通过使用 `streamingContext.checkpoint(checkpointDirectory)` 完成的. 这将允许您使用上述有状态转换.
+另外, 如果要使应用程序从 driver 故障中恢复, 您应该重写 streaming 应用程序以具有以下行为.
 
-Checkpointing can be enabled by setting a directory in a fault-tolerant,
-reliable file system (e.g., HDFS, S3, etc.) to which the checkpoint information will be saved.
-This is done by using `streamingContext.checkpoint(checkpointDirectory)`. This will allow you to
-use the aforementioned stateful transformations. Additionally,
-if you want to make the application recover from driver failures, you should rewrite your
-streaming application to have the following behavior.
-
-  + When the program is being started for the first time, it will create a new StreamingContext,
-    set up all the streams and then call start().
-  + When the program is being restarted after failure, it will re-create a StreamingContext
-    from the checkpoint data in the checkpoint directory.
+  + 当程序第一次启动时, 它将创建一个新的 StreamingContext, 设置所有流, 然后调用 start().
+  + 当程序在失败后重新启动时, 它将从 checkpoint 目录中的 checkpoint 数据重新创建一个 StreamingContext.
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
 
-This behavior is made simple by using `StreamingContext.getOrCreate`. This is used as follows.
+使用 `StreamingContext.getOrCreate` 可以简化此行为. 这样使用如下.
 
 {% highlight scala %}
 // Function to create and setup a new StreamingContext
@@ -1701,26 +1661,20 @@ You can also explicitly create a `StreamingContext` from the checkpoint data and
 </div>
 </div>
 
-In addition to using `getOrCreate` one also needs to ensure that the driver process gets
-restarted automatically on failure. This can only be done by the deployment infrastructure that is
-used to run the application. This is further discussed in the
-[Deployment](#deploying-applications) section.
+除了使用 `getOrCreate` 之外, 还需要确保在失败时自动重新启动 driver 进程. 
+这只能由用于运行应用程序的部署基础架构完成. 这在 [部署](#deploying-applications) 部分进一步讨论.
 
-Note that checkpointing of RDDs incurs the cost of saving to reliable storage.
-This may cause an increase in the processing time of those batches where RDDs get checkpointed.
-Hence, the interval of
-checkpointing needs to be set carefully. At small batch sizes (say 1 second), checkpointing every
-batch may significantly reduce operation throughput. Conversely, checkpointing too infrequently
-causes the lineage and task sizes to grow, which may have detrimental effects. For stateful
-transformations that require RDD checkpointing, the default interval is a multiple of the
-batch interval that is at least 10 seconds. It can be set by using
-`dstream.checkpoint(checkpointInterval)`. Typically, a checkpoint interval of 5 - 10 sliding intervals of a DStream is a good setting to try.
+请注意, RDD 的 checkpoint 会导致保存到可靠存储的成本. 这可能会导致 RDD 得到 checkpoint 的批次的处理时间增加. 因此, 需要仔细设置 checkpoint 的间隔. 
+在小批量大小（例如: 1秒）, 检查每个批次可能会显着降低操作吞吐量. 相反,  checkpoint 太少会导致谱系和任务大小增长, 这可能会产生不利影响. 
+对于需要 RDD  checkpoint 的状态转换, 默认间隔是至少10秒的批间隔的倍数. 它可以通过使用 `dstream.checkpoint(checkpointInterval)` 进行设置. 通常, DStream 的5到10个滑动间隔的 checkpoint 间隔是一个很好的设置.
 
 ***
 
-## Accumulators, Broadcast Variables, and Checkpoints
+## Accumulators, Broadcast 变量, 和 Checkpoint
 
-[Accumulators](programming-guide.html#accumulators) and [Broadcast variables](programming-guide.html#broadcast-variables) cannot be recovered from checkpoint in Spark Streaming. If you enable checkpointing and use [Accumulators](programming-guide.html#accumulators) or [Broadcast variables](programming-guide.html#broadcast-variables) as well, you'll have to create lazily instantiated singleton instances for [Accumulators](programming-guide.html#accumulators) and [Broadcast variables](programming-guide.html#broadcast-variables) so that they can be re-instantiated after the driver restarts on failure. This is shown in the following example.
+在Spark Streaming中, 无法从 checkpoint 恢复 [Accumulators](programming-guide.html#accumulators) 和 [Broadcast 变量](programming-guide.html#broadcast-variables) .
+如果启用 checkpoint 并使用 [Accumulators](programming-guide.html#accumulators) 或 [Broadcast 变量](programming-guide.html#broadcast-variables) , 则必须为 [Accumulators](programming-guide.html#accumulators) 和 [Broadcast 变量](programming-guide.html#broadcast-variables) 创建延迟实例化的单例实例, 以便在 driver 重新启动失败后重新实例化. 
+这在下面的示例中显示: 
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -1778,7 +1732,7 @@ wordCounts.foreachRDD { (rdd: RDD[(String, Int)], time: Time) =>
 
 {% endhighlight %}
 
-See the full [source code]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/scala/org/apache/spark/examples/streaming/RecoverableNetworkWordCount.scala).
+请参阅完整的 [源代码]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/scala/org/apache/spark/examples/streaming/RecoverableNetworkWordCount.scala).
 </div>
 <div data-lang="java" markdown="1">
 {% highlight java %}
@@ -1835,7 +1789,7 @@ wordCounts.foreachRDD((rdd, time) -> {
 
 {% endhighlight %}
 
-See the full [source code]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/streaming/JavaRecoverableNetworkWordCount.java).
+请参阅完整的 [源代码]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/streaming/JavaRecoverableNetworkWordCount.java).
 </div>
 <div data-lang="python" markdown="1">
 {% highlight python %}
@@ -1869,120 +1823,47 @@ wordCounts.foreachRDD(echo)
 
 {% endhighlight %}
 
-See the full [source code]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/streaming/recoverable_network_wordcount.py).
+请参阅完整的 [源代码]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/streaming/recoverable_network_wordcount.py).
 
 </div>
 </div>
 
 ***
 
-## Deploying Applications
-This section discusses the steps to deploy a Spark Streaming application.
+## 应用程序部署
 
-### Requirements
+本节讨论部署 Spark Streaming 应用程序的步骤.
+
+### 要求
 {:.no_toc}
 
-To run a Spark Streaming applications, you need to have the following.
+要运行 Spark Streaming 应用程序, 您需要具备以下功能.
 
-- *Cluster with a cluster manager* - This is the general requirement of any Spark application,
-  and discussed in detail in the [deployment guide](cluster-overview.html).
+- *集群管理器集群* - 这是任何 Spark 应用程序的一般要求, 并在 [部署指南](cluster-overview.html) 中详细讨论.
 
-- *Package the application JAR* - You have to compile your streaming application into a JAR.
-  If you are using [`spark-submit`](submitting-applications.html) to start the
-  application, then you will not need to provide Spark and Spark Streaming in the JAR. However,
-  if your application uses [advanced sources](#advanced-sources) (e.g. Kafka, Flume),
-  then you will have to package the extra artifact they link to, along with their dependencies,
-  in the JAR that is used to deploy the application. For example, an application using `KafkaUtils`
-  will have to include `spark-streaming-kafka-0-8_{{site.SCALA_BINARY_VERSION}}` and all its
-  transitive dependencies in the application JAR.
+- *打包应用程序 JAR* - 您必须将 streaming 应用程序编译为 JAR. 如果您正在使用 [`spark-submit`](submitting-applications.html) 启动应用程序, 则不需要在 JAR 中提供 Spark 和 Spark Streaming.但是, 如果您的应用程序使用高级资源（例如: Kafka, Flume）, 那么您将必须将他们链接的额外工件及其依赖项打包在用于部署应用程序的 JAR 中.例如, 使用 `KafkaUtils` 的应用程序必须在应用程序 JAR 中包含 `spark-streaming-kafka-0-8_{{site.SCALA_BINARY_VERSION}}` 及其所有传递依赖关系.
 
-- *Configuring sufficient memory for the executors* - Since the received data must be stored in
-  memory, the executors must be configured with sufficient memory to hold the received data. Note
-  that if you are doing 10 minute window operations, the system has to keep at least last 10 minutes
-  of data in memory. So the memory requirements for the application depends on the operations
-  used in it.
+- *为 executor 配置足够的内存* - 由于接收到的数据必须存储在内存中, 所以 executor 必须配置足够的内存来保存接收到的数据. 请注意, 如果您正在进行10分钟的窗口操作, 系统必须至少保留最近10分钟的内存中的数据. 因此, 应用程序的内存要求取决于其中使用的操作.
 
-- *Configuring checkpointing* - If the stream application requires it, then a directory in the
-  Hadoop API compatible fault-tolerant storage (e.g. HDFS, S3, etc.) must be configured as the
-  checkpoint directory and the streaming application written in a way that checkpoint
-  information can be used for failure recovery. See the [checkpointing](#checkpointing) section
-  for more details.
+- *配置 checkpoint* - 如果 streaming 应用程序需要它, 则 Hadoop API 兼容容错存储（例如：HDFS, S3等）中的目录必须配置为 checkpoint 目录, 并且流程应用程序以 checkpoint 信息的方式编写 用于故障恢复. 有关详细信息, 请参阅 [checkpoint](#checkpointing) 部分.
 
-- *Configuring automatic restart of the application driver* - To automatically recover from a
-  driver failure, the deployment infrastructure that is
-  used to run the streaming application must monitor the driver process and relaunch the driver
-  if it fails. Different [cluster managers](cluster-overview.html#cluster-manager-types)
-  have different tools to achieve this.
-    + *Spark Standalone* - A Spark application driver can be submitted to run within the Spark
-      Standalone cluster (see
-      [cluster deploy mode](spark-standalone.html#launching-spark-applications)), that is, the
-      application driver itself runs on one of the worker nodes. Furthermore, the
-      Standalone cluster manager can be instructed to *supervise* the driver,
-      and relaunch it if the driver fails either due to non-zero exit code,
-      or due to failure of the node running the driver. See *cluster mode* and *supervise* in the
-      [Spark Standalone guide](spark-standalone.html) for more details.
-    + *YARN* - Yarn supports a similar mechanism for automatically restarting an application.
-      Please refer to YARN documentation for more details.
-    + *Mesos* - [Marathon](https://github.com/mesosphere/marathon) has been used to achieve this
-      with Mesos.
+- *配置应用程序 driver 的自动重新启动* - 要从 driver 故障自动恢复, 用于运行流应用程序的部署基础架构必须监视 driver 进程, 并在 driver 发生故障时重新启动 driver.不同的 [集群管理者](cluster-overview.html#cluster-manager-types) 有不同的工具来实现这一点.
+    + *Spark Standalone* - 可以提交 Spark 应用程序 driver 以在Spark Standalone集群中运行（请参阅 [集群部署模式](spark-standalone.html#launching-spark-applications) ）, 即应用程序 driver 本身在其中一个工作节点上运行. 此外, 可以指示独立的群集管理器来监督 driver, 如果由于非零退出代码而导致 driver 发生故障, 或由于运行 driver 的节点发生故障, 则可以重新启动它. 有关详细信息, 请参阅 [Spark Standalone 指南]](spark-standalone.html) 中的群集模式和监督.
+    + *YARN* - Yarn 支持类似的机制来自动重新启动应用程序.有关详细信息, 请参阅 YARN文档.
+    + *Mesos* - [Marathon](https://github.com/mesosphere/marathon) 已被用来实现这一点与Mesos.
 
-- *Configuring write ahead logs* - Since Spark 1.2,
-  we have introduced _write ahead logs_ for achieving strong
-  fault-tolerance guarantees. If enabled,  all the data received from a receiver gets written into
-  a write ahead log in the configuration checkpoint directory. This prevents data loss on driver
-  recovery, thus ensuring zero data loss (discussed in detail in the
-  [Fault-tolerance Semantics](#fault-tolerance-semantics) section). This can be enabled by setting
-  the [configuration parameter](configuration.html#spark-streaming)
-  `spark.streaming.receiver.writeAheadLog.enable` to `true`. However, these stronger semantics may
-  come at the cost of the receiving throughput of individual receivers. This can be corrected by
-  running [more receivers in parallel](#level-of-parallelism-in-data-receiving)
-  to increase aggregate throughput. Additionally, it is recommended that the replication of the
-  received data within Spark be disabled when the write ahead log is enabled as the log is already
-  stored in a replicated storage system. This can be done by setting the storage level for the
-  input stream to `StorageLevel.MEMORY_AND_DISK_SER`. While using S3 (or any file system that
-  does not support flushing) for _write ahead logs_, please remember to enable
-  `spark.streaming.driver.writeAheadLog.closeFileAfterWrite` and
-  `spark.streaming.receiver.writeAheadLog.closeFileAfterWrite`. See
-  [Spark Streaming Configuration](configuration.html#spark-streaming) for more details.
-  Note that Spark will not encrypt data written to the write ahead log when I/O encryption is
-  enabled. If encryption of the write ahead log data is desired, it should be stored in a file
-  system that supports encryption natively.
+- *配置预写日志* - 自 Spark 1.2 以来, 我们引入了写入日志来实现强大的容错保证.如果启用, 则从 receiver 接收的所有数据都将写入配置 checkpoint 目录中的写入日志.这可以防止 driver 恢复时的数据丢失, 从而确保零数据丢失（在 [容错语义](#fault-tolerance-semantics) 部分中详细讨论）.可以通过将 [配置参数](configuration.html#spark-streaming) `spark.streaming.receiver.writeAheadLog.enable` 设置为 `true`来启用此功能.然而, 这些更强的语义可能以单个 receiver 的接收吞吐量为代价.通过 [并行运行更多的 receiver](#level-of-parallelism-in-data-receiving) 可以纠正这一点, 以增加总吞吐量.另外, 建议在启用写入日志时, 在日志已经存储在复制的存储系统中时, 禁用在 Spark 中接收到的数据的复制.这可以通过将输入流的存储级别设置为 `StorageLevel.MEMORY_AND_DISK_SER` 来完成.使用 S3（或任何不支持刷新的文件系统）写入日志时, 请记住启用 `spark.streaming.driver.writeAheadLog.closeFileAfterWrite` 和`spark.streaming.receiver.writeAheadLog.closeFileAfterWrite`.有关详细信息, 请参阅 [Spark Streaming配](configuration.html#spark-streaming).请注意, 启用 I/O 加密时, Spark 不会将写入写入日志的数据加密.如果需要对提前记录数据进行加密, 则应将其存储在本地支持加密的文件系统中.
 
-- *Setting the max receiving rate* - If the cluster resources is not large enough for the streaming
-  application to process data as fast as it is being received, the receivers can be rate limited
-  by setting a maximum rate limit in terms of records / sec.
-  See the [configuration parameters](configuration.html#spark-streaming)
-  `spark.streaming.receiver.maxRate` for receivers and `spark.streaming.kafka.maxRatePerPartition`
-  for Direct Kafka approach. In Spark 1.5, we have introduced a feature called *backpressure* that
-  eliminate the need to set this rate limit, as Spark Streaming automatically figures out the
-  rate limits and dynamically adjusts them if the processing conditions change. This backpressure
-  can be enabled by setting the [configuration parameter](configuration.html#spark-streaming)
-  `spark.streaming.backpressure.enabled` to `true`.
+- *设置最大接收速率* - 如果集群资源不够大, streaming 应用程序能够像接收到的那样快速处理数据, 则可以通过设置 记录/秒 的最大速率限制来对 receiver 进行速率限制. 请参阅 receiver 的 `spark.streaming.receiver.maxRate` 和用于 Direct Kafka 方法的 `spark.streaming.kafka.maxRatePerPartition` 的 [配置参数](configuration.html#spark-streaming). 在Spark 1.5中, 我们引入了一个称为背压的功能, 无需设置此速率限制, 因为Spark Streaming会自动计算速率限制, 并在处理条件发生变化时动态调整速率限制. 可以通过将 [配置参数](configuration.html#spark-streaming) `spark.streaming.backpressure.enabled` 设置为 `true` 来启用此 backpressure.
 
-### Upgrading Application Code
+### 升级应用程序代码
 {:.no_toc}
 
-If a running Spark Streaming application needs to be upgraded with new
-application code, then there are two possible mechanisms.
+如果运行的 Spark Streaming 应用程序需要使用新的应用程序代码进行升级, 则有两种可能的机制.
 
-- The upgraded Spark Streaming application is started and run in parallel to the existing application.
-Once the new one (receiving the same data as the old one) has been warmed up and is ready
-for prime time, the old one be can be brought down. Note that this can be done for data sources that support
-sending the data to two destinations (i.e., the earlier and upgraded applications).
+- 升级后的 Spark Streaming 应用程序与现有应用程序并行启动并运行.一旦新的（接收与旧的数据相同的数据）已经升温并准备好黄金时段, 旧的可以被关掉.请注意, 这可以用于支持将数据发送到两个目的地（即较早和已升级的应用程序）的数据源.
 
-- The existing application is shutdown gracefully (see
-[`StreamingContext.stop(...)`](api/scala/index.html#org.apache.spark.streaming.StreamingContext)
-or [`JavaStreamingContext.stop(...)`](api/java/index.html?org/apache/spark/streaming/api/java/JavaStreamingContext.html)
-for graceful shutdown options) which ensure data that has been received is completely
-processed before shutdown. Then the
-upgraded application can be started, which will start processing from the same point where the earlier
-application left off. Note that this can be done only with input sources that support source-side buffering
-(like Kafka, and Flume) as data needs to be buffered while the previous application was down and
-the upgraded application is not yet up. And restarting from earlier checkpoint
-information of pre-upgrade code cannot be done. The checkpoint information essentially
-contains serialized Scala/Java/Python objects and trying to deserialize objects with new,
-modified classes may lead to errors. In this case, either start the upgraded app with a different
-checkpoint directory, or delete the previous checkpoint directory.
+- 现有应用程序正常关闭（请参阅 [`StreamingContext.stop(...)`](api/scala/index.html#org.apache.spark.streaming.StreamingContext) 或 [`JavaStreamingContext.stop(...)`](api/java/index.html?org/apache/spark/streaming/api/java/JavaStreamingContext.html) 以获取正常的关闭选项）, 以确保已关闭的数据在关闭之前被完全处理.然后可以启动升级的应用程序, 这将从较早的应用程序停止的同一点开始处理.请注意, 只有在支持源端缓冲的输入源（如: Kafka 和 Flume）时才可以进行此操作, 因为数据需要在先前的应用程序关闭并且升级的应用程序尚未启动时进行缓冲.从升级前代码的早期 checkpoint 信息重新启动不能完成.checkpoint 信息基本上包含序列化的 Scala/Java/Python 对象, 并尝试使用新的修改的类反序列化对象可能会导致错误.在这种情况下, 可以使用不同的 checkpoint 目录启动升级的应用程序, 也可以删除以前的 checkpoint 目录.
 
 ***
 
