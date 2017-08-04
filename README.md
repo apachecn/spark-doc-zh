@@ -1,15 +1,16 @@
 # Apache Spark 官方文档中文版
-![](doc/en/img/spark-logo-hd.png) 
-
-官网地址: [Apache Spark](http://spark.apache.org/): <http://spark.apache.org/>
-
+![](doc/en/img/spark-logo-hd.png)   
 Apache Spark™ 是一个快速的, 用于海量数据处理的通用引擎.
 
-## 正在翻译
+官方网址: [Apache Spark](http://spark.apache.org/): <http://spark.apache.org>  
+中文文档: [ApacheCN - Apache Spark](http://spark.apachecn.org): <http://spark.apachecn.org>
 
-[Apache Spark 2.2.0](http://spark.apachecn.org/docs/cn/2.2.0/)（已翻译完成 80%）
+## 维护地址
+github: <https://github.com/apachecn/spark-doc-zh/>  
+[ApacheCN](http://www.apachecn.org): <http://spark.apachecn.org/docs/cn/2.2.0/>
 
-维护地址: [Apache Spark 2.2.0 官方文档中文版](http://spark.apachecn.org/docs/cn/2.2.0/): [http://spark.apachecn.org/docs/cn/2.2.0/](http://spark.apachecn.org/docs/cn/2.2.0/)
+## 翻译进度
+[Apache Spark 2.2.0 官方文档中文版翻译进度](http://spark.apachecn.org/docs/cn/2.2.0/translate-progress.html): <http://spark.apachecn.org/docs/cn/2.2.0/translate-progress.html>
 
 ## 历史版本
 [Apache Spark 2.0.2 官方文档中文版](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2883613): [http://cwiki.apachecn.org/pages/viewpage.action?pageId=2883613](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2883613)
@@ -21,14 +22,10 @@ Apache Spark™ 是一个快速的, 用于海量数据处理的通用引擎.
     4. 工具使用, 可参考下面的内容.
 
 ## 工具使用（针对新手）
-工欲善其事, 必先利其器 ...
-
-工具随意, 能达到效果就好.
-
-我这里使用的是 `VSCode` 编辑器.
-
-简易的使用指南请参阅: [VSCode Windows 平台入门使用指南](help/vscode-windows-usage.md), 介绍了 `VSCode` 与 `github` 一起搭配的简易使用的方法.
-
+工欲善其事, 必先利其器 ...  
+工具随意, 能达到效果就好.  
+我这里使用的是 `VSCode` 编辑器.  
+简易的使用指南请参阅: [VSCode Windows 平台入门使用指南](help/vscode-windows-usage.md), 介绍了 `VSCode` 与 `github` 一起搭配的简易使用的方法.  
 如果要将 VSCode 的 Markdown 预览风格切换为 github 的风格，请参阅: [VSCode 修改 markdown 的预览风格为 github 的风格](help/vscode-markdown-preview-github-style.md).
 
 ## 角色分配
