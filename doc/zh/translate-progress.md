@@ -5,6 +5,31 @@ title: Spark 官方文档中文版翻译进度
 ---
 
 ## Apache Spark 2.2.0 官方文档中文版翻译进度
+<table class="apachecn-bordered">
+<tr><th>是否完成</th><th>完成百分比</th><th>任务名称</th><th>Markdown</th><th>开始时间</th><th>结束时间</th><th>贡献者</th><th>备注</th></tr>
+  <tr>
+    <td>否</td>
+    <td>97%</td>
+    <td>Apache Spark 2.2.0 官方文档中文版翻译</td>
+    <td></td>
+    <td>2017-07-18</td>
+    <td>2017-07-31</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>是</td>
+    <td>100%</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;Overview</td>
+    <td>index.md</td>
+    <td>2017-07-18</td>
+    <td>2017-07-18</td>
+    <td><a href="https://github.com/wangyangting">@wangyangting</a>（那伊抹微笑）</td>
+    <td></td>
+  </tr>
+</table>
+
+## Apache Spark 2.2.0 官方文档中文版翻译进度
 | 是否完成 | 完成百分比 | 任务名称 | Markdown | 开始时间 | 结束时间 | 贡献者 | 备注 |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | 否 | 97% | ◢ Apache Spark 2.2.0 官方文档中文版翻译 |  | 2017-07-18 | 2017-07-31 |  |  |
