@@ -59,7 +59,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spark Programming Guide</td>
@@ -71,7 +70,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spark streaming</td>
@@ -87,7 +85,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Data Frames, Datasets and SQL</td>
@@ -104,7 +101,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Structured Streaming</td>
@@ -116,7 +112,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mlib(Machine Learning)</td>
@@ -128,7 +123,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GraphX(Graph Processing)</td>
@@ -140,7 +134,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SparkR(R on Spark)</td>
@@ -155,7 +148,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;◢ Deploying</td>
@@ -167,7 +159,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Overview</td>
@@ -179,7 +170,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Submitting Applications</td>
@@ -191,7 +181,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spark Standalone</td>
@@ -203,7 +192,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mesos</td>
@@ -215,7 +203,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;YARN</td>
@@ -227,7 +214,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;◢ More</td>
@@ -239,7 +225,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Configuration</td>
@@ -254,7 +239,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Monitoring</td>
@@ -266,7 +250,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tuning Guide</td>
@@ -278,7 +261,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Job Scheduling</td>
@@ -290,7 +272,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Security</td>
@@ -302,7 +283,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hardware Provisioning</td>
@@ -314,7 +294,6 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <tr>
     <td>是</td>
     <td>100%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Building Spark </td>
