@@ -2082,22 +2082,22 @@ Output operations （输出操作）（如 `foreachRDD` ）具有 _at-least once
 ***************************************************************************************************
 ***************************************************************************************************
 
-# 接下来我们要了解什么
-* Additional guides （附加指南）
-    - [Kafka Integration Guide （Kafka 集成指南）](streaming-kafka-integration.html)
-    - [Kinesis Integration Guide （Kinesis 集成指南）](streaming-kinesis-integration.html)
-    - [Custom Receiver Guide （自定义接收器指南）](streaming-custom-receivers.html)
-* 第三方 DStream 数据源可以在 [Third Party Projects](http://spark.apache.org/third-party-projects.html) 查看.
+# 快速链接
+* 附加指南
+    - [Kafka 集成指南](streaming-kafka-integration.html)
+    - [Kinesis 集成指南](streaming-kinesis-integration.html)
+    - [自定义 Receiver（接收器）指南](streaming-custom-receivers.html)
+* 第三方 DStream 数据源可以在 [第三方项目](http://spark.apache.org/third-party-projects.html) 上查看.
 * API 文档
   - Scala 文档
-    * [StreamingContext](api/scala/index.html#org.apache.spark.streaming.StreamingContext) and
+    * [StreamingContext](api/scala/index.html#org.apache.spark.streaming.StreamingContext) 和
   [DStream](api/scala/index.html#org.apache.spark.streaming.dstream.DStream)
     * [KafkaUtils](api/scala/index.html#org.apache.spark.streaming.kafka.KafkaUtils$),
     [FlumeUtils](api/scala/index.html#org.apache.spark.streaming.flume.FlumeUtils$),
     [KinesisUtils](api/scala/index.html#org.apache.spark.streaming.kinesis.KinesisUtils$),
   - Java 文档
     * [JavaStreamingContext](api/java/index.html?org/apache/spark/streaming/api/java/JavaStreamingContext.html),
-    [JavaDStream](api/java/index.html?org/apache/spark/streaming/api/java/JavaDStream.html) and
+    [JavaDStream](api/java/index.html?org/apache/spark/streaming/api/java/JavaDStream.html) 和
     [JavaPairDStream](api/java/index.html?org/apache/spark/streaming/api/java/JavaPairDStream.html)
     * [KafkaUtils](api/java/index.html?org/apache/spark/streaming/kafka/KafkaUtils.html),
     [FlumeUtils](api/java/index.html?org/apache/spark/streaming/flume/FlumeUtils.html),
@@ -2109,4 +2109,4 @@ Output operations （输出操作）（如 `foreachRDD` ）具有 _at-least once
 * 更多的示例在 [Scala]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/scala/org/apache/spark/examples/streaming)
   和 [Java]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/java/org/apache/spark/examples/streaming)
   和 [Python]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/python/streaming)
-* [Paper](http://www.eecs.berkeley.edu/Pubs/TechRpts/2012/EECS-2012-259.pdf) 和 [video](http://youtu.be/g171ndOHgJ0) 描述 Spark Streaming.
+* 描述 Spark Streaming 的 [Paper](http://www.eecs.berkeley.edu/Pubs/TechRpts/2012/EECS-2012-259.pdf) 和 [video](http://youtu.be/g171ndOHgJ0).
