@@ -58,7 +58,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/wangyangting">@wangyangting</a>（那伊抹微笑）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -70,7 +70,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/wangyangting">@wangyangting</a>（那伊抹微笑）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -86,7 +86,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     </td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -103,7 +103,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     </td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -115,7 +115,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/chenyyx">@chenyyx</a>（Joy yx）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -127,7 +127,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/chenyyx">@chenyyx</a>（Joy yx）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -139,7 +139,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/jiangzhonglian">@jiangzhonglian</a>（片刻）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -154,7 +154,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     </td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -166,7 +166,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -178,7 +178,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/huangtianan">@huangtianan</a>（huangtianan）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -187,10 +187,10 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td>1 天</td>
     <td>2017-07-20</td>
     <td>2017-07-20</td>
-    <td><a href="https://github.com/sehriff">@sehriff</a>（sehriff</）td>
+    <td><a href="https://github.com/sehriff">@sehriff</a>（sehriff）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -202,7 +202,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/chenyyx">@chenyyx</a>（Joy yx）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -214,7 +214,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/chenyyx">@chenyyx</a>（Joy yx）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -226,7 +226,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/wangyangting">@wangyangting</a>（那伊抹微笑）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -238,7 +238,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -253,7 +253,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     </td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -265,7 +265,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/jiangzhonglian">@jiangzhonglian</a>（片刻）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -277,7 +277,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/jiangzhonglian">@jiangzhonglian</a>（片刻）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -289,7 +289,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/stealthsMrs">@stealthsMrs</a>（stealthsMrs）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -301,7 +301,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/wangyangting">@wangyangting</a>（那伊抹微笑）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
@@ -313,7 +313,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td><a href="https://github.com/huangtianan">@huangtianan</a>（huangtianan）</td>
     <td></td>
   </tr>
-  </tr>
+  <tr>
     <tr>
     <td>是</td>
     <td>100%</td>
