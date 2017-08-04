@@ -924,25 +924,14 @@ SELECT * FROM jsonTable
 
 ## Hive 表
 
-Spark SQL also supports reading and writing data stored in [Apache Hive](http://hive.apache.org/).
-However, since Hive has a large number of dependencies, these dependencies are not included in the
-default Spark distribution. If Hive dependencies can be found on the classpath, Spark will load them
-automatically. Note that these Hive dependencies must also be present on all of the worker nodes, as
-they will need access to the Hive serialization and deserialization libraries (SerDes) in order to
-access data stored in Hive.
+Spark SQL 还支持读取和写入存储在 [Apache Hive](http://hive.apache.org/) 中的数据。 
+但是，由于 Hive 具有大量依赖关系，因此这些依赖关系不包含在默认 Spark 分发中。 
+如果在类路径中找到 Hive 依赖项，Spark 将自动加载它们。 
+请注意，这些 Hive 依赖关系也必须存在于所有工作节点上，因为它们将需要访问 Hive 序列化和反序列化库 (SerDes)，以访问存储在 Hive 中的数据。
 
-Configuration of Hive is done by placing your `hive-site.xml`, `core-site.xml` (for security configuration),
-and `hdfs-site.xml` (for HDFS configuration) file in `conf/`.
+通过将 `hive-site.xml`, `core-site.xml`（用于安全配置）和 `hdfs-site.xml` （用于 HDFS 配置）文件放在 `conf/` 中来完成配置。
 
-When working with Hive, one must instantiate `SparkSession` with Hive support, including
-connectivity to a persistent Hive metastore, support for Hive serdes, and Hive user-defined functions.
-Users who do not have an existing Hive deployment can still enable Hive support. When not configured
-by the `hive-site.xml`, the context automatically creates `metastore_db` in the current directory and
-creates a directory configured by `spark.sql.warehouse.dir`, which defaults to the directory
-`spark-warehouse` in the current directory that the Spark application is started. Note that
-the `hive.metastore.warehouse.dir` property in `hive-site.xml` is deprecated since Spark 2.0.0.
-Instead, use `spark.sql.warehouse.dir` to specify the default location of database in warehouse.
-You may need to grant write privilege to the user who starts the Spark application.
+当使用 Hive 时，必须用 Hive 支持实例化 `SparkSession`，包括连接到持续的 Hive 转移，支持 Hive serdes 和 Hive 用户定义的功能。 没有现有 Hive 部署的用户仍然可以启用 Hive 支持。 当 `hive-site.xml` 未配置时，上下文会自动在当前目录中创建 `metastore_db`，并创建由 `spark.sql.warehouse.dir` 配置的目录，该目录默认为Spark应用程序当前目录中的 `spark-warehouse` 目录 开始了 请注意，自从2.0.0以来，`hive-site.xml` 中的 `hive.metastore.warehouse.dir` 属性已被弃用。 而是使用 `spark.sql.warehouse.dir` 来指定仓库中数据库的默认位置。 您可能需要向启动 Spark 应用程序的用户授予写权限。å
 
 <div class="codetabs">
 
@@ -960,99 +949,87 @@ You may need to grant write privilege to the user who starts the Spark applicati
 
 <div data-lang="r"  markdown="1">
 
-When working with Hive one must instantiate `SparkSession` with Hive support. This
-adds support for finding tables in the MetaStore and writing queries using HiveQL.
+当使用 Hive 时，必须使用 Hive 支持实例化 `SparkSession`。这个增加了在 MetaStore 中查找表并使用 HiveQL 编写查询的支持。
 
 {% include_example spark_hive r/RSparkSQLExample.R %}
 
 </div>
 </div>
 
-### Specifying storage format for Hive tables
+### 指定 Hive 表的存储格式
 
-When you create a Hive table, you need to define how this table should read/write data from/to file system,
-i.e. the "input format" and "output format". You also need to define how this table should deserialize the data
-to rows, or serialize rows to data, i.e. the "serde". The following options can be used to specify the storage
-format("serde", "input format", "output format"), e.g. `CREATE TABLE src(id int) USING hive OPTIONS(fileFormat 'parquet')`.
-By default, we will read the table files as plain text. Note that, Hive storage handler is not supported yet when
-creating table, you can create a table using storage handler at Hive side, and use Spark SQL to read it.
+创建 Hive 表时，需要定义如何 从/向 文件系统 read/write 数据，即 "输入格式" 和 "输出格式"。 
+您还需要定义该表如何将数据反序列化为行，或将行序列化为数据，即 "serde"。 
+以下选项可用于指定存储格式 ("serde", "input format", "output format")，例如，`CREATE TABLE src(id int) USING hive OPTIONS(fileFormat 'parquet')`。 
+默认情况下，我们将以纯文本形式读取表格文件。 
+请注意，Hive 存储处理程序在创建表时不受支持，您可以使用 Hive 端的存储处理程序创建一个表，并使用 Spark SQL 来读取它。
 
 <table class="table">
   <tr><th>Property Name</th><th>Meaning</th></tr>
   <tr>
     <td><code>fileFormat</code></td>
     <td>
-      A fileFormat is kind of a package of storage format specifications, including "serde", "input format" and
-      "output format". Currently we support 6 fileFormats: 'sequencefile', 'rcfile', 'orc', 'parquet', 'textfile' and 'avro'.
+      fileFormat是一种存储格式规范的包，包括 "serde"，"input format" 和 "output format"。
+      目前我们支持6个文件格式：'sequencefile'，'rcfile'，'orc'，'parquet'，'textfile'和'avro'。
     </td>
   </tr>
 
   <tr>
     <td><code>inputFormat, outputFormat</code></td>
     <td>
-      These 2 options specify the name of a corresponding `InputFormat` and `OutputFormat` class as a string literal,
-      e.g. `org.apache.hadoop.hive.ql.io.orc.OrcInputFormat`. These 2 options must be appeared in pair, and you can not
-      specify them if you already specified the `fileFormat` option.
+      这两个选项将相应的 "InputFormat" 和 "OutputFormat" 类的名称指定为字符串文字，例如: `org.apache.hadoop.hive.ql.io.orc.OrcInputFormat`。 这两个选项必须成对出现，如果您已经指定了 "fileFormat" 选项，则无法指定它们。
     </td>
   </tr>
 
   <tr>
     <td><code>serde</code></td>
     <td>
-      This option specifies the name of a serde class. When the `fileFormat` option is specified, do not specify this option
-      if the given `fileFormat` already include the information of serde. Currently "sequencefile", "textfile" and "rcfile"
-      don't include the serde information and you can use this option with these 3 fileFormats.
+      此选项指定 serde 类的名称。 当指定 `fileFormat` 选项时，如果给定的 `fileFormat` 已经包含 serde 的信息，那么不要指定这个选项。 
+      目前的 "sequencefile", "textfile" 和 "rcfile" 不包含 serde 信息，你可以使用这3个文件格式的这个选项。
     </td>
   </tr>
 
   <tr>
     <td><code>fieldDelim, escapeDelim, collectionDelim, mapkeyDelim, lineDelim</code></td>
     <td>
-      These options can only be used with "textfile" fileFormat. They define how to read delimited files into rows.
+      这些选项只能与 "textfile" 文件格式一起使用。它们定义如何将分隔的文件读入行。
     </td>
   </tr>
 </table>
 
-All other properties defined with `OPTIONS` will be regarded as Hive serde properties.
+使用 `OPTIONS` 定义的所有其他属性将被视为 Hive serde 属性。
 
-### Interacting with Different Versions of Hive Metastore
+### 与不同版本的 Hive Metastore 进行交互
 
-One of the most important pieces of Spark SQL's Hive support is interaction with Hive metastore,
-which enables Spark SQL to access metadata of Hive tables. Starting from Spark 1.4.0, a single binary
-build of Spark SQL can be used to query different versions of Hive metastores, using the configuration described below.
-Note that independent of the version of Hive that is being used to talk to the metastore, internally Spark SQL
-will compile against Hive 1.2.1 and use those classes for internal execution (serdes, UDFs, UDAFs, etc).
+Spark SQL 的 Hive 支持的最重要的部分之一是与 Hive metastore 进行交互，这使得 Spark SQL 能够访问 Hive 表的元数据。
+从 Spark 1.4.0 开始，使用 Spark SQL 的单一二进制构建可以使用下面所述的配置来查询不同版本的 Hive 转移。 
+请注意，独立于用于与转移点通信的 Hive 版本，内部 Spark SQL 将针对 Hive 1.2.1 进行编译，并使用这些类进行内部执行（serdes，UDF，UDAF等）。
 
-The following options can be used to configure the version of Hive that is used to retrieve metadata:
+以下选项可用于配置用于检索元数据的 Hive 版本：
 
 <table class="table">
-  <tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+  <tr><th>属性名称</th><th>默认值</th><th>含义</th></tr>
   <tr>
     <td><code>spark.sql.hive.metastore.version</code></td>
     <td><code>1.2.1</code></td>
     <td>
-      Version of the Hive metastore. Available
-      options are <code>0.12.0</code> through <code>1.2.1</code>.
+      Hive metastore 版本。 可用选项为 <code>0.12.0</code> 至 <code>1.2.1</code>。
     </td>
   </tr>
   <tr>
     <td><code>spark.sql.hive.metastore.jars</code></td>
     <td><code>builtin</code></td>
     <td>
-      Location of the jars that should be used to instantiate the HiveMetastoreClient. This
-      property can be one of three options:
+      当启用 <code>-Phive</code> 时，使用 Hive 1.2.1，它与 Spark 程序集捆绑在一起。选择此选项时，spark.sql.hive.metastore.version 必须为 <code>1.2.1</code> 或未定义。
+      行家
+      使用从Maven存储库下载的指定版本的Hive jar。 通常不建议在生产部署中使用此配置。 *****
+      应用于实例化 HiveMetastoreClient 的 jar 的位置。该属性可以是三个选项之一:
       <ol>
         <li><code>builtin</code></li>
-        Use Hive 1.2.1, which is bundled with the Spark assembly when <code>-Phive</code> is
-        enabled. When this option is chosen, <code>spark.sql.hive.metastore.version</code> must be
-        either <code>1.2.1</code> or not defined.
+        当启用 <code>-Phive</code> 时，使用 Hive 1.2.1，它与 Spark 程序集捆绑在一起。选择此选项时，<code>spark.sql.hive.metastore.version</code> 必须为 <code>1.2.1</code> 或未定义。
         <li><code>maven</code></li>
-        Use Hive jars of specified version downloaded from Maven repositories. This configuration
-        is not generally recommended for production deployments.
-        <li>A classpath in the standard format for the JVM. This classpath must include all of Hive
-        and its dependencies, including the correct version of Hadoop. These jars only need to be
-        present on the driver, but if you are running in yarn cluster mode then you must ensure
-        they are packaged with your application.</li>
+        使用从 Maven 存储库下载的指定版本的 Hive jar。通常不建议在生产部署中使用此配置。
+        <li>JVM 的标准格式的 classpath。 该类路径必须包含所有 Hive 及其依赖项，包括正确版本的 Hadoop。这些罐只需要存在于 driver 程序中，但如果您正在运行在 yarn 集群模式，那么您必须确保它们与应用程序一起打包。</li>
       </ol>
     </td>
   </tr>
@@ -1061,11 +1038,10 @@ The following options can be used to configure the version of Hive that is used 
     <td><code>com.mysql.jdbc,<br/>org.postgresql,<br/>com.microsoft.sqlserver,<br/>oracle.jdbc</code></td>
     <td>
       <p>
-        A comma separated list of class prefixes that should be loaded using the classloader that is
-        shared between Spark SQL and a specific version of Hive. An example of classes that should
-        be shared is JDBC drivers that are needed to talk to the metastore. Other classes that need
-        to be shared are those that interact with classes that are already shared. For example,
-        custom appenders that are used by log4j.
+        使用逗号分隔的类前缀列表，应使用在 Spark SQL 和特定版本的 Hive 之间共享的类加载器来加载。
+        一个共享类的示例就是用来访问 Hive metastore 的 JDBC driver。
+        其它需要共享的类，是需要与已经共享的类进行交互的。
+        例如，log4j 使用的自定义 appender。
       </p>
     </td>
   </tr>
@@ -1074,127 +1050,125 @@ The following options can be used to configure the version of Hive that is used 
     <td><code>(empty)</code></td>
     <td>
       <p>
-        A comma separated list of class prefixes that should explicitly be reloaded for each version
-        of Hive that Spark SQL is communicating with. For example, Hive UDFs that are declared in a
-        prefix that typically would be shared (i.e. <code>org.apache.spark.*</code>).
+        一个逗号分隔的类前缀列表，应该明确地为 Spark SQL 正在通信的 Hive 的每个版本重新加载。
+        例如，在通常将被共享的前缀中声明的 Hive UDF （即： <code>org.apache.spark.*</code>）。
       </p>
     </td>
   </tr>
 </table>
 
 
-## JDBC To Other Databases
+## JDBC 连接其它数据库
 
-Spark SQL also includes a data source that can read data from other databases using JDBC. This
-functionality should be preferred over using [JdbcRDD](api/scala/index.html#org.apache.spark.rdd.JdbcRDD).
-This is because the results are returned
-as a DataFrame and they can easily be processed in Spark SQL or joined with other data sources.
-The JDBC data source is also easier to use from Java or Python as it does not require the user to
-provide a ClassTag.
-(Note that this is different than the Spark SQL JDBC server, which allows other applications to
-run queries using Spark SQL).
+Spark SQL 还包括可以使用 JDBC 从其他数据库读取数据的数据源。此功能应优于使用 [JdbcRDD](api/scala/index.html#org.apache.spark.rdd.JdbcRDD)。 
+这是因为结果作为 DataFrame 返回，并且可以轻松地在 Spark SQL 中处理或与其他数据源连接。 
+JDBC 数据源也更容易从 Java 或 Python 使用，因为它不需要用户提供 ClassTag。（请注意，这不同于 Spark SQL JDBC 服务器，允许其他应用程序使用 Spark SQL 运行查询）。
 
-To get started you will need to include the JDBC driver for you particular database on the
-spark classpath. For example, to connect to postgres from the Spark Shell you would run the
-following command:
+要开始使用，您需要在 Spark 类路径中包含特定数据库的 JDBC driver 程序。
+例如，要从 Spark Shell 连接到 postgres，您将运行以下命令:
 
 {% highlight bash %}
 bin/spark-shell --driver-class-path postgresql-9.4.1207.jar --jars postgresql-9.4.1207.jar
 {% endhighlight %}
 
-Tables from the remote database can be loaded as a DataFrame or Spark SQL temporary view using
-the Data Sources API. Users can specify the JDBC connection properties in the data source options.
-<code>user</code> and <code>password</code> are normally provided as connection properties for
-logging into the data sources. In addition to the connection properties, Spark also supports
-the following case-insensitive options:
+可以使用 Data Sources API 将来自远程数据库的表作为 DataFrame 或 Spark SQL 临时视图进行加载。
+用户可以在数据源选项中指定 JDBC 连接属性。<code>用户</code> 和 <code>密码</code>通常作为登录数据源的连接属性提供。
+除了连接属性外，Spark 还支持以下不区分大小写的选项:
 
 <table class="table">
-  <tr><th>Property Name</th><th>Meaning</th></tr>
+  <tr><th>属性名称</th><th>含义</th></tr>
   <tr>
     <td><code>url</code></td>
     <td>
-      The JDBC URL to connect to. The source-specific connection properties may be specified in the URL. e.g., <code>jdbc:postgresql://localhost/test?user=fred&password=secret</code>
+      要连接的JDBC URL。 源特定的连接属性可以在URL中指定。 例如jdbc：<code>jdbc:postgresql://localhost/test?user=fred&password=secret</code>
     </td>
   </tr>
 
   <tr>
     <td><code>dbtable</code></td>
     <td>
-      The JDBC table that should be read. Note that anything that is valid in a <code>FROM</code> clause of
-      a SQL query can be used. For example, instead of a full table you could also use a
-      subquery in parentheses.
+      应该读取的 JDBC 表。请注意，可以使用在SQL查询的 <code>FROM</code> 子句中有效的任何内容。 
+      例如，您可以使用括号中的子查询代替完整表。
     </td>
   </tr>
 
   <tr>
     <td><code>driver</code></td>
     <td>
-      The class name of the JDBC driver to use to connect to this URL.
+      用于连接到此 URL 的 JDBC driver 程序的类名。
     </td>
   </tr>
 
   <tr>
     <td><code>partitionColumn, lowerBound, upperBound</code></td>
     <td>
-      These options must all be specified if any of them is specified. In addition,
-      <code>numPartitions</code> must be specified. They describe how to partition the table when
-      reading in parallel from multiple workers.
-      <code>partitionColumn</code> must be a numeric column from the table in question. Notice
-      that <code>lowerBound</code> and <code>upperBound</code> are just used to decide the
-      partition stride, not for filtering the rows in table. So all rows in the table will be
-      partitioned and returned. This option applies only to reading.
+      如果指定了这些选项，则必须指定这些选项。 另外，必须指定 <code>numPartitions</code>. 
+      他们描述如何从多个工作人员并行阅读时分割表。<code>partitionColumn</code> 必须是有问题的表中的数字列。 
+      请注意，<code>lowerBound</code> 和  <code>upperBound</code> 仅用于决定分区的大小，而不是用于过滤表中的行。 
+      因此，表中的所有行将被分区并返回。此选项仅适用于阅读。
     </td>
   </tr>
 
   <tr>
-     <td><code>numPartitions</code></td>
-     <td>
-       The maximum number of partitions that can be used for parallelism in table reading and
-       writing. This also determines the maximum number of concurrent JDBC connections.
-       If the number of partitions to write exceeds this limit, we decrease it to this limit by
-       calling <code>coalesce(numPartitions)</code> before writing.
-     </td>
+    <td><code>numPartitions</code></td>
+    <td>
+      在表读写中可以用于并行度的最大分区数。这也确定并发JDBC连接的最大数量。 
+      如果要写入的分区数超过此限制，则在写入之前通过调用 <code>coalesce(numPartitions)</code> 将其减少到此限制。
+    </td>
   </tr>
 
   <tr>
     <td><code>fetchsize</code></td>
     <td>
-      The JDBC fetch size, which determines how many rows to fetch per round trip. This can help performance on JDBC drivers which default to low fetch size (eg. Oracle with 10 rows). This option applies only to reading.
+      JDBC 提取大小，用于确定每次往返行程的行数。 
+      这可以帮助JDBC driver 程序的性能降低，这些 driver 程序默认具有较低的提取大小（例如: 具有10行的 Oracle）。
+      此选项仅适用于阅读。
     </td>
   </tr>
 
   <tr>
-     <td><code>batchsize</code></td>
-     <td>
-       The JDBC batch size, which determines how many rows to insert per round trip. This can help performance on JDBC drivers. This option applies only to writing. It defaults to <code>1000</code>.
-     </td>
+    <td><code>batchsize</code></td>
+    <td>
+      JDBC批量大小，用于确定每往返行数要插入的行数。 
+      这可以帮助JDBC driver 程序的性能。
+      此选项仅适用于写作。默认为 <code>1000</code>.
+    </td>
   </tr>
 
   <tr>
-     <td><code>isolationLevel</code></td>
-     <td>
-       The transaction isolation level, which applies to current connection. It can be one of <code>NONE</code>, <code>READ_COMMITTED</code>, <code>READ_UNCOMMITTED</code>, <code>REPEATABLE_READ</code>, or <code>SERIALIZABLE</code>, corresponding to standard transaction isolation levels defined by JDBC's Connection object, with default of <code>READ_UNCOMMITTED</code>. This option applies only to writing. Please refer the documentation in <code>java.sql.Connection</code>.
-     </td>
-   </tr>
+    <td><code>isolationLevel</code></td>
+    <td>
+      事务隔离级别，适用于当前连接。
+      它可以是 <code>NONE</code>, <code>READ_COMMITTED</code>, <code>READ_UNCOMMITTED</code>, <code>REPEATABLE_READ</code>, 或 <code>SERIALIZABLE</code> 之一，对应于 JDBC 连接对象定义的标准事务隔离级别，默认为 <code>READ_UNCOMMITTED</code>。 
+      此选项仅适用于写作。请参考 <code>java.sql.Connection</code> 中的文档。
+    </td>
+  </tr>
 
   <tr>
     <td><code>truncate</code></td>
     <td>
-     This is a JDBC writer related option. When <code>SaveMode.Overwrite</code> is enabled, this option causes Spark to truncate an existing table instead of dropping and recreating it. This can be more efficient, and prevents the table metadata (e.g., indices) from being removed. However, it will not work in some cases, such as when the new data has a different schema. It defaults to <code>false</code>. This option applies only to writing.
+      这是一个与 JDBC 相关的选项。
+      启用 <code>SaveMode.Overwrite</code> 时，此选项会导致 Spark 截断现有表，而不是删除并重新创建。 
+      这可以更有效，并且防止表元数据（例如，索引）被移除。 
+      但是，在某些情况下，例如当新数据具有不同的模式时，它将无法工作。 它默认为 <code>false</code>。 
+      此选项仅适用于写作。
    </td>
   </tr>
 
   <tr>
     <td><code>createTableOptions</code></td>
     <td>
-     This is a JDBC writer related option. If specified, this option allows setting of database-specific table and partition options when creating a table (e.g., <code>CREATE TABLE t (name string) ENGINE=InnoDB.</code>). This option applies only to writing.
+      这是一个与JDBC相关的选项。
+      如果指定，此选项允许在创建表时设置特定于数据库的表和分区选项（例如：<code>CREATE TABLE t (name string) ENGINE=InnoDB.</code> ）。此选项仅适用于写作。
    </td>
   </tr>
 
   <tr>
     <td><code>createTableColumnTypes</code></td>
     <td>
-     The database column data types to use instead of the defaults, when creating the table. Data type information should be specified in the same format as CREATE TABLE columns syntax (e.g: <code>"name CHAR(64), comments VARCHAR(1024)")</code>. The specified types should be valid spark sql data types. This option applies only to writing.
+      使用数据库列数据类型而不是默认值，创建表时。
+      数据类型信息应以与 CREATE TABLE 列语法相同的格式指定（例如：<code>"name CHAR(64), comments VARCHAR(1024)"</code>）。
+      指定的类型应该是有效的 spark sql 数据类型。此选项仅适用于写作。
     </td>
   </tr>  
 </table>
@@ -1237,69 +1211,62 @@ SELECT * FROM resultTable
 </div>
 </div>
 
-## Troubleshooting
+## 故障排除
 
- * The JDBC driver class must be visible to the primordial class loader on the client session and on all executors. This is because Java's DriverManager class does a security check that results in it ignoring all drivers not visible to the primordial class loader when one goes to open a connection. One convenient way to do this is to modify compute_classpath.sh on all worker nodes to include your driver JARs.
- * Some databases, such as H2, convert all names to upper case. You'll need to use upper case to refer to those names in Spark SQL.
+* JDBC driver 程序类必须对客户端会话和所有执行程序上的原始类加载器可见。 这是因为 Java 的 DriverManager 类执行安全检查，导致它忽略原始类加载器不可见的所有 driver 程序，当打开连接时。一个方便的方法是修改所有工作节点上的compute_classpath.sh 以包含您的 driver 程序 JAR。
+* 一些数据库，例如 H2，将所有名称转换为大写。 您需要使用大写字母来引用 Spark SQL 中的这些名称。
 
 
-# Performance Tuning
+# 性能调优
 
-For some workloads it is possible to improve performance by either caching data in memory, or by
-turning on some experimental options.
+对于某些工作负载，可以通过缓存内存中的数据或打开一些实验选项来提高性能。
 
-## Caching Data In Memory
+## 在内存中缓存数据
 
-Spark SQL can cache tables using an in-memory columnar format by calling `spark.catalog.cacheTable("tableName")` or `dataFrame.cache()`.
-Then Spark SQL will scan only required columns and will automatically tune compression to minimize
-memory usage and GC pressure. You can call `spark.catalog.uncacheTable("tableName")` to remove the table from memory.
+Spark SQL 可以通过调用 `spark.catalog.cacheTable("tableName")` 或 `dataFrame.cache()` 来使用内存中的列格式来缓存表。 
+然后，Spark SQL 将只扫描所需的列，并将自动调整压缩以最小化内存使用量和 GC 压力。
+您可以调用 `spark.catalog.uncacheTable("tableName")` 从内存中删除该表。
 
-Configuration of in-memory caching can be done using the `setConf` method on `SparkSession` or by running
-`SET key=value` commands using SQL.
+内存缓存的配置可以使用 `SparkSession` 上的 `setConf` 方法或使用 SQL 运行 `SET key=value` 命令来完成。
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>属性名称</th><th>默认</th><th>含义</th></tr>
 <tr>
   <td><code>spark.sql.inMemoryColumnarStorage.compressed</code></td>
   <td>true</td>
   <td>
-    When set to true Spark SQL will automatically select a compression codec for each column based
-    on statistics of the data.
+    当设置为 true 时，Spark SQL 将根据数据的统计信息为每个列自动选择一个压缩编解码器。
   </td>
 </tr>
 <tr>
   <td><code>spark.sql.inMemoryColumnarStorage.batchSize</code></td>
   <td>10000</td>
   <td>
-    Controls the size of batches for columnar caching. Larger batch sizes can improve memory utilization
-    and compression, but risk OOMs when caching data.
+    控制批量的柱状缓存的大小。更大的批量大小可以提高内存利用率和压缩率，但是在缓存数据时会冒出 OOM 风险。
   </td>
 </tr>
 
 </table>
 
-## Other Configuration Options
+## 其他配置选项
 
-The following options can also be used to tune the performance of query execution. It is possible
-that these options will be deprecated in future release as more optimizations are performed automatically.
+以下选项也可用于调整查询执行的性能。这些选项可能会在将来的版本中被废弃，因为更多的优化是自动执行的。
 
 <table class="table">
-  <tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+  <tr><th>属性名称</th><th>默认值</th><th>含义</th></tr>
   <tr>
     <td><code>spark.sql.files.maxPartitionBytes</code></td>
     <td>134217728 (128 MB)</td>
     <td>
-      The maximum number of bytes to pack into a single partition when reading files.
+      在读取文件时，将单个分区打包的最大字节数。
     </td>
   </tr>
   <tr>
     <td><code>spark.sql.files.openCostInBytes</code></td>
     <td>4194304 (4 MB)</td>
     <td>
-      The estimated cost to open a file, measured by the number of bytes could be scanned in the same
-      time. This is used when putting multiple files into a partition. It is better to over estimated,
-      then the partitions with small files will be faster than partitions with bigger files (which is
-      scheduled first).
+      按照字节数来衡量的打开文件的估计费用可以在同一时间进行扫描。 
+      将多个文件放入分区时使用。最好过度估计，那么具有小文件的分区将比具有较大文件的分区（首先计划的）更快。
     </td>
   </tr>
   <tr>
@@ -1307,7 +1274,7 @@ that these options will be deprecated in future release as more optimizations ar
     <td>300</td>
     <td>
     <p>
-      Timeout in seconds for the broadcast wait time in broadcast joins
+      广播连接中的广播等待时间超时（秒）
     </p>
     </td>
   </tr>
@@ -1315,10 +1282,8 @@ that these options will be deprecated in future release as more optimizations ar
     <td><code>spark.sql.autoBroadcastJoinThreshold</code></td>
     <td>10485760 (10 MB)</td>
     <td>
-      Configures the maximum size in bytes for a table that will be broadcast to all worker nodes when
-      performing a join. By setting this value to -1 broadcasting can be disabled. Note that currently
-      statistics are only supported for Hive Metastore tables where the command
-      <code>ANALYZE TABLE &lt;tableName&gt; COMPUTE STATISTICS noscan</code> has been run.
+      配置执行连接时将广播给所有工作节点的表的最大大小（以字节为单位）。 
+      通过将此值设置为-1可以禁用广播。 请注意，目前的统计信息仅支持 Hive Metastore 表，其中已运行命令 <code>ANALYZE TABLE &lt;tableName&gt; COMPUTE STATISTICS noscan</code>。
     </td>
   </tr>
   <tr>
@@ -1330,25 +1295,23 @@ that these options will be deprecated in future release as more optimizations ar
   </tr>
 </table>
 
-# Distributed SQL Engine
+# 分布式 SQL 引擎
 
-Spark SQL can also act as a distributed query engine using its JDBC/ODBC or command-line interface.
-In this mode, end-users or applications can interact with Spark SQL directly to run SQL queries,
-without the need to write any code.
+Spark SQL 也可以充当使用其 JDBC/ODBC 或命令行界面的分布式查询引擎。
+在这种模式下，最终用户或应用程序可以直接与 Spark SQL 交互运行 SQL 查询，而不需要编写任何代码。
 
-## Running the Thrift JDBC/ODBC server
+## 运行 Thrift JDBC/ODBC 服务器
 
-The Thrift JDBC/ODBC server implemented here corresponds to the [`HiveServer2`](https://cwiki.apache.org/confluence/display/Hive/Setting+Up+HiveServer2)
-in Hive 1.2.1 You can test the JDBC server with the beeline script that comes with either Spark or Hive 1.2.1.
+这里实现的 Thrift JDBC/ODBC 服务器对应于 Hive 1.2 中的 [`HiveServer2`](https://cwiki.apache.org/confluence/display/Hive/Setting+Up+HiveServer2)。
+您可以使用 Spark 或 Hive 1.2.1 附带的直线脚本测试 JDBC 服务器。
 
-To start the JDBC/ODBC server, run the following in the Spark directory:
+要启动 JDBC/ODBC 服务器，请在 Spark 目录中运行以下命令:
 
     ./sbin/start-thriftserver.sh
 
-This script accepts all `bin/spark-submit` command line options, plus a `--hiveconf` option to
-specify Hive properties. You may run `./sbin/start-thriftserver.sh --help` for a complete list of
-all available options. By default, the server listens on localhost:10000. You may override this
-behaviour via either environment variables, i.e.:
+此脚本接受所有 `bin/spark-submit` 命令行选项，以及 `--hiveconf` 选项来指定 Hive 属性。 
+您可以运行 `./sbin/start-thriftserver.sh --help` 查看所有可用选项的完整列表。 
+默认情况下，服务器监听 localhost:10000. 您可以通过环境变量覆盖此行为，即:
 
 {% highlight bash %}
 export HIVE_SERVER2_THRIFT_PORT=<listening-port>
@@ -1368,46 +1331,45 @@ or system properties:
   ...
 {% endhighlight %}
 
-Now you can use beeline to test the Thrift JDBC/ODBC server:
+现在，您可以使用 beeline 来测试 Thrift JDBC/ODBC 服务器:
 
     ./bin/beeline
 
-Connect to the JDBC/ODBC server in beeline with:
+使用 beeline 方式连接到  JDBC/ODBC 服务器:
 
     beeline> !connect jdbc:hive2://localhost:10000
 
-Beeline will ask you for a username and password. In non-secure mode, simply enter the username on
-your machine and a blank password. For secure mode, please follow the instructions given in the
-[beeline documentation](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients).
+Beeline 将要求您输入用户名和密码。 
+在非安全模式下，只需输入机器上的用户名和空白密码即可。 
+对于安全模式，请按照 [beeline 文档](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients) 中的说明进行操作。
 
-Configuration of Hive is done by placing your `hive-site.xml`, `core-site.xml` and `hdfs-site.xml` files in `conf/`.
+配置Hive是通过将 `hive-site.xml`, `core-site.xml` 和 `hdfs-site.xml` 文件放在 `conf/` 中完成的。
 
-You may also use the beeline script that comes with Hive.
+您也可以使用 Hive 附带的 beeline 脚本。
 
-Thrift JDBC server also supports sending thrift RPC messages over HTTP transport.
-Use the following setting to enable HTTP mode as system property or in `hive-site.xml` file in `conf/`:
+Thrift JDBC 服务器还支持通过 HTTP 传输发送 thrift RPC 消息。 
+使用以下设置启用 HTTP 模式作为系统属性或在 `conf/` 中的 `hive-site.xml` 文件中启用:
 
     hive.server2.transport.mode - Set this to value: http
     hive.server2.thrift.http.port - HTTP port number to listen on; default is 10001
     hive.server2.http.endpoint - HTTP endpoint; default is cliservice
 
-To test, use beeline to connect to the JDBC/ODBC server in http mode with:
+要测试，请使用 beeline 以 http 模式连接到 JDBC/ODBC 服务器:
 
     beeline> !connect jdbc:hive2://<host>:<port>/<database>?hive.server2.transport.mode=http;hive.server2.thrift.http.path=<http_endpoint>
 
 
-## Running the Spark SQL CLI
+## 运行 Spark SQL CLI
 
-The Spark SQL CLI is a convenient tool to run the Hive metastore service in local mode and execute
-queries input from the command line. Note that the Spark SQL CLI cannot talk to the Thrift JDBC server.
+Spark SQL CLI 是在本地模式下运行 Hive 转移服务并执行从命令行输入的查询的方便工具。 
+请注意，Spark SQL CLI 不能与 Thrift JDBC 服务器通信。
 
-To start the Spark SQL CLI, run the following in the Spark directory:
+要启动 Spark SQL CLI，请在 Spark 目录中运行以下命令:
 
     ./bin/spark-sql
 
-Configuration of Hive is done by placing your `hive-site.xml`, `core-site.xml` and `hdfs-site.xml` files in `conf/`.
-You may run `./bin/spark-sql --help` for a complete list of all available
-options.
+配置 Hive 是通过将 `hive-site.xml`, `core-site.xml` 和 `hdfs-site.xml` 文件放在 `conf/` 中完成的。 
+您可以运行 `./bin/spark-sql --help` 获取所有可用选项的完整列表。
 
 # 迁移指南
 
