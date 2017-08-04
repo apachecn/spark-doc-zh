@@ -79,8 +79,8 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td>2017-08-03</td>
     <td>
       <a href="https://github.com/wangyangting">@wangyangting</a>（那伊抹微笑）<br/>
-      <a href="https://github.com/jiangzhonglian">@wangyangting</a>（片刻）<br/>
-      <a href="https://github.com/chenyyx">@wangyangting</a>（Joy yx）
+      <a href="https://github.com/jiangzhonglian">@jiangzhonglian</a>（片刻）<br/>
+      <a href="https://github.com/chenyyx">@chenyyx</a>（Joy yx）
     </td>
     <td></td>
   </tr>
@@ -94,8 +94,8 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
     <td>
       <a href="https://github.com/qinchaofeng">@qinchaofeng</a>（qinchaofeng）<br/>
-      <a href="https://github.com/chenyyx">@wangyangting</a>（Joy yx）<br/>
-      <a href="https://github.com/jiangzhonglian">@wangyangting</a>（片刻）<br/>
+      <a href="https://github.com/chenyyx">@chenyyx</a>（Joy yx）<br/>
+      <a href="https://github.com/jiangzhonglian">@jiangzhonglian</a>（片刻）<br/>
       <a href="https://github.com/wangyangting">@wangyangting</a>（那伊抹微笑）
     </td>
     <td></td>
