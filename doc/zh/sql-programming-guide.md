@@ -9,23 +9,23 @@ title: Spark SQL and DataFrames
 
 # Overview
 
-Spark SQL 是 Spark 处理结构化数据的一个模块。与基础的 Spark RDD API 不同，Spark SQL 提供了查询结构化数据及计算结果等信息的接口。在内部，Spark SQL 使用这个额外的信息去执行额外的优化。有几种方式可以跟 Spark SQL 进行交互，包括 SQL 和 Dataset API。当使用相同执行引擎进行计算时，无论使用哪种 API / 语言都可以快速的计算。这种统一意味着开发人员能够在基于提供最自然的方式来表达一个给定的 transformation API 之间实现轻松的来回切换不同的 。
+Spark SQL 是 Spark 处理结构化数据的一个模块.与基础的 Spark RDD API 不同, Spark SQL 提供了查询结构化数据及计算结果等信息的接口.在内部, Spark SQL 使用这个额外的信息去执行额外的优化.有几种方式可以跟 Spark SQL 进行交互, 包括 SQL 和 Dataset API.当使用相同执行引擎进行计算时, 无论使用哪种 API / 语言都可以快速的计算.这种统一意味着开发人员能够在基于提供最自然的方式来表达一个给定的 transformation API 之间实现轻松的来回切换不同的 .
 
-该页面所有例子使用的示例数据都包含在 Spark 的发布中，并且可以使用 `spark-shell`, `pyspark` shell, 或者 `sparkR` shell来运行.
+该页面所有例子使用的示例数据都包含在 Spark 的发布中, 并且可以使用 `spark-shell`, `pyspark` shell, 或者 `sparkR` shell来运行.
 
 
 ## SQL
 
-Spark SQL 的功能之一是执行 SQL 查询。Spark SQL 也能够被用于从已存在的 Hive 环境中读取数据。更多关于如何配置这个特性的信息，请参考 [Hive 表](#hive-tables) 这部分. 当以另外的编程语言运行SQL  时，查询结果将以 [Dataset/DataFrame](#datasets-and-dataframes)的形式返回。您也可以使用 [命令行](#running-the-spark-sql-cli)或者通过 [JDBC/ODBC](#running-the-thrift-jdbcodbc-server)与 SQL 接口交互。
+Spark SQL 的功能之一是执行 SQL 查询.Spark SQL 也能够被用于从已存在的 Hive 环境中读取数据.更多关于如何配置这个特性的信息, 请参考 [Hive 表](#hive-tables) 这部分. 当以另外的编程语言运行SQL  时, 查询结果将以 [Dataset/DataFrame](#datasets-and-dataframes)的形式返回.您也可以使用 [命令行](#running-the-spark-sql-cli)或者通过 [JDBC/ODBC](#running-the-thrift-jdbcodbc-server)与 SQL 接口交互.
 
 ## Datasets and DataFrames
 
 一个 Dataset 是一个分布式的数据集合
-Dataset 是在 Spark 1.6 中被添加的新接口，它提供了 RDD 的优点（强类型化，能够使用强大的 lambda 函数）与Spark SQL执行引擎的优点。一个 Dataset 可以从 JVM 对象来 [构造](#creating-datasets) 并且使用转换功能（map，flatMap，filter，等等）。
+Dataset 是在 Spark 1.6 中被添加的新接口, 它提供了 RDD 的优点（强类型化, 能够使用强大的 lambda 函数）与Spark SQL执行引擎的优点.一个 Dataset 可以从 JVM 对象来 [构造](#creating-datasets) 并且使用转换功能（map, flatMap, filter, 等等）.
 Dataset API 在[Scala][scala-datasets] 和
-[Java][java-datasets]是可用的。Python 不支持 Dataset API。但是由于 Python 的动态特性，许多 Dataset API 的优点已经可用了 (也就是说，你可能通过 name 天生的`row.columnName`属性访问一行中的字段)。这种情况和 R 相似。
+[Java][java-datasets]是可用的.Python 不支持 Dataset API.但是由于 Python 的动态特性, 许多 Dataset API 的优点已经可用了 (也就是说, 你可能通过 name 天生的`row.columnName`属性访问一行中的字段).这种情况和 R 相似.
 
-一个 DataFrame 是一个 *Dataset* 组成的指定列。它的概念与一个在关系型数据库或者在 R/Python 中的表是相等的， 但是有很多优化. DataFrames 可以从大量的 [sources](#data-sources) 中构造出来，比如: 结构化的文本文件, Hive中的表, 外部数据库, 或者已经存在的 RDDs。
+一个 DataFrame 是一个 *Dataset* 组成的指定列.它的概念与一个在关系型数据库或者在 R/Python 中的表是相等的,  但是有很多优化. DataFrames 可以从大量的 [sources](#data-sources) 中构造出来, 比如: 结构化的文本文件, Hive中的表, 外部数据库, 或者已经存在的 RDDs.
 DataFrame API 可以在 Scala,
 Java, [Python](api/python/pyspark.sql.html#pyspark.sql.DataFrame), 和 [R](api/R/index.html)中实现.
 在 Scala 和 Java中, 一个 DataFrame 所代表的是一个多个 `Row`（行）的的 Dataset（数据集合）.
@@ -69,11 +69,11 @@ Spark SQL中所有功能的入口点是 [`SparkSession`](api/R/sparkR.session.ht
 
 {% include_example init_session r/RSparkSQLExample.R %}
 
-注意第一次调用时, `sparkR.session()` 初始化一个全局的 `SparkSession` 单实例, 并且总是返回一个引用此实例，可以连续的调用. 通过这种方式, 用户仅需要创建一次 `SparkSession` , 然后像 `read.df` SparkR函数就能够立即获取全局的实例,用户不需要再 `SparkSession` 之间进行实例的传递.
+注意第一次调用时, `sparkR.session()` 初始化一个全局的 `SparkSession` 单实例, 并且总是返回一个引用此实例, 可以连续的调用. 通过这种方式, 用户仅需要创建一次 `SparkSession` , 然后像 `read.df` SparkR函数就能够立即获取全局的实例,用户不需要再 `SparkSession` 之间进行实例的传递.
 </div>
 </div>
 
-Spark 2.0 中的`SparkSession` 为 Hive 特性提供了内嵌的支持，包括使用 HiveQL 编写查询的能力，访问 Hive UDF,以及从 Hive 表中读取数据的能力。为了使用这些特性，你不需要去有一个已存在的 Hive 设置。
+Spark 2.0 中的`SparkSession` 为 Hive 特性提供了内嵌的支持, 包括使用 HiveQL 编写查询的能力, 访问 Hive UDF,以及从 Hive 表中读取数据的能力.为了使用这些特性, 你不需要去有一个已存在的 Hive 设置.
 
 ## 创建 DataFrames
 
@@ -121,7 +121,7 @@ Spark 2.0 中的`SparkSession` 为 Hive 特性提供了内嵌的支持，包括�
 
 DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org.apache.spark.sql.Dataset), [Java](api/java/index.html?org/apache/spark/sql/Dataset.html), [Python](api/python/pyspark.sql.html#pyspark.sql.DataFrame) and [R](api/R/SparkDataFrame.html)中机构化数据的操作.
 
-正如上面提到的一样, Spark 2.0中, DataFrames在Scala 和 Java API中，仅仅是多个 `Row`s的Dataset. 这些操作也参考了与强类型的Scala/Java Datasets中的"类型转换" 对应的"无类型转换" 。
+正如上面提到的一样, Spark 2.0中, DataFrames在Scala 和 Java API中, 仅仅是多个 `Row`s的Dataset. 这些操作也参考了与强类型的Scala/Java Datasets中的"类型转换" 对应的"无类型转换" .
 
 这里包括一些使用 Dataset 进行结构化数据处理的示例 :
 
@@ -131,7 +131,7 @@ DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org
 
 能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/scala/index.html#org.apache.spark.sql.Dataset).
 
-除了简单的列引用和表达式之外，DataFrame 也有丰富的函数库，包括 string 操作，date 算术，常见的 math 操作以及更多。可用的完整列表请参考  [DataFrame 函数指南](api/scala/index.html#org.apache.spark.sql.functions$).
+除了简单的列引用和表达式之外, DataFrame 也有丰富的函数库, 包括 string 操作, date 算术, 常见的 math 操作以及更多.可用的完整列表请参考  [DataFrame 函数指南](api/scala/index.html#org.apache.spark.sql.functions$).
 </div>
 
 <div data-lang="java" markdown="1">
@@ -140,16 +140,16 @@ DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org
 
 为了能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/java/org/apache/spark/sql/Dataset.html).
 
-除了简单的列引用和表达式之外，DataFrame 也有丰富的函数库，包括 string 操作，date 算术，常见的 math 操作以及更多。可用的完整列表请参考  [DataFrame 函数指南](api/java/org/apache/spark/sql/functions.html).
+除了简单的列引用和表达式之外, DataFrame 也有丰富的函数库, 包括 string 操作, date 算术, 常见的 math 操作以及更多.可用的完整列表请参考  [DataFrame 函数指南](api/java/org/apache/spark/sql/functions.html).
 </div>
 
 <div data-lang="python"  markdown="1">
-在Python中，可以通过(`df.age`) 或者(`df['age']`)来获取DataFrame的列. 虽然前者便于交互式操作, 但是还是建议用户使用后者, 这样不会破坏列名，也能引用DataFrame的类.
+在Python中, 可以通过(`df.age`) 或者(`df['age']`)来获取DataFrame的列. 虽然前者便于交互式操作, 但是还是建议用户使用后者, 这样不会破坏列名, 也能引用DataFrame的类.
 
 {% include_example untyped_ops python/sql/basic.py %}
 为了能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/python/pyspark.sql.html#pyspark.sql.DataFrame).
 
-除了简单的列引用和表达式之外，DataFrame 也有丰富的函数库，包括 string 操作，date 算术，常见的 math 操作以及更多。可用的完整列表请参考  [DataFrame 函数指南](api/python/pyspark.sql.html#module-pyspark.sql.functions).
+除了简单的列引用和表达式之外, DataFrame 也有丰富的函数库, 包括 string 操作, date 算术, 常见的 math 操作以及更多.可用的完整列表请参考  [DataFrame 函数指南](api/python/pyspark.sql.html#module-pyspark.sql.functions).
 
 </div>
 
@@ -159,7 +159,7 @@ DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org
 
 为了能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/R/index.html).
 
-除了简单的列引用和表达式之外，DataFrame 也有丰富的函数库，包括 string 操作，date 算术，常见的 math 操作以及更多。可用的完整列表请参考  [DataFrame 函数指南](api/R/SparkDataFrame.html).
+除了简单的列引用和表达式之外, DataFrame 也有丰富的函数库, 包括 string 操作, date 算术, 常见的 math 操作以及更多.可用的完整列表请参考  [DataFrame 函数指南](api/R/SparkDataFrame.html).
 
 </div>
 
@@ -196,7 +196,7 @@ DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org
 
 ## 全局临时视图
 
-Spark SQL中的临时视图是session级别的，也就是会随着session的消失而消失. 如果你想让一个临时视图在所有session中相互传递并且可用，直到Spark 应用退出, 你可以建立一个全局的临时视图.全局的临时视图存在于系统数据库 `global_temp`中, 我们必须加上库名去引用它, 比如. `SELECT * FROM global_temp.view1`.
+Spark SQL中的临时视图是session级别的, 也就是会随着session的消失而消失. 如果你想让一个临时视图在所有session中相互传递并且可用, 直到Spark 应用退出, 你可以建立一个全局的临时视图.全局的临时视图存在于系统数据库 `global_temp`中, 我们必须加上库名去引用它, 比如. `SELECT * FROM global_temp.view1`.
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -227,7 +227,7 @@ SELECT * FROM global_temp.temp_view
 
 ## 创建Datasets
 
-Dataset 与 RDD 相似，然而，并不是使用 Java 序列化或者 Kryo [编码器](api/scala/index.html#org.apache.spark.sql.Encoder) 来序列化用于处理或者通过网络进行传输的对象. 虽然编码器和标准的序列化都负责将一个对象序列化成字节，编码器是动态生成的代码，并且使用了一种允许 Spark 去执行许多像 filtering，sorting 以及 hashing 这样的操作，不需要将字节反序列化成对象的格式。
+Dataset 与 RDD 相似, 然而, 并不是使用 Java 序列化或者 Kryo [编码器](api/scala/index.html#org.apache.spark.sql.Encoder) 来序列化用于处理或者通过网络进行传输的对象. 虽然编码器和标准的序列化都负责将一个对象序列化成字节, 编码器是动态生成的代码, 并且使用了一种允许 Spark 去执行许多像 filtering, sorting 以及 hashing 这样的操作, 不需要将字节反序列化成对象的格式.
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -241,16 +241,16 @@ Dataset 与 RDD 相似，然而，并不是使用 Java 序列化或者 Kryo [编
 
 ## RDD的互操作性
 
-Spark SQL 支持两种不同的方法用于转换已存在的 RDD 成为 Dataset。第一种方法是使用反射去推断一个包含指定的对象类型的 RDD 的 Schema。在你的 Spark 应用程序中当你已知 Schema 时这个基于方法的反射可以让你的代码更简洁。
+Spark SQL 支持两种不同的方法用于转换已存在的 RDD 成为 Dataset.第一种方法是使用反射去推断一个包含指定的对象类型的 RDD 的 Schema.在你的 Spark 应用程序中当你已知 Schema 时这个基于方法的反射可以让你的代码更简洁.
 
-第二种用于创建 Dataset 的方法是通过一个允许你构造一个 Schema 然后把它应用到一个已存在的 RDD 的编程接口。然而这种方法更繁琐，当列和它们的类型知道运行时都是未知时它允许你去构造 Dataset。
+第二种用于创建 Dataset 的方法是通过一个允许你构造一个 Schema 然后把它应用到一个已存在的 RDD 的编程接口.然而这种方法更繁琐, 当列和它们的类型知道运行时都是未知时它允许你去构造 Dataset.
 
 ### 使用反射推断Schema
 <div class="codetabs">
 
 <div data-lang="scala"  markdown="1">
 
-Spark SQL 的 Scala 接口支持自动转换一个包含 case classes 的 RDD 为 DataFrame。Case class 定义了表的 Schema。Case class 的参数名使用反射读取并且成为了列名。Case class 也可以是嵌套的或者包含像 `Seq` 或者 `Array` 这样的复杂类型。这个 RDD 能够被隐式转换成一个 DataFrame 然后被注册为一个表。表可以用于后续的 SQL 语句。
+Spark SQL 的 Scala 接口支持自动转换一个包含 case classes 的 RDD 为 DataFrame.Case class 定义了表的 Schema.Case class 的参数名使用反射读取并且成为了列名.Case class 也可以是嵌套的或者包含像 `Seq` 或者 `Array` 这样的复杂类型.这个 RDD 能够被隐式转换成一个 DataFrame 然后被注册为一个表.表可以用于后续的 SQL 语句.
 
 {% include_example schema_inferring scala/org/apache/spark/examples/sql/SparkSQLExample.scala %}
 </div>
@@ -259,7 +259,7 @@ Spark SQL 的 Scala 接口支持自动转换一个包含 case classes 的 RDD �
 
 Spark SQL 支持一个[JavaBeans]的RDD(http://stackoverflow.com/questions/3295496/what-is-a-javabean-exactly)自动转换为一个DataFrame.
 `BeanInfo`利用反射定义表的schema. 目前Spark SQL不支持含有`Map`的JavaBeans. 但是支持嵌套`List`或者 `Array`JavaBeans . 
-你可以通过创建一个有getters和setters的序列化的类来创建一个JavaBean。
+你可以通过创建一个有getters和setters的序列化的类来创建一个JavaBean.
 
 {% include_example schema_inferring java/org/apache/spark/examples/sql/JavaSparkSQLExample.java %}
 </div>
@@ -279,10 +279,10 @@ Spark SQL能够把RDD 转换为一个DataFrame, 并推断其类型. 这些行由
 
 <div data-lang="scala"  markdown="1">
 
-当 case class 不能够在执行之前被定义（例如，records 记录的结构在一个 string 字符串中被编码了，或者一个 text 文本 dataset 将被解析并且不同的用户投影的字段是不一样的）。一个 `DataFrame` 可以使用下面的三步以编程的方式来创建。
+当 case class 不能够在执行之前被定义（例如, records 记录的结构在一个 string 字符串中被编码了, 或者一个 text 文本 dataset 将被解析并且不同的用户投影的字段是不一样的）.一个 `DataFrame` 可以使用下面的三步以编程的方式来创建.
 
 1. 从原始的 RDD 创建 RDD 的 `Row`（行）;
-2. Step 1 被创建后，创建 Schema 表示一个 `StructType` 匹配 RDD 中的 `Row`（行）的结构.
+2. Step 1 被创建后, 创建 Schema 表示一个 `StructType` 匹配 RDD 中的 `Row`（行）的结构.
 3. 通过 `SparkSession` 提供的 `createDataFrame` 方法应用 Schema 到 RDD 的 RowS（行）.
 
 例如:
@@ -310,11 +310,11 @@ For example:
 
 <div data-lang="python"  markdown="1">
 
-当一个字典不能被提前定义 (例如,记录的结构是在一个字符串中, 抑或一个文本中解析，被不同的用户所属),
+当一个字典不能被提前定义 (例如,记录的结构是在一个字符串中, 抑或一个文本中解析, 被不同的用户所属),
 一个 `DataFrame` 可以通过以下3步来创建.
 
 1. RDD从原始的RDD穿件一个RDD的toples或者一个列表;
-2. Step 1 被创建后，创建 Schema 表示一个 `StructType` 匹配 RDD 中的结构.
+2. Step 1 被创建后, 创建 Schema 表示一个 `StructType` 匹配 RDD 中的结构.
 3. 通过 `SparkSession` 提供的 `createDataFrame` 方法应用 Schema 到 RDD .
 
 For example:
@@ -371,18 +371,16 @@ For example, a type-safe user-defined average can look like:
 
 </div>
 
-# Data Sources
+# Data Sources （数据源）
 
-Spark SQL supports operating on a variety of data sources through the DataFrame interface.
-A DataFrame can be operated on using relational transformations and can also be used to create a temporary view.
-Registering a DataFrame as a temporary view allows you to run SQL queries over its data. This section
-describes the general methods for loading and saving data using the Spark Data Sources and then
-goes into specific options that are available for the built-in data sources.
+Spark SQL 支持通过 DataFrame 接口对各种 data sources （数据源）进行操作.
+DataFrame 可以使用 relational transformations （关系转换）操作, 也可用于创建 temporary view （临时视图）.
+将 DataFrame 注册为 temporary view （临时视图）允许您对其数据运行 SQL 查询. 本节
+描述了使用 Spark Data Sources 加载和保存数据的一般方法, 然后涉及可用于 built-in data sources （内置数据源）的 specific options （特定选项）.
 
-## Generic Load/Save Functions
+## Generic Load/Save Functions （通用 加载/保存 功能）
 
-In the simplest form, the default data source (`parquet` unless otherwise configured by
-`spark.sql.sources.default`) will be used for all operations.
+在最简单的形式中, 默认数据源（`parquet`, 除非另有配置 `spark.sql.sources.default` ）将用于所有操作.
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -405,13 +403,9 @@ In the simplest form, the default data source (`parquet` unless otherwise config
 </div>
 </div>
 
-### Manually Specifying Options
+### Manually Specifying Options （手动指定选项）
 
-You can also manually specify the data source that will be used along with any extra options
-that you would like to pass to the data source. Data sources are specified by their fully qualified
-name (i.e., `org.apache.spark.sql.parquet`), but for built-in sources you can also use their short
-names (`json`, `parquet`, `jdbc`, `orc`, `libsvm`, `csv`, `text`). DataFrames loaded from any data
-source type can be converted into other types using this syntax.
+您还可以 manually specify （手动指定）将与任何你想传递给 data source 的其他选项一起使用的 data source . Data sources 由其 fully qualified name （完全限定名称）（即 `org.apache.spark.sql.parquet` ）, 但是对于 built-in sources （内置的源）, 你也可以使用它们的 shortnames （短名称）（`json`, `parquet`, `jdbc`, `orc`, `libsvm`, `csv`, `text`）.从任何 data source type （数据源类型）加载 DataFrames 可以使用此 syntax （语法）转换为其他类型.
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -431,10 +425,9 @@ source type can be converted into other types using this syntax.
 </div>
 </div>
 
-### Run SQL on files directly
+### Run SQL on files directly （直接在文件上运行 SQL）
 
-Instead of using read API to load a file into DataFrame and query it, you can also query that
-file directly with SQL.
+不使用读取 API 将文件加载到 DataFrame 并进行查询, 也可以直接用 SQL 查询该文件.
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -455,12 +448,9 @@ file directly with SQL.
 </div>
 </div>
 
-### Save Modes
+### Save Modes （保存模式）
 
-Save operations can optionally take a `SaveMode`, that specifies how to handle existing data if
-present. It is important to realize that these save modes do not utilize any locking and are not
-atomic. Additionally, when performing an `Overwrite`, the data will be deleted before writing out the
-new data.
+Save operations （保存操作）可以选择使用 `SaveMode` , 它指定如何处理现有数据如果存在的话. 重要的是要意识到, 这些 save modes （保存模式）不使用任何 locking （锁定）并且不是 atomic （原子）. 另外, 当执行 `Overwrite` 时, 数据将在新数据写出之前被删除.
 
 <table class="table">
 <tr><th>Scala/Java</th><th>Any Language</th><th>Meaning</th></tr>
@@ -468,65 +458,49 @@ new data.
   <td><code>SaveMode.ErrorIfExists</code> (default)</td>
   <td><code>"error"</code> (default)</td>
   <td>
-    When saving a DataFrame to a data source, if data already exists,
-    an exception is expected to be thrown.
+    将 DataFrame 保存到 data source （数据源）时, 如果数据已经存在, 则会抛出异常.
   </td>
 </tr>
 <tr>
   <td><code>SaveMode.Append</code></td>
   <td><code>"append"</code></td>
   <td>
-    When saving a DataFrame to a data source, if data/table already exists,
-    contents of the DataFrame are expected to be appended to existing data.
+    将 DataFrame 保存到 data source （数据源）时, 如果 data/table 已存在, 则 DataFrame 的内容将被 append （附加）到现有数据中.
   </td>
 </tr>
 <tr>
   <td><code>SaveMode.Overwrite</code></td>
   <td><code>"overwrite"</code></td>
   <td>
-    Overwrite mode means that when saving a DataFrame to a data source,
-    if data/table already exists, existing data is expected to be overwritten by the contents of
-    the DataFrame.
+    Overwrite mode （覆盖模式）意味着将 DataFrame 保存到 data source （数据源）时, 如果 data/table 已经存在, 则预期 DataFrame 的内容将 overwritten （覆盖）现有数据.
   </td>
 </tr>
 <tr>
   <td><code>SaveMode.Ignore</code></td>
   <td><code>"ignore"</code></td>
   <td>
-    Ignore mode means that when saving a DataFrame to a data source, if data already exists,
-    the save operation is expected to not save the contents of the DataFrame and to not
-    change the existing data. This is similar to a <code>CREATE TABLE IF NOT EXISTS</code> in SQL.
+    Ignore mode （忽略模式）意味着当将 DataFrame 保存到 data source （数据源）时, 如果数据已经存在, 则保存操作预期不会保存 DataFrame 的内容, 并且不更改现有数据. 这与 SQL 中的<code> CREATE TABLE IF NOT EXISTS </code> 类似.
   </td>
 </tr>
 </table>
 
-### Saving to Persistent Tables
+### Saving to Persistent Tables （保存到持久表）
 
-`DataFrames` can also be saved as persistent tables into Hive metastore using the `saveAsTable`
-command. Notice that an existing Hive deployment is not necessary to use this feature. Spark will create a
-default local Hive metastore (using Derby) for you. Unlike the `createOrReplaceTempView` command,
-`saveAsTable` will materialize the contents of the DataFrame and create a pointer to the data in the
-Hive metastore. Persistent tables will still exist even after your Spark program has restarted, as
-long as you maintain your connection to the same metastore. A DataFrame for a persistent table can
-be created by calling the `table` method on a `SparkSession` with the name of the table.
+`DataFrames` 也可以使用 `saveAsTable` 命令作为 persistent tables （持久表）保存到 Hive metastore 中. 请注意, existing Hive deployment （现有的 Hive 部署）不需要使用此功能. Spark 将为您创建默认的 local Hive metastore （本地 Hive metastore）（使用 Derby ）. 与 `createOrReplaceTempView` 命令不同,  `saveAsTable` 将 materialize （实现） DataFrame 的内容, 并创建一个指向 Hive metastore 中数据的指针. 即使您的 Spark 程序重新启动,  Persistent tables （持久性表）仍然存在, 因为您保持与同一个 metastore 的连接. 可以通过使用表的名称在 `SparkSession` 上调用 `table` 方法来创建 persistent tabl （持久表）的 DataFrame .
 
-For file-based data source, e.g. text, parquet, json, etc. you can specify a custom table path via the
-`path` option, e.g. `df.write.option("path", "/some/path").saveAsTable("t")`. When the table is dropped,
-the custom table path will not be removed and the table data is still there. If no custom table path is
-specified, Spark will write data to a default table path under the warehouse directory. When the table is
-dropped, the default table path will be removed too.
+对于 file-based （基于文件）的 data source （数据源）, 例如 text, parquet, json等, 您可以通过 `path` 选项指定 custom table path （自定义表路径）, 例如 `df.write.option("path", "/some/path").saveAsTable("t")` . 当表被 dropped （删除）时, custom table path （自定义表路径）将不会被删除, 并且表数据仍然存在. 如果未指定自定义表路径, Spark 将把数据写入 warehouse directory （仓库目录）下的默认表路径. 当表被删除时, 默认的表路径也将被删除.
 
-Starting from Spark 2.1, persistent datasource tables have per-partition metadata stored in the Hive metastore. This brings several benefits:
+从 Spark 2.1 开始, persistent datasource tables （持久性数据源表）将 per-partition metadata （每个分区元数据）存储在 Hive metastore 中. 这带来了几个好处:
 
-- Since the metastore can return only necessary partitions for a query, discovering all the partitions on the first query to the table is no longer needed.
-- Hive DDLs such as `ALTER TABLE PARTITION ... SET LOCATION` are now available for tables created with the Datasource API.
+- 由于 metastore 只能返回查询的必要 partitions （分区）, 因此不再需要将第一个查询上的所有 partitions discovering 到表中.
+- Hive DDLs 如 `ALTER TABLE PARTITION ... SET LOCATION` 现在可用于使用 Datasource API 创建的表.
 
-Note that partition information is not gathered by default when creating external datasource tables (those with a `path` option). To sync the partition information in the metastore, you can invoke `MSCK REPAIR TABLE`.
+请注意, 创建 external datasource tables （外部数据源表）（带有 `path` 选项）的表时, 默认情况下不会收集 partition information （分区信息）. 要 sync （同步） metastore 中的分区信息, 可以调用 `MSCK REPAIR TABLE` .
 
-### Bucketing, Sorting and Partitioning
+### Bucketing, Sorting and Partitioning （分桶, 排序和分区）
 
-For file-based data source, it is also possible to bucket and sort or partition the output. 
-Bucketing and sorting are applicable only to persistent tables:
+对于 file-based data source （基于文件的数据源）, 也可以对 output （输出）进行 bucket 和 sort 或者 partition .
+Bucketing 和 sorting 仅适用于 persistent tables :
 
 <div class="codetabs">
 
@@ -559,7 +533,7 @@ CLUSTERED BY(name) INTO 42 BUCKETS;
 
 </div>
 
-while partitioning can be used with both `save` and `saveAsTable` when using the Dataset APIs.
+在使用 Dataset API 时, partitioning 可以同时与 `save` 和 `saveAsTable` 一起使用.
 
 
 <div class="codetabs">
@@ -592,7 +566,7 @@ CREATE TABLE users_by_favorite_color(
 
 </div>
 
-It is possible to use both partitioning and bucketing for a single table:
+可以为 single table （单个表）使用 partitioning 和 bucketing:
 
 <div class="codetabs">
 
@@ -626,21 +600,17 @@ CLUSTERED BY(name) SORTED BY (favorite_numbers) INTO 42 BUCKETS;
 
 </div>
 
-`partitionBy` creates a directory structure as described in the [Partition Discovery](#partition-discovery) section.
-Thus, it has limited applicability to columns with high cardinality. In contrast 
- `bucketBy` distributes
-data across a fixed number of buckets and can be used when a number of unique values is unbounded.
+`partitionBy` 创建一个 directory structure （目录结构）, 如 [Partition Discovery](#partition-discovery) 部分所述.
+因此, 对 cardinality （基数）较高的 columns 的适用性有限. 相反, `bucketBy` 可以在固定数量的 buckets 中分配数据, 并且可以在 a number of unique values is unbounded （多个唯一值无界时）使用数据.
 
 ## Parquet Files
 
-[Parquet](http://parquet.io) is a columnar format that is supported by many other data processing systems.
-Spark SQL provides support for both reading and writing Parquet files that automatically preserves the schema
-of the original data. When writing Parquet files, all columns are automatically converted to be nullable for
-compatibility reasons.
+[Parquet](http://parquet.io) 是许多其他数据处理系统支持的 columnar format （柱状格式）.
+Spark SQL 支持读写 Parquet 文件, 可自动保留 schema of the original data （原始数据的模式）. 当编写 Parquet 文件时, 出于兼容性原因, 所有 columns 都将自动转换为可空.
 
-### Loading Data Programmatically
+### Loading Data Programmatically （以编程的方式加载数据）
 
-Using the data from the above example:
+使用上面例子中的数据:
 
 <div class="codetabs">
 
@@ -681,14 +651,9 @@ SELECT * FROM parquetTable
 
 </div>
 
-### Partition Discovery
+### Partition Discovery （分区发现）
 
-Table partitioning is a common optimization approach used in systems like Hive. In a partitioned
-table, data are usually stored in different directories, with partitioning column values encoded in
-the path of each partition directory. The Parquet data source is now able to discover and infer
-partitioning information automatically. For example, we can store all our previously used
-population data into a partitioned table using the following directory structure, with two extra
-columns, `gender` and `country` as partitioning columns:
+Table partitioning （表分区）是在像 Hive 这样的系统中使用的常见的优化方法. 在 partitioned table （分区表）中, 数据通常存储在不同的目录中, partitioning column values encoded （分区列值编码）在每个 partition directory （分区目录）的路径中. Parquet data source （Parquet 数据源）现在可以自动 discover （发现）和 infer （推断）分区信息. 例如, 我们可以使用以下 directory structure （目录结构）将所有以前使用的 population data （人口数据）存储到 partitioned table （分区表）中, 其中有两个额外的列 `gender` 和 `country` 作为 partitioning columns （分区列）:
 
 {% highlight text %}
 
@@ -714,9 +679,8 @@ path
 
 {% endhighlight %}
 
-By passing `path/to/table` to either `SparkSession.read.parquet` or `SparkSession.read.load`, Spark SQL
-will automatically extract the partitioning information from the paths.
-Now the schema of the returned DataFrame becomes:
+通过将 `path/to/table` 传递给 `SparkSession.read.parquet` 或 `SparkSession.read.load` , Spark SQL 将自动从路径中提取 partitioning information （分区信息）.
+现在返回的 DataFrame 的 schema （模式）变成:
 
 {% highlight text %}
 
@@ -728,33 +692,18 @@ root
 
 {% endhighlight %}
 
-Notice that the data types of the partitioning columns are automatically inferred. Currently,
-numeric data types and string type are supported. Sometimes users may not want to automatically
-infer the data types of the partitioning columns. For these use cases, the automatic type inference
-can be configured by `spark.sql.sources.partitionColumnTypeInference.enabled`, which is default to
-`true`. When type inference is disabled, string type will be used for the partitioning columns.
+请注意, 会自动 inferred （推断） partitioning columns （分区列）的 data types （数据类型）.目前, 支持 numeric data types （数字数据类型）和 string type （字符串类型）.有些用户可能不想自动推断 partitioning columns （分区列）的数据类型.对于这些用例,  automatic type inference （自动类型推断）可以由 `spark.sql.sources.partitionColumnTypeInference.enabled` 配置, 默认为 `true` .当禁用 type inference （类型推断）时, string type （字符串类型）将用于 partitioning columns （分区列）.
 
-Starting from Spark 1.6.0, partition discovery only finds partitions under the given paths
-by default. For the above example, if users pass `path/to/table/gender=male` to either
-`SparkSession.read.parquet` or `SparkSession.read.load`, `gender` will not be considered as a
-partitioning column. If users need to specify the base path that partition discovery
-should start with, they can set `basePath` in the data source options. For example,
-when `path/to/table/gender=male` is the path of the data and
-users set `basePath` to `path/to/table/`, `gender` will be a partitioning column.
+从 Spark 1.6.0 开始, 默认情况下, partition discovery （分区发现）只能找到给定路径下的 partitions （分区）.对于上述示例, 如果用户将 `path/to/table/gender=male` 传递给 `SparkSession.read.parquet` 或 `SparkSession.read.load` , 则 `gender` 将不被视为 partitioning column （分区列）.如果用户需要指定 partition discovery （分区发现）应该开始的基本路径, 则可以在数据源选项中设置 `basePath`.例如, 当 `path/to/table/gender=male` 是数据的路径并且用户将 `basePath` 设置为 `path/to/table/`, `gender` 将是一个 partitioning column （分区列）.
 
-### Schema Merging
+### Schema Merging （模式合并）
 
-Like ProtocolBuffer, Avro, and Thrift, Parquet also supports schema evolution. Users can start with
-a simple schema, and gradually add more columns to the schema as needed. In this way, users may end
-up with multiple Parquet files with different but mutually compatible schemas. The Parquet data
-source is now able to automatically detect this case and merge schemas of all these files.
+像 ProtocolBuffer ,  Avro 和 Thrift 一样, Parquet 也支持 schema evolution （模式演进）. 用户可以从一个 simple schema （简单的架构）开始, 并根据需要逐渐向 schema 添加更多的 columns （列）. 以这种方式, 用户可能会使用不同但相互兼容的 schemas 的 multiple Parquet files （多个 Parquet 文件）. Parquet data source （Parquet 数据源）现在能够自动检测这种情况并 merge （合并）所有这些文件的 schemas .
 
-Since schema merging is a relatively expensive operation, and is not a necessity in most cases, we
-turned it off by default starting from 1.5.0. You may enable it by
+由于 schema merging （模式合并）是一个 expensive operation （相对昂贵的操作）, 并且在大多数情况下不是必需的, 所以默认情况下从 1.5.0 开始. 你可以按照如下的方式启用它:
 
-1. setting data source option `mergeSchema` to `true` when reading Parquet files (as shown in the
-   examples below), or
-2. setting the global SQL option `spark.sql.parquet.mergeSchema` to `true`.
+1. 读取 Parquet 文件时, 将 data source option （数据源选项） `mergeSchema` 设置为 `true` （如下面的例子所示）, 或
+2. 将 global SQL option （全局 SQL 选项） `spark.sql.parquet.mergeSchema` 设置为 `true` .
 
 <div class="codetabs">
 
@@ -779,39 +728,29 @@ turned it off by default starting from 1.5.0. You may enable it by
 
 </div>
 
-### Hive metastore Parquet table conversion
+### Hive metastore Parquet table conversion （Hive metastore Parquet table 转换）
 
-When reading from and writing to Hive metastore Parquet tables, Spark SQL will try to use its own
-Parquet support instead of Hive SerDe for better performance. This behavior is controlled by the
-`spark.sql.hive.convertMetastoreParquet` configuration, and is turned on by default.
+当读取和写入 Hive metastore Parquet 表时, Spark SQL 将尝试使用自己的 Parquet support （Parquet 支持）, 而不是 Hive SerDe 来获得更好的性能. 此 behavior （行为）由 `spark.sql.hive.convertMetastoreParquet` 配置控制, 默认情况下 turned on （打开）.
 
 #### Hive/Parquet Schema Reconciliation
 
-There are two key differences between Hive and Parquet from the perspective of table schema
-processing.
+从 table schema processing （表格模式处理）的角度来说, Hive 和 Parquet 之间有两个关键的区别.
 
-1. Hive is case insensitive, while Parquet is not
-1. Hive considers all columns nullable, while nullability in Parquet is significant
+1. Hive 不区分大小写, 而 Parquet 不是
+1. Hive 认为所有 columns （列）都可以为空, 而 Parquet 中的可空性是 significant （重要）的.
 
-Due to this reason, we must reconcile Hive metastore schema with Parquet schema when converting a
-Hive metastore Parquet table to a Spark SQL Parquet table. The reconciliation rules are:
+由于这个原因, 当将 Hive metastore Parquet 表转换为 Spark SQL Parquet 表时, 我们必须调整 metastore schema 与 Parquet schema. reconciliation 规则是:
 
-1. Fields that have the same name in both schema must have the same data type regardless of
-   nullability. The reconciled field should have the data type of the Parquet side, so that
-   nullability is respected.
+1. 在两个 schema 中具有 same name （相同名称）的 Fields （字段）必须具有 same data type （相同的数据类型）, 而不管 nullability （可空性）. reconciled field 应具有 Parquet 的数据类型, 以便 nullability （可空性）得到尊重.
 
-1. The reconciled schema contains exactly those fields defined in Hive metastore schema.
+1. reconciled schema （调和模式）正好包含 Hive metastore schema 中定义的那些字段.
 
-   - Any fields that only appear in the Parquet schema are dropped in the reconciled schema.
-   - Any fields that only appear in the Hive metastore schema are added as nullable field in the
-     reconciled schema.
+   - 只出现在 Parquet schema 中的任何字段将被 dropped （删除）在 reconciled schema 中.
+   - 仅在 Hive metastore schema 中出现的任何字段在 reconciled schema 中作为 nullable field （可空字段）添加.
 
-#### Metadata Refreshing
+#### Metadata Refreshing （元数据刷新）
 
-Spark SQL caches Parquet metadata for better performance. When Hive metastore Parquet table
-conversion is enabled, metadata of those converted tables are also cached. If these tables are
-updated by Hive or other external tools, you need to refresh them manually to ensure consistent
-metadata.
+Spark SQL 缓存 Parquet metadata 以获得更好的性能. 当启用 Hive metastore Parquet table conversion （转换）时, 这些 converted tables （转换表）的 metadata （元数据）也被 cached （缓存）. 如果这些表由 Hive 或其他外部工具更新, 则需要手动刷新以确保 consistent metadata （一致的元数据）.
 
 <div class="codetabs">
 
@@ -852,56 +791,50 @@ REFRESH TABLE my_table;
 
 </div>
 
-### Configuration
+### Configuration （配置）
 
-Configuration of Parquet can be done using the `setConf` method on `SparkSession` or by running
-`SET key=value` commands using SQL.
+可以使用 `SparkSession` 上的 `setConf` 方法或使用 SQL 运行 `SET key = value` 命令来完成 Parquet 的配置.
 
 <table class="table">
-<tr><th>Property Name</th><th>Default</th><th>Meaning</th></tr>
+<tr><th>Property Name （参数名称）</th><th>Default（默认）</th><th>Meaning（含义）</th></tr>
 <tr>
   <td><code>spark.sql.parquet.binaryAsString</code></td>
   <td>false</td>
   <td>
-    Some other Parquet-producing systems, in particular Impala, Hive, and older versions of Spark SQL, do
-    not differentiate between binary data and strings when writing out the Parquet schema. This
-    flag tells Spark SQL to interpret binary data as a string to provide compatibility with these systems.
+    一些其他 Parquet-producing systems （Parquet 生产系统）, 特别是 Impala, Hive 和旧版本的 Spark SQL , 在 writing out （写出） Parquet schema 时, 不区分 binary data （二进制数据）和 strings （字符串）. 该 flag 告诉 Spark SQL 将 binary data （二进制数据）解释为 string （字符串）以提供与这些系统的兼容性.
   </td>
 </tr>
 <tr>
   <td><code>spark.sql.parquet.int96AsTimestamp</code></td>
   <td>true</td>
   <td>
-    Some Parquet-producing systems, in particular Impala and Hive, store Timestamp into INT96. This
-    flag tells Spark SQL to interpret INT96 data as a timestamp to provide compatibility with these systems.
+    一些 Parquet-producing systems , 特别是 Impala 和 Hive , 将 Timestamp 存入INT96 . 该 flag 告诉 Spark SQL 将 INT96 数据解析为 timestamp 以提供与这些系统的兼容性.
   </td>
 </tr>
 <tr>
   <td><code>spark.sql.parquet.cacheMetadata</code></td>
   <td>true</td>
   <td>
-    Turns on caching of Parquet schema metadata. Can speed up querying of static data.
+    打开 Parquet schema metadata 的缓存. 可以加快查询静态数据.
   </td>
 </tr>
 <tr>
   <td><code>spark.sql.parquet.compression.codec</code></td>
   <td>snappy</td>
   <td>
-    Sets the compression codec use when writing Parquet files. Acceptable values include:
-    uncompressed, snappy, gzip, lzo.
+    在编写 Parquet 文件时设置 compression codec （压缩编解码器）的使用. 可接受的值包括: uncompressed, snappy, gzip, lzo .
   </td>
 </tr>
 <tr>
   <td><code>spark.sql.parquet.filterPushdown</code></td>
   <td>true</td>
-  <td>Enables Parquet filter push-down optimization when set to true.</td>
+  <td>设置为 true 时启用 Parquet filter push-down optimization .</td>
 </tr>
 <tr>
   <td><code>spark.sql.hive.convertMetastoreParquet</code></td>
   <td>true</td>
   <td>
-    When set to false, Spark SQL will use the Hive SerDe for parquet tables instead of the built in
-    support.
+    当设置为 false 时, Spark SQL 将使用 Hive SerDe 作为 parquet tables , 而不是内置的支持.
   </td>
 </tr>
 <tr>
@@ -909,8 +842,7 @@ Configuration of Parquet can be done using the `setConf` method on `SparkSession
   <td>false</td>
   <td>
     <p>
-      When true, the Parquet data source merges schemas collected from all data files, otherwise the
-      schema is picked from the summary file or a random data file if no summary file is available.
+      当为 true 时, Parquet data source （Parquet 数据源） merges （合并）从所有 data files （数据文件）收集的 schemas , 否则如果没有可用的 summary file , 则从 summary file 或 random data file 中挑选 schema .
     </p>
   </td>
 </tr>
@@ -919,69 +851,54 @@ Configuration of Parquet can be done using the `setConf` method on `SparkSession
   <td>true</td>
   <td>
     <p>
-      When true, enable the metadata-only query optimization that use the table's metadata to
-      produce the partition columns instead of table scans. It applies when all the columns scanned
-      are partition columns and the query has an aggregate operator that satisfies distinct
-      semantics.
+      如果为 true , 则启用使用表的 metadata 的 metadata-only query optimization 来生成 partition columns （分区列）而不是 table scans （表扫描）. 当 scanned （扫描）的所有 columns （列）都是 partition columns （分区列）并且 query （查询）具有满足 distinct semantics （不同语义）的 aggregate operator （聚合运算符）时, 它将适用.
     </p>
   </td>
 </tr>
 </table>
 
-## JSON Datasets
+## JSON Datasets （JSON 数据集）
 <div class="codetabs">
 
 <div data-lang="scala"  markdown="1">
-Spark SQL can automatically infer the schema of a JSON dataset and load it as a `Dataset[Row]`.
-This conversion can be done using `SparkSession.read.json()` on either a `Dataset[String]`,
-or a JSON file.
+Spark SQL 可以 automatically infer （自动推断）JSON dataset 的 schema, 并将其作为 `Dataset[Row]` 加载.
+这个 conversion （转换）可以在 `Dataset[String]` 上使用 `SparkSession.read.json()` 来完成, 或 JSON 文件.
 
-Note that the file that is offered as _a json file_ is not a typical JSON file. Each
-line must contain a separate, self-contained valid JSON object. For more information, please see
-[JSON Lines text format, also called newline-delimited JSON](http://jsonlines.org/).
+请注意, 以  _a json file_ 提供的文件不是典型的 JSON 文件. 每行必须包含一个 separate （单独的）,  self-contained valid （独立的有效的）JSON 对象. 有关更多信息, 请参阅 [JSON Lines text format, also called newline-delimited JSON](http://jsonlines.org/) .
 
-For a regular multi-line JSON file, set the `multiLine` option to `true`.
+对于 regular multi-line JSON file （常规的多行 JSON 文件）, 将 `multiLine` 选项设置为 `true` .
 
 {% include_example json_dataset scala/org/apache/spark/examples/sql/SQLDataSourceExample.scala %}
 </div>
 
 <div data-lang="java"  markdown="1">
-Spark SQL can automatically infer the schema of a JSON dataset and load it as a `Dataset<Row>`.
-This conversion can be done using `SparkSession.read().json()` on either a `Dataset<String>`,
-or a JSON file.
+Spark SQL 可以 automatically infer （自动推断）JSON dataset 的 schema, 并将其作为 `Dataset<Row>` 加载.
+这个 conversion （转换）可以在 `Dataset<String>` 上使用 `SparkSession.read.json()` 来完成, 或 JSON 文件.
 
-Note that the file that is offered as _a json file_ is not a typical JSON file. Each
-line must contain a separate, self-contained valid JSON object. For more information, please see
-[JSON Lines text format, also called newline-delimited JSON](http://jsonlines.org/).
+请注意, 以  _a json file_ 提供的文件不是典型的 JSON 文件. 每行必须包含一个 separate （单独的）,  self-contained valid （独立的有效的）JSON 对象. 有关更多信息, 请参阅 [JSON Lines text format, also called newline-delimited JSON](http://jsonlines.org/)
 
-For a regular multi-line JSON file, set the `multiLine` option to `true`.
+对于 regular multi-line JSON file （常规的多行 JSON 文件）, 将 `multiLine` 选项设置为 `true` .
 
 {% include_example json_dataset java/org/apache/spark/examples/sql/JavaSQLDataSourceExample.java %}
 </div>
 
 <div data-lang="python"  markdown="1">
-Spark SQL can automatically infer the schema of a JSON dataset and load it as a DataFrame.
-This conversion can be done using `SparkSession.read.json` on a JSON file.
+Spark SQL 可以 automatically infer （自动推断）JSON  dataset 的 schema , 并将其作为 DataFrame 加载.
+可以使用 JSON 文件中的 `SparkSession.read.json` 进行此 conversion （转换）.
 
-Note that the file that is offered as _a json file_ is not a typical JSON file. Each
-line must contain a separate, self-contained valid JSON object. For more information, please see
-[JSON Lines text format, also called newline-delimited JSON](http://jsonlines.org/).
+请注意, 以  _a json file_ 提供的文件不是典型的 JSON 文件. 每行必须包含一个 separate （单独的）,  self-contained valid （独立的有效的）JSON 对象. 有关更多信息, 请参阅 [JSON Lines text format, also called newline-delimited JSON](http://jsonlines.org/)
 
-For a regular multi-line JSON file, set the `multiLine` parameter to `True`.
+对于 regular multi-line JSON file （常规的多行 JSON 文件）, 将 `multiLine` 选项设置为 `true` .
 
 {% include_example json_dataset python/sql/datasource.py %}
 </div>
 
 <div data-lang="r"  markdown="1">
-Spark SQL can automatically infer the schema of a JSON dataset and load it as a DataFrame. using
-the `read.json()` function, which loads data from a directory of JSON files where each line of the
-files is a JSON object.
+Spark SQL 可以 automatically infer （自动推断）JSON dataset 的 schema , 并将其作为 DataFrame 加载. 使用 `read.json()` 函数, 它从 JSON 文件的目录中加载数据, 其中每一行文件都是一个 JSON 对象.
 
-Note that the file that is offered as _a json file_ is not a typical JSON file. Each
-line must contain a separate, self-contained valid JSON object. For more information, please see
-[JSON Lines text format, also called newline-delimited JSON](http://jsonlines.org/).
+请注意, 以  _a json file_ 提供的文件不是典型的 JSON 文件. 每行必须包含一个 separate （单独的）,  self-contained valid （独立的有效的）JSON 对象. 有关更多信息, 请参阅 [JSON Lines text format, also called newline-delimited JSON](http://jsonlines.org/).
 
-For a regular multi-line JSON file, set a named parameter `multiLine` to `TRUE`.
+对于 regular multi-line JSON file （常规的多行 JSON 文件）, 将 `multiLine` 选项设置为 `true` .
 
 {% include_example json_dataset r/RSparkSQLExample.R %}
 
