@@ -383,12 +383,7 @@ Time: 2014-10-14 15:25:21
 </div>
 </div>
 
-For ingesting data from sources like Kafka, Flume, and Kinesis that are not present in the Spark
-Streaming core
- API, you will have to add the corresponding
-artifact `spark-streaming-xyz_{{site.SCALA_BINARY_VERSION}}` to the dependencies. For example,
-some of the common ones are as follows.
-对于从现在没有在 Spark Streaming Core API 中的数据源获取数据，如 Kafka， Flume，Kinesis ，你必须添加相应的坐标  `spark-streaming-xyz_{{site.SCALA_BINARY_VERSION}}` 到依赖中.
+针对从 Spark Streaming Core API 中不存在的数据源中获取数据，如 Kafka， Flume，Kinesis ，你必须添加相应的坐标  `spark-streaming-xyz_{{site.SCALA_BINARY_VERSION}}` 到依赖中.
 例如，有一些常见的依赖如下.
 
 
@@ -664,12 +659,8 @@ Input DStreams 也可以从自定义数据源中创建.
 ***
 
 ##  DStreams 上的 Transformations（转换）
-Similar to that of RDDs, transformations allow the data from the input DStream to be modified.
-DStreams support many of the transformations available on normal Spark RDD's.
-Some of the common ones are as follows.
-
 与 RDD 类似，transformation 允许从 input DStream 输入的数据做修改.
-DStreams 支持很多在 RDD 中可用的 transformation 算子。一些常用的算子如下所示 : 
+DStreams 支持很多在 RDD 中可用的 transformation 算子。一些常用的如下所示 : 
 
 与RDD类似，类似，transformation 允许修改来自 input DStream 的数据.
 DStreams 支持标准的 Spark RDD 上可用的许多转换.
@@ -763,10 +754,7 @@ def updateFunction(newValues: Seq[Int], runningCount: Option[Int]): Option[Int] 
 val runningCounts = pairs.updateStateByKey[Int](updateFunction _)
 {% endhighlight %}
 
-The update function will be called for each word, with `newValues` having a sequence of 1's (from
-the `(word, 1)` pairs) and the `runningCount` having the previous count.
-
-更新函数将会被每个单词调用，·newValues· 拥有一系列的 1（来自 (word, 1) pairs），runningCount 拥有之前的次数.
+update 函数将会被每个单词调用，`newValues` 拥有一系列的 1（来自 (word, 1) pairs），runningCount 拥有之前的次数.
 
 </div>
 <div data-lang="java" markdown="1">
