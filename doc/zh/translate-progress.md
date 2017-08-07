@@ -85,8 +85,8 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
     <td></td>
   </tr>
   <tr>
-    <td>是</td>
-    <td>100%</td>
+    <td>否</td>
+    <td>98%</td>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Data Frames, Datasets and SQL</td>
     <td>sql-programming-guide.md</td>
     <td>1 天</td>
