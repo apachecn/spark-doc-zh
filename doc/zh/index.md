@@ -86,10 +86,10 @@ Spark 既可以独立运行, 也可以在一些现有的 Cluster Manager（集�
 
 **API 文档:**
 
-* [Spark Scala API (Scaladoc)](api/scala/index.html#org.apache.spark.package)
-* [Spark Java API (Javadoc)](api/java/index.html)
-* [Spark Python API (Sphinx)](api/python/index.html)
-* [Spark R API (Roxygen2)](api/R/index.html)
+* [Spark Scala API (Scaladoc)](http://spark.apache.org/docs/2.2.0/api/scala/index.html#org.apache.spark.package)
+* [Spark Java API (Javadoc)](http://spark.apache.org/docs/2.2.0/api/java/index.html)
+* [Spark Python API (Sphinx)](http://spark.apache.org/docs/2.2.0/api/python/index.html)
+* [Spark R API (Roxygen2)](http://spark.apache.org/docs/2.2.0/api/R/index.html)
 
 **部署指南:**
 
