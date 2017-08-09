@@ -77,7 +77,7 @@ Spark 既可以独立运行, 也可以在一些现有的 Cluster Manager（集�
 **编程指南:**
 
 * [快速入门](quick-start.html): 简单的介绍 Spark API; 从这里开始！
-* [Spark 编程指南](programming-guide.html): 在 Spark 支持的所有语言（Scala, Java, Python, R）中的详细概述。
+* [Spark 编程指南](rdd-programming-guide.html): 在 Spark 支持的所有语言（Scala, Java, Python, R）中的详细概述。
 * 构建在 Spark 之上的模块:
   * [Spark Streaming](streaming-programming-guide.html): 实时数据流处理
   * [Spark SQL, Datasets, and DataFrames](sql-programming-guide.html): 支持结构化数据和关系查询
