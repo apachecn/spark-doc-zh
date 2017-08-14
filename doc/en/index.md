@@ -88,7 +88,7 @@ options for deployment:
 **Programming Guides:**
 
 * [Quick Start](quick-start.html): a quick introduction to the Spark API; start here!
-* [Spark Programming Guide](programming-guide.html): detailed overview of Spark
+* [Spark Programming Guide](rdd-programming-guide.html): detailed overview of Spark
   in all supported languages (Scala, Java, Python, R)
 * Modules built on Spark:
   * [Spark Streaming](streaming-programming-guide.html): processing real-time data streams
