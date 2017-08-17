@@ -270,9 +270,9 @@ Lines with a: 46, Lines with b: 23
 
 </div>
 <div data-lang="java" markdown="1">
-This example will use Maven to compile an application JAR, but any similar build system will work.
+这个例子使用Maven来编译成一个jar应用程序，其他的构建系统（如Ant、Gradle，译者注）也可以。
 
-We'll create a very simple Spark application, `SimpleApp.java`:
+我们会创建一个非常简单的Spark应用，`SimpleApp.java`:
 
 {% highlight java %}
 /* SimpleApp.java */
@@ -294,13 +294,10 @@ public class SimpleApp {
 }
 {% endhighlight %}
 
-This program just counts the number of lines containing 'a' and the number containing 'b' in the
-Spark README. Note that you'll need to replace YOUR_SPARK_HOME with the location where Spark is
-installed. Unlike the earlier examples with the Spark shell, which initializes its own SparkSession,
-we initialize a SparkSession as part of the program.
+这个程序计算Spark README文档中包含字母'a'和字母'b'的行数。注意把YOUR_SPARK_HOME修改成你的Spark的安装目录。 跟之前的Spark shell不同，我们需要初始化SparkSession。
 
-To build the program, we also write a Maven `pom.xml` file that lists Spark as a dependency.
-Note that Spark artifacts are tagged with a Scala version.
+把Spark依赖添加到Maven的`pom.xml`文件里。
+注意Spark的artifacts使用Scala版本进行标记。
 
 {% highlight xml %}
 <project>
@@ -320,7 +317,7 @@ Note that Spark artifacts are tagged with a Scala version.
 </project>
 {% endhighlight %}
 
-We lay out these files according to the canonical Maven directory structure:
+我们按照Maven经典的目录结构组织这些文件：
 {% highlight bash %}
 $ find .
 ./pom.xml
@@ -330,15 +327,15 @@ $ find .
 ./src/main/java/SimpleApp.java
 {% endhighlight %}
 
-Now, we can package the application using Maven and execute it with `./bin/spark-submit`.
+现在我们用Maven打包这个应用，然后用`./bin/spark-submit`执行它。
 
 {% highlight bash %}
-# Package a JAR containing your application
+# 打包包含应用程序的JAR
 $ mvn package
 ...
 [INFO] Building jar: {..}/{..}/target/simple-project-1.0.jar
 
-# Use spark-submit to run your application
+# 用spark-submit来运行程序
 $ YOUR_SPARK_HOME/bin/spark-submit \
   --class "SimpleApp" \
   --master local[4] \
