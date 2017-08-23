@@ -16,6 +16,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
 
 ## Spark 2.2.0 官方文档中文版
 
+* 2017-08-23: 修复 sql-programming-guide.md 中格式错乱的 BUG.
 * 2017-08-14: 修改 index.md 和 tuning.md 中不正确的地方.
 * 2017-08-08: 修改 index.md 中 API 文档失效的链接，直接指向官网，并且修改页面底部展示的风格.
 * 2017-08-04: 增加 [Spark Sql](http://spark.apachecn.org/docs/cn/2.2.0/sql-programming-guide.html) 的文档翻译部分（100%）.
