@@ -78,7 +78,7 @@ Spark 2.0 中的`SparkSession` 为 Hive 特性提供了内嵌的支持，包括�
 ## 创建 DataFrames
 
 <div class="codetabs">
-<div data-lang="scala"  markdown="1">
+<div data-lang="scala"  markdown="1">
 在一个 `SparkSession`中, 应用程序可以从一个 [已经存在的 `RDD`](#interoperating-with-rdds),
 从hive表, 或者从 [Spark数据源](#data-sources)中创建一个DataFrames.
 
@@ -87,7 +87,7 @@ Spark 2.0 中的`SparkSession` 为 Hive 特性提供了内嵌的支持，包括�
 {% include_example create_df scala/org/apache/spark/examples/sql/SparkSQLExample.scala %}
 </div>
 
-<div data-lang="java" markdown="1">
+<div data-lang="java"  markdown="1">
 在一个 `SparkSession`中, 应用程序可以从一个 [已经存在的 `RDD`](#interoperating-with-rdds),
 从hive表, 或者从 [Spark数据源](#data-sources)中创建一个DataFrames.
 
@@ -105,7 +105,7 @@ Spark 2.0 中的`SparkSession` 为 Hive 特性提供了内嵌的支持，包括�
 {% include_example create_df python/sql/basic.py %}
 </div>
 
-<div data-lang="r"  markdown="1">
+<div data-lang="r"  markdown="1">
 在一个 `SparkSession`中, 应用程序可以从一个本地的R frame 数据,
 从hive表, 或者从[Spark数据源](#data-sources).
 
@@ -134,7 +134,7 @@ DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org
 除了简单的列引用和表达式之外，DataFrame 也有丰富的函数库，包括 string 操作，date 算术，常见的 math 操作以及更多。可用的完整列表请参考  [DataFrame 函数指南](api/scala/index.html#org.apache.spark.sql.functions$).
 </div>
 
-<div data-lang="java" markdown="1">
+<div data-lang="java"  markdown="1">
 
 {% include_example untyped_ops java/org/apache/spark/examples/sql/JavaSparkSQLExample.java %}
 
@@ -143,7 +143,7 @@ DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org
 除了简单的列引用和表达式之外，DataFrame 也有丰富的函数库，包括 string 操作，date 算术，常见的 math 操作以及更多。可用的完整列表请参考  [DataFrame 函数指南](api/java/org/apache/spark/sql/functions.html).
 </div>
 
-<div data-lang="python"  markdown="1">
+<div data-lang="python"  markdown="1">
 在Python中，可以通过(`df.age`) 或者(`df['age']`)来获取DataFrame的列. 虽然前者便于交互式操作, 但是还是建议用户使用后者, 这样不会破坏列名，也能引用DataFrame的类.
 
 {% include_example untyped_ops python/sql/basic.py %}
