@@ -6,7 +6,7 @@ description: Apache Spark SPARK_VERSION_SHORT 官方文档中文版首页
 ---
 
 Apache Spark 是一个快速的, 多用途的集群计算系统。
-它提供了 Java, Scala, Python 和 R 的高级 API，以及支持通用的执行图计算的优化引擎.
+它提供了 Java, Scala, Python 和 R 的高级 API，以及一个支持通用的执行图计算的优化过的引擎.
 它还支持一组丰富的高级工具, 包括用于 SQL 和结构化数据处理的 [Spark SQL](sql-programming-guide.html), 用于机器学习的 [MLlib](ml-guide.html), 用于图形处理的 [GraphX](graphx-programming-guide.html), 以及 [Spark Streaming](streaming-programming-guide.html)。
 
 # 下载
