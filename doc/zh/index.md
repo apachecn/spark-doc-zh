@@ -7,19 +7,19 @@ description: Apache Spark SPARK_VERSION_SHORT 官方文档中文版首页
 
 Apache Spark 是一个快速的, 多用途的集群计算系统。
 它提供了 Java, Scala, Python 和 R 的高级 API，以及一个支持通用的执行图计算的优化过的引擎.
-它还支持一组丰富的高级工具, 包括用于 SQL 和结构化数据处理的 [Spark SQL](sql-programming-guide.html), 用于机器学习的 [MLlib](ml-guide.html), 用于图形处理的 [GraphX](graphx-programming-guide.html), 以及 [Spark Streaming](streaming-programming-guide.html)。
+它还支持一组丰富的高级工具, 包括使用 SQL 处理结构化数据处理的 [Spark SQL](sql-programming-guide.html), 用于机器学习的 [MLlib](ml-guide.html), 用于图形处理的 [GraphX](graphx-programming-guide.html), 以及 [Spark Streaming](streaming-programming-guide.html)。
 
 # 下载
 
-从该项目官网的 [下载页面](http://spark.apache.org/downloads.html) 获取 Spark. 该文档用于 Spark {{site.SPARK_VERSION}} 版本. Spark 使用了针对 HDFS 和 YARN 的 Hadoop 的 client libraries（客户端库）. 为了适用于主流的 Hadoop 版本可以下载先前的 package.
-用户还可以下载 "Hadoop free" binary, 并且可以 [通过增加 Spark 的 classpath](hadoop-provided.html) Spark 来与任何的 Hadoop 版本一起运行 Spark.
-Scala 和 Java 用户可以在他们的工程中使用它的 Maven 坐标来包含 Spark, 并且在将来 Python 用户也可以从 PyPI 中安装 Spark。
+从该项目官网的 [下载页面](http://spark.apache.org/downloads.html) 获取 Spark. 该文档用于 Spark {{site.SPARK_VERSION}} 版本. Spark可以通过Hadoop client库使用HDFS和YARN.下载一个预编译主流Hadoop版本比较麻烦.
+用户可以下载一个编译好的Hadoop版本, 并且可以 通过[设置 Spark 的 classpath](hadoop-provided.html) 来与任何的 Hadoop 版本一起运行 Spark.
+Scala 和 Java 用户可以在他们的工程中通过Maven的方式引入 Spark, 并且在将来 Python 用户也可以从 PyPI 中安装 Spark。
 
 
-如果您希望从源码中构建 Spark, 请访问 [构建 Spark](building-spark.html).
+如果您希望从源码中编译一个Spark, 请访问 [编译 Spark](building-spark.html).
 
 
-Spark 既可以在 Windows 上又可以在类似 UNIX 的系统（例如, Linux, Mac OS）上运行。它很容易在一台机器上本地运行 - 您只需要在系统 `PATH` 上安装 `Java`, 或者将 `JAVA_HOME` 环境变量指向一个 `Java` 安装目录即可。
+Spark可以在windows和unix类似的系统（例如, Linux, Mac OS）上运行。它可以很容易的在一台本地机器上运行 -你只需要安装一个JAVA环境并配置PATH环境变量，或者让JAVA_HOME指向你的JAVA安装路径
 
 Spark 可运行在 Java 8+, Python 2.7+/3.4+ 和 R 3.1+ 的环境上。针对 Scala API, Spark {{site.SPARK_VERSION}}
 使用了 Scala {{site.SCALA_BINARY_VERSION}}. 您将需要去使用一个可兼容的 Scala 版本
@@ -33,7 +33,7 @@ Spark 可运行在 Java 8+, Python 2.7+/3.4+ 和 R 3.1+ 的环境上。针对 Sc
 
 Spark 自带了几个示例程序.  Scala, Java, Python 和 R 示例在
 `examples/src/main` 目录中. 要运行 Java 或 Scala 中的某个示例程序, 在最顶层的 Spark 目录中使用
-`bin/run-example <class> [params]` 命令即可.（在幕后, 它调用了 [`spark-submit` 脚本](submitting-applications.html)以启动应用程序）。例如,
+`bin/run-example <class> [params]` 命令即可.（这个命令底层调用了 [`spark-submit` 脚本](submitting-applications.html)去加载应用程序）。例如,
 
     ./bin/run-example SparkPi 10
 
@@ -41,10 +41,8 @@ Spark 自带了几个示例程序.  Scala, Java, Python 和 R 示例在
 
     ./bin/spark-shell --master local[2]
 
-该 `--master`选项可以指定为为
-[针对分布式集群的 master URL](submitting-applications.html#master-urls), 或者 `local` 以使用 1 个线程在本地运行, 或者 `local[N]` 以使用 N 个线程在本地运行。您应该通过使用
-`local` 来启动以便测试. 该选项的完整列表, 请使用 `--help` 选项来运行 Spark shell。
-
+该 `--master`选项可以指定为
+[针对分布式集群的 master URL](submitting-applications.html#master-urls), 或者 以`local`模式 使用 1 个线程在本地运行, `local[N]` 会使用 N 个线程在本地运行.你应该先使用local模式进行测试. 可以通过--help指令来获取spark-shell的所有配置项.
 Spark 同样支持 Python API。在 Python interpreter（解释器）中运行交互式的 Spark, 请使用
 `bin/pyspark`:
 
