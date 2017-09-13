@@ -16,6 +16,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
 
 ## Spark 2.2.0 官方文档中文版
 
+* 2017-09-13: 修改 sql-programming-guide.md 中的 `写作` 为 `写操作`, 英文原文为 `writing`. 更多细节请看 <https://github.com/apachecn/spark-doc-zh/issues/95>
 * 2017-08-29: 修改 index.md 中的语法问题.
 * 2017-08-23: 修复 sql-programming-guide.md 中格式错乱的 BUG.
 * 2017-08-14: 修改 index.md 和 tuning.md 中不正确的地方.
