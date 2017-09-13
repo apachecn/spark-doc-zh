@@ -1131,7 +1131,7 @@ bin/spark-shell --driver-class-path postgresql-9.4.1207.jar --jars postgresql-9.
     <td>
       JDBC批量大小，用于确定每往返行数要插入的行数。 
       这可以帮助JDBC driver 程序的性能。
-      此选项仅适用于写作。默认为 <code>1000</code>.
+      此选项仅适用于写操作。默认为 <code>1000</code>.
     </td>
   </tr>
 
@@ -1140,7 +1140,7 @@ bin/spark-shell --driver-class-path postgresql-9.4.1207.jar --jars postgresql-9.
     <td>
       事务隔离级别，适用于当前连接。
       它可以是 <code>NONE</code>, <code>READ_COMMITTED</code>, <code>READ_UNCOMMITTED</code>, <code>REPEATABLE_READ</code>, 或 <code>SERIALIZABLE</code> 之一，对应于 JDBC 连接对象定义的标准事务隔离级别，默认为 <code>READ_UNCOMMITTED</code>。 
-      此选项仅适用于写作。请参考 <code>java.sql.Connection</code> 中的文档。
+      此选项仅适用于写操作。请参考 <code>java.sql.Connection</code> 中的文档。
     </td>
   </tr>
 
@@ -1151,7 +1151,7 @@ bin/spark-shell --driver-class-path postgresql-9.4.1207.jar --jars postgresql-9.
       启用 <code>SaveMode.Overwrite</code> 时，此选项会导致 Spark 截断现有表，而不是删除并重新创建。 
       这可以更有效，并且防止表元数据（例如，索引）被移除。 
       但是，在某些情况下，例如当新数据具有不同的模式时，它将无法工作。 它默认为 <code>false</code>。 
-      此选项仅适用于写作。
+      此选项仅适用于写操作。
    </td>
   </tr>
 
@@ -1159,7 +1159,7 @@ bin/spark-shell --driver-class-path postgresql-9.4.1207.jar --jars postgresql-9.
     <td><code>createTableOptions</code></td>
     <td>
       这是一个与JDBC相关的选项。
-      如果指定，此选项允许在创建表时设置特定于数据库的表和分区选项（例如：<code>CREATE TABLE t (name string) ENGINE=InnoDB.</code> ）。此选项仅适用于写作。
+      如果指定，此选项允许在创建表时设置特定于数据库的表和分区选项（例如：<code>CREATE TABLE t (name string) ENGINE=InnoDB.</code> ）。此选项仅适用于写操作。
    </td>
   </tr>
 
@@ -1168,7 +1168,7 @@ bin/spark-shell --driver-class-path postgresql-9.4.1207.jar --jars postgresql-9.
     <td>
       使用数据库列数据类型而不是默认值，创建表时。
       数据类型信息应以与 CREATE TABLE 列语法相同的格式指定（例如：<code>"name CHAR(64), comments VARCHAR(1024)"</code>）。
-      指定的类型应该是有效的 spark sql 数据类型。此选项仅适用于写作。
+      指定的类型应该是有效的 spark sql 数据类型。此选项仅适用于写操作。
     </td>
   </tr>  
 </table>
