@@ -169,24 +169,24 @@ DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
-`SparkSession`的`sql`函数可以使应用以编程的没事运行SQL查询并且返回一个`DataFrame`.
+`SparkSession` 的 `sql` 函数可以让应用程序以编程的方式运行 SQL 查询, 并将结果作为一个 `DataFrame` 返回.
 
 {% include_example run_sql scala/org/apache/spark/examples/sql/SparkSQLExample.scala %}
 </div>
 
 <div data-lang="java" markdown="1">
-`SparkSession`的`sql`函数可以使应用以编程的没事运行SQL查询并且返回一个`Dataset<Row>`.
+`SparkSession` 的 `sql` 函数可以让应用程序以编程的方式运行 SQL 查询, 并将结果作为一个 `Dataset<Row>` 返回.
 
 {% include_example run_sql java/org/apache/spark/examples/sql/JavaSparkSQLExample.java %}
 </div>
 
 <div data-lang="python"  markdown="1">
-`SparkSession`的`sql`函数可以使应用以编程的没事运行SQL查询并且返回一个`DataFrame`.
+`SparkSession` 的 `sql` 函数可以让应用程序以编程的方式运行 SQL 查询, 并将结果作为一个 `DataFrame` 返回.
 {% include_example run_sql python/sql/basic.py %}
 </div>
 
 <div data-lang="r"  markdown="1">
-`SparkSession`的`sql`函数可以使应用以编程的没事运行SQL查询并且返回一个`DataFrame`.
+`SparkSession` 的 `sql` 函数可以让应用程序以编程的方式运行 SQL 查询, 并将结果作为一个 `DataFrame` 返回.
 
 {% include_example run_sql r/RSparkSQLExample.R %}
 
@@ -1103,9 +1103,9 @@ bin/spark-shell --driver-class-path postgresql-9.4.1207.jar --jars postgresql-9.
     <td><code>partitionColumn, lowerBound, upperBound</code></td>
     <td>
       如果指定了这些选项，则必须指定这些选项。 另外，必须指定 <code>numPartitions</code>. 
-      他们描述如何从多个工作人员并行阅读时分割表。<code>partitionColumn</code> 必须是有问题的表中的数字列。 
+      他们描述如何从多个 worker 并行读取数据时将表给分区。<code>partitionColumn</code> 必须是有问题的表中的数字列。 
       请注意，<code>lowerBound</code> 和  <code>upperBound</code> 仅用于决定分区的大小，而不是用于过滤表中的行。 
-      因此，表中的所有行将被分区并返回。此选项仅适用于阅读。
+      因此，表中的所有行将被分区并返回。此选项仅适用于读操作。
     </td>
   </tr>
 
@@ -1120,18 +1120,18 @@ bin/spark-shell --driver-class-path postgresql-9.4.1207.jar --jars postgresql-9.
   <tr>
     <td><code>fetchsize</code></td>
     <td>
-      JDBC 提取大小，用于确定每次往返行程的行数。 
-      这可以帮助JDBC driver 程序的性能降低，这些 driver 程序默认具有较低的提取大小（例如: 具有10行的 Oracle）。
-      此选项仅适用于阅读。
+      JDBC 抓取的大小，用于确定每次数据往返传递的行数。 
+      这有利于提升 JDBC driver 的性能，它们的默认值较小（例如: Oracle 是 10 行）。
+      该选项仅适用于读取操作。
     </td>
   </tr>
 
   <tr>
     <td><code>batchsize</code></td>
     <td>
-      JDBC批量大小，用于确定每往返行数要插入的行数。 
-      这可以帮助JDBC driver 程序的性能。
-      此选项仅适用于写操作。默认为 <code>1000</code>.
+      JDBC 批处理的大小，用于确定每次数据往返传递的行数。 
+      这有利于提升 JDBC driver 的性能。
+      该选项仅适用于写操作。默认值为 <code>1000</code>.
     </td>
   </tr>
 
@@ -1627,7 +1627,7 @@ Spark SQL 支持绝大部分的 Hive 功能，如:
   * `MAP<>`
   * `STRUCT<>`
 
-### 为支持的 Hive 函数
+### 未支持的 Hive 函数
 
 以下是目前还不支持的 Hive 函数列表。在 Hive 部署中这些功能大部分都用不到。
 
