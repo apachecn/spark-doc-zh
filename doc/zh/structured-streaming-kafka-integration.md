@@ -3,21 +3,20 @@ layout: global
 title: Structured Streaming + Kafka Integration Guide (Kafka broker version 0.10.0 or higher)
 ---
 
-Structured Streaming integration for Kafka 0.10 to read data from and write data to Kafka.
+为Kafka 0.10提供结构化的流集成，以读取数据，并将数据写入Kafka。
 
-## Linking
-For Scala/Java applications using SBT/Maven project definitions, link your application with the following artifact:
+## 链接
+对于使用SBT / Maven项目定义的Scala / Java应用程序，将您的应用程序链接到以下工件:
 
     groupId = org.apache.spark
     artifactId = spark-sql-kafka-0-10_{{site.SCALA_BINARY_VERSION}}
     version = {{site.SPARK_VERSION_SHORT}}
 
-For Python applications, you need to add this above library and its dependencies when deploying your
-application. See the [Deploying](#deploying) subsection below.
+对于Python应用程序，您需要在部署应用程序时添加上述库及其依赖项。请参阅下面的[部署](#deploying)小节。
 
-## Reading Data from Kafka
+## 从卡夫卡读取数据
 
-### Creating a Kafka Source for Streaming Queries
+### 创建一个用于流查询的Kafka源
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -121,9 +120,8 @@ df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
 </div>
 </div>
 
-### Creating a Kafka Source for Batch Queries 
-If you have a use case that is better suited to batch processing,
-you can create an Dataset/DataFrame for a defined range of offsets.
+### 为批量查询创建Kafka源：
+如果您有一个更适合于批处理的用例，您可以创建一个Dataset/DataFrame来定义范围的偏移量。
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -238,7 +236,7 @@ df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
 </div>
 </div>
 
-Each row in the source has the following schema:
+源中的每一行都有以下模式:
 <table class="table">
 <tr><th>Column</th><th>Type</th></tr>
 <tr>
@@ -271,40 +269,33 @@ Each row in the source has the following schema:
 </tr>
 </table>
 
-The following options must be set for the Kafka source
-for both batch and streaming queries.
+对于批处理和流查询，必须为Kafka源设置以下选项。
 
 <table class="table">
 <tr><th>Option</th><th>value</th><th>meaning</th></tr>
 <tr>
   <td>assign</td>
   <td>json string {"topicA":[0,1],"topicB":[2,4]}</td>
-  <td>Specific TopicPartitions to consume.
-  Only one of "assign", "subscribe" or "subscribePattern"
-  options can be specified for Kafka source.</td>
+  <td>具体TopicPartitions消费。"assign", "subscribe" or "subscribePattern" 选项，只可以有一个指定给kafka 源。</td>
 </tr>
 <tr>
   <td>subscribe</td>
   <td>A comma-separated list of topics</td>
-  <td>The topic list to subscribe.
-  Only one of "assign", "subscribe" or "subscribePattern"
-  options can be specified for Kafka source.</td>
+  <td>订阅的主题列表。"assign", "subscribe" or "subscribePattern" 选项，只可以有一一个指定给kafka 源。</td>
 </tr>
 <tr>
   <td>subscribePattern</td>
   <td>Java regex string</td>
-  <td>The pattern used to subscribe to topic(s).
-  Only one of "assign, "subscribe" or "subscribePattern"
-  options can be specified for Kafka source.</td>
+  <td>subscribePattern	Java regex string	用于订阅主题的模式。"assign", "subscribe" or "subscribePattern" 选项，只可以有一一个指定给kafka 源。</td>
 </tr>
 <tr>
   <td>kafka.bootstrap.servers</td>
   <td>A comma-separated list of host:port</td>
-  <td>The Kafka "bootstrap.servers" configuration.</td>
+  <td>Kafka的 "bootstrap.servers" 配置。</td>
 </tr>
 </table>
 
-The following configurations are optional:
+以下配置是可选的:
 
 <table class="table">
 <tr><th>Option</th><th>value</th><th>default</th><th>query type</th><th>meaning</th></tr>
@@ -315,13 +306,7 @@ The following configurations are optional:
   </td>
   <td>"latest" for streaming, "earliest" for batch</td>
   <td>streaming and batch</td>
-  <td>The start point when a query is started, either "earliest" which is from the earliest offsets,
-  "latest" which is just from the latest offsets, or a json string specifying a starting offset for
-  each TopicPartition.  In the json, -2 as an offset can be used to refer to earliest, -1 to latest.
-  Note: For batch queries, latest (either implicitly or by using -1 in json) is not allowed.
-  For streaming queries, this only applies when a new query is started, and that resuming will
-  always pick up from where the query left off. Newly discovered partitions during a query will start at
-  earliest.</td>
+  <td>当一个查询开始的时候, 或者从最早的偏移量："earliest",或者从最新的偏移量："latest",或JSON字符串指定为每个topicpartition起始偏移。在json中，-2作为偏移量可以用来表示最早的，-1到最新的。注意:对于批处理查询，不允许使用最新的查询(隐式或在json中使用-1)。对于流查询，这只适用于启动一个新查询时，并且恢复总是从查询的位置开始，在查询期间新发现的分区将会尽早开始。</td>
 </tr>
 <tr>
   <td>endingOffsets</td>
@@ -330,62 +315,50 @@ The following configurations are optional:
   </td>
   <td>latest</td>
   <td>batch query</td>
-  <td>The end point when a batch query is ended, either "latest" which is just referred to the
-  latest, or a json string specifying an ending offset for each TopicPartition.  In the json, -1
-  as an offset can be used to refer to latest, and -2 (earliest) as an offset is not allowed.</td>
+  <td>当一个批处理查询结束时，或者从最新的偏移量："latest", 或者为每个topic分区指定一个结束偏移的json字符串。在json中，-1作为偏移量可以用于引用最新的，而-2(最早)是不允许的偏移量。</td>
 </tr>
 <tr>
   <td>failOnDataLoss</td>
   <td>true or false</td>
   <td>true</td>
   <td>streaming query</td>
-  <td>Whether to fail the query when it's possible that data is lost (e.g., topics are deleted, or
-  offsets are out of range). This may be a false alarm. You can disable it when it doesn't work
-  as you expected. Batch queries will always fail if it fails to read any data from the provided
-  offsets due to lost data.</td>
+  <td>当数据丢失的时候，这是一个失败的查询。(如：主题被删除，或偏移量超出范围。)这可能是一个错误的警报。当它不像你预期的那样工作时，你可以禁用它。如果由于数据丢失而不能从提供的偏移量中读取任何数据，批处理查询总是会失败。</td>
 </tr>
 <tr>
   <td>kafkaConsumer.pollTimeoutMs</td>
   <td>long</td>
   <td>512</td>
   <td>streaming and batch</td>
-  <td>The timeout in milliseconds to poll data from Kafka in executors.</td>
+  <td>在执行器中从卡夫卡轮询执行数据，以毫秒为超时间隔单位。</td>
 </tr>
 <tr>
   <td>fetchOffset.numRetries</td>
   <td>int</td>
   <td>3</td>
   <td>streaming and batch</td>
-  <td>Number of times to retry before giving up fetching Kafka offsets.</td>
+  <td>放弃获取卡夫卡偏移值之前重试的次数。</td>
 </tr>
 <tr>
   <td>fetchOffset.retryIntervalMs</td>
   <td>long</td>
   <td>10</td>
   <td>streaming and batch</td>
-  <td>milliseconds to wait before retrying to fetch Kafka offsets</td>
+  <td>在重新尝试取回Kafka偏移量之前等待毫秒值。</td>
 </tr>
 <tr>
   <td>maxOffsetsPerTrigger</td>
   <td>long</td>
   <td>none</td>
   <td>streaming and batch</td>
-  <td>Rate limit on maximum number of offsets processed per trigger interval. The specified total number of offsets will be proportionally split across topicPartitions of different volume.</td>
+  <td>对每个触发器间隔处理的偏移量的最大数量的速率限制。偏移量的指定总数将按比例在不同卷的topic分区上进行分割。</td>
 </tr>
 </table>
 
-## Writing Data to Kafka
+## 写数据到卡夫卡
 
-Here, we describe the support for writing Streaming Queries and Batch Queries to Apache Kafka. Take note that 
-Apache Kafka only supports at least once write semantics. Consequently, when writing---either Streaming Queries
-or Batch Queries---to Kafka, some records may be duplicated; this can happen, for example, if Kafka needs
-to retry a message that was not acknowledged by a Broker, even though that Broker received and wrote the message record.
-Structured Streaming cannot prevent such duplicates from occurring due to these Kafka write semantics. However, 
-if writing the query is successful, then you can assume that the query output was written at least once. A possible
-solution to remove duplicates when reading the written data could be to introduce a primary (unique) key 
-that can be used to perform de-duplication when reading.
+在这里，我们描述了对Apache Kafka编写流查询和批量查询的支持。注意，Apache Kafka只支持至少一次写语义。因此，当对卡夫卡进行流媒体查询或批量查询时，一些记录可能会被复制;例如，如果Kafka需要重试一个未被代理确认的消息，即使该代理收到并编写了消息记录。由于这些卡夫卡的写语义，结构化流不能防止这种重复发生。但是，如果写入查询是成功的，那么您可以假设查询输出至少编写一次。当阅读书面数据时，可能的解决方法是引入一个主键(唯一的)键，用于在读取时执行去复制。
 
-The Dataframe being written to Kafka should have the following columns in schema:
+Dataframe写入Kafka应该在模式中有以下列：
 <table class="table">
 <tr><th>Column</th><th>Type</th></tr>
 <tr>
@@ -401,27 +374,22 @@ The Dataframe being written to Kafka should have the following columns in schema
   <td>string</td>
 </tr>
 </table>
-\* The topic column is required if the "topic" configuration option is not specified.<br>
+\* 如果没有指定“topic”配置选项，则需要主题列。<br>
 
-The value column is the only required option. If a key column is not specified then 
-a ```null``` valued key column will be automatically added (see Kafka semantics on 
-how ```null``` valued key values are handled). If a topic column exists then its value
-is used as the topic when writing the given row to Kafka, unless the "topic" configuration
-option is set i.e., the "topic" configuration option overrides the topic column.
+value列是惟一需要的选项。如果没有指定键列，则会自动添加一个空值键列(参见Kafka语义，以处理如何处理null值的键值)。如果主题列存在，那么当将给定的行写入Kafka时，它的值就被用作主题，除非“topic”配置选项设置为。，“topic”配置选项覆盖主题栏。
 
-The following options must be set for the Kafka sink
-for both batch and streaming queries.
+对于批处理和流查询，必须为Kafka接收器设置以下选项。
 
 <table class="table">
 <tr><th>Option</th><th>value</th><th>meaning</th></tr>
 <tr>
   <td>kafka.bootstrap.servers</td>
   <td>A comma-separated list of host:port</td>
-  <td>The Kafka "bootstrap.servers" configuration.</td>
+  <td> Kafka的集群("bootstrap.servers")配置。</td>
 </tr>
 </table>
 
-The following configurations are optional:
+以下配置是可选的:
 
 <table class="table">
 <tr><th>Option</th><th>value</th><th>default</th><th>query type</th><th>meaning</th></tr>
@@ -430,12 +398,11 @@ The following configurations are optional:
   <td>string</td>
   <td>none</td>
   <td>streaming and batch</td>
-  <td>Sets the topic that all rows will be written to in Kafka. This option overrides any
-  topic column that may exist in the data.</td>
+  <td>设置所有行写入卡夫卡的主题。此选项覆盖数据中可能存在的任何主题列。</td>
 </tr>
 </table>
 
-### Creating a Kafka Sink for Streaming Queries
+### 为流查询创建Kafka接收器：
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -572,40 +539,25 @@ df.selectExpr("topic", "CAST(key AS STRING)", "CAST(value AS STRING)") \
 </div>
 
 
-## Kafka Specific Configurations
+## 卡夫卡的具体配置：
 
-Kafka's own configurations can be set via `DataStreamReader.option` with `kafka.` prefix, e.g, 
-`stream.option("kafka.bootstrap.servers", "host:port")`. For possible kafka parameters, see 
-[Kafka consumer config docs](http://kafka.apache.org/documentation.html#newconsumerconfigs) for
-parameters related to reading data, and [Kafka producer config docs](http://kafka.apache.org/documentation/#producerconfigs)
-for parameters related to writing data.
+卡夫卡自己的配置可以通过`datastreamreader.option`中为`kafka.`的前缀设置,例如, 
+`stream.option("kafka.bootstrap.servers", "host:port")`. 对于合理的卡夫卡参数，请参阅[kafka的消费者配置文档](http://kafka.apache.org/documentation.html#newconsumerconfigs)，
+了解与读取数据相关的参数，以及[kafka生产者配置文档](http://kafka.apache.org/documentation/#producerconfigs)，以获得与写入数据相关的参数。
 
-Note that the following Kafka params cannot be set and the Kafka source or sink will throw an exception:
+注意，以下卡夫卡的参数不能被设置，卡夫卡source或sink会抛出一个例外:
 
-- **group.id**: Kafka source will create a unique group id for each query automatically.
-- **auto.offset.reset**: Set the source option `startingOffsets` to specify
- where to start instead. Structured Streaming manages which offsets are consumed internally, rather 
- than rely on the kafka Consumer to do it. This will ensure that no data is missed when new 
- topics/partitions are dynamically subscribed. Note that `startingOffsets` only applies when a new
- streaming query is started, and that resuming will always pick up from where the query left off.
-- **key.deserializer**: Keys are always deserialized as byte arrays with ByteArrayDeserializer. Use 
- DataFrame operations to explicitly deserialize the keys.
-- **value.deserializer**: Values are always deserialized as byte arrays with ByteArrayDeserializer. 
- Use DataFrame operations to explicitly deserialize the values.
-- **key.serializer**: Keys are always serialized with ByteArraySerializer or StringSerializer. Use
-DataFrame operations to explicitly serialize the keys into either strings or byte arrays.
-- **value.serializer**: values are always serialized with ByteArraySerializer or StringSerializer. Use
-DataFrame oeprations to explicitly serialize the values into either strings or byte arrays.
-- **enable.auto.commit**: Kafka source doesn't commit any offset.
-- **interceptor.classes**: Kafka source always read keys and values as byte arrays. It's not safe to
- use ConsumerInterceptor as it may break the query.
+- **group.id**: Kafka源将自动为每个查询创建一个唯一的组id。
+- **auto.offset.reset**:设置源选项`startingoffset`来指定从哪里开始。结构化流管理可以在内部消耗抵消，而不是依赖于kafka的消费者来完成。这将确保在动态订阅新主题/分区时不会遗漏任何数据。注意，`startingoffset`只适用于启动一个新的流查询时，并且恢复将总是从查询停止的地方开始。
+- **key.deserializer**: 键总是被反序列化为字节数组和`ByteArrayDeserializer`。使用`DataFrame`操作显式地反序列化键。
+- **value.deserializer**:值总是以字节数组和`ByteArrayDeserializer`进行反序列化。使用`DataFrame`操作显式地反序列化值。
+- **key.serializer**: 键总是用`ByteArraySerializer`或`StringSerializer`序列化。使用`DataFrame`操作显式地将键序列化为字符串或字节数组。
+- **value.serializer**: 值总是用`ByteArraySerializer`或`StringSerializer`序列化。使用`DataFrame oeprations`将值显式序列化到字符串或字节数组中。
+- **enable.auto.commit**: 卡夫卡源不能提交任何偏移量。
+- **interceptor.classes**: Kafka源总是将键和值读取为字节数组。使用`ConsumerInterceptor`是不安全的，因为它可能会破坏查询。
+## 部署
 
-## Deploying
-
-As with any Spark applications, `spark-submit` is used to launch your application. `spark-sql-kafka-0-10_{{site.SCALA_BINARY_VERSION}}`
-and its dependencies can be directly added to `spark-submit` using `--packages`, such as,
+与任何Spark应用程序一样，`spark-submit`用于启动应用程序。`spark-sql-kafka-0- 10_2.11`及其依赖关系可以直接添加到`spark-submit`中，例如，
 
     ./bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_{{site.SCALA_BINARY_VERSION}}:{{site.SPARK_VERSION_SHORT}} ...
-
-See [Application Submission Guide](submitting-applications.html) for more details about submitting
-applications with external dependencies.
+有关提交与外部依赖关系的应用程序的详细信息，请参阅应用[程序提交指南](submitting-applications.html)。
