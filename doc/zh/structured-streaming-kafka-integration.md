@@ -1,22 +1,22 @@
 ---
 layout: global
-title: Structured Streaming + Kafka Integration Guide (Kafka broker version 0.10.0 or higher)
+title: Structured Streaming + Kafka 集成指南 (Kafka broker 版本 0.10.0 或更高)
 ---
 
-为Kafka 0.10提供结构化的流集成，以读取数据，并将数据写入Kafka。
+针对 Kafka 0.10 提供了 Structured Streaming 集成，以读取数据，并将数据写入 Kafka。
 
-## 链接
-对于使用SBT / Maven项目定义的Scala / Java应用程序，将您的应用程序链接到以下工件:
+## 依赖
+针对使用 SBT/Maven 项目定义的 Scala/Java 应用程序，使用下列坐标来添加依赖:
 
     groupId = org.apache.spark
     artifactId = spark-sql-kafka-0-10_{{site.SCALA_BINARY_VERSION}}
     version = {{site.SPARK_VERSION_SHORT}}
 
-对于Python应用程序，您需要在部署应用程序时添加上述库及其依赖项。请参阅下面的[部署](#deploying)小节。
+针对 Python 应用程序，您需要在部署应用程序时添加上述库及其依赖项。请参阅下面的 [部署](#部署) 小节。
 
-## 从卡夫卡读取数据
+## 从 Kafka 读取数据
 
-### 创建一个用于流查询的Kafka源
+### 创建一个用于 Streaming Queries（流查询）的 Kafka Source
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -121,7 +121,7 @@ df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
 </div>
 
 ### 为批量查询创建Kafka源：
-如果您有一个更适合于批处理的用例，您可以创建一个Dataset/DataFrame来定义范围的偏移量。
+如果您有一个更适合于批处理的用例，您可以为一个定义好的 offset 范围来创建一个 Dataset/DataFrame。
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -236,7 +236,7 @@ df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
 </div>
 </div>
 
-源中的每一行都有以下模式:
+源中的每一行都有以下 schema（模式）:
 <table class="table">
 <tr><th>Column</th><th>Type</th></tr>
 <tr>
@@ -269,29 +269,29 @@ df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
 </tr>
 </table>
 
-对于批处理和流查询，必须为Kafka源设置以下选项。
+对于批处理和流查询，必须为 Kafka source 设置以下选项。
 
 <table class="table">
-<tr><th>Option</th><th>value</th><th>meaning</th></tr>
+<tr><th>Option（选项）</th><th>value（值）</th><th>meaning（含义）</th></tr>
 <tr>
   <td>assign</td>
   <td>json string {"topicA":[0,1],"topicB":[2,4]}</td>
-  <td>具体TopicPartitions消费。"assign", "subscribe" or "subscribePattern" 选项，只可以有一个指定给kafka 源。</td>
+  <td>指定 TopicPartitions 来消费。针对 Kafka Source 只能指定 "assign", "subscribe" 或 "subscribePattern" 其中的一个选项。</td>
 </tr>
 <tr>
   <td>subscribe</td>
-  <td>A comma-separated list of topics</td>
-  <td>订阅的主题列表。"assign", "subscribe" or "subscribePattern" 选项，只可以有一一个指定给kafka 源。</td>
+  <td>逗号分隔的 topics 列表</td>
+  <td>要订阅的 topic 列表。针对 Kafka Source 只能指定 "assign", "subscribe" 或 "subscribePattern" 其中的一个选项</td>
 </tr>
 <tr>
   <td>subscribePattern</td>
   <td>Java regex string</td>
-  <td>subscribePattern	Java regex string	用于订阅主题的模式。"assign", "subscribe" or "subscribePattern" 选项，只可以有一一个指定给kafka 源。</td>
+  <td>用于订阅 topic(s) 的 pattern（模式）。针对 Kafka Source 只能指定 "assign", "subscribe" 或 "subscribePattern" 其中的一个选项。</td>
 </tr>
 <tr>
   <td>kafka.bootstrap.servers</td>
-  <td>A comma-separated list of host:port</td>
-  <td>Kafka的 "bootstrap.servers" 配置。</td>
+  <td>逗号分隔的 host:port 列表</td>
+  <td>Kafka 中的 "bootstrap.servers" 配置。</td>
 </tr>
 </table>
 
@@ -304,8 +304,8 @@ df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
   <td>"earliest", "latest" (streaming only), or json string
   """ {"topicA":{"0":23,"1":-1},"topicB":{"0":-2}} """
   </td>
-  <td>"latest" for streaming, "earliest" for batch</td>
-  <td>streaming and batch</td>
+  <td>"latest" 用于 streaming, "earliest" 用于 batch（批处理）</td>
+  <td>streaming 和 batch</td>
   <td>当一个查询开始的时候, 或者从最早的偏移量："earliest",或者从最新的偏移量："latest",或JSON字符串指定为每个topicpartition起始偏移。在json中，-2作为偏移量可以用来表示最早的，-1到最新的。注意:对于批处理查询，不允许使用最新的查询(隐式或在json中使用-1)。对于流查询，这只适用于启动一个新查询时，并且恢复总是从查询的位置开始，在查询期间新发现的分区将会尽早开始。</td>
 </tr>
 <tr>
@@ -354,11 +354,17 @@ df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
 </tr>
 </table>
 
-## 写数据到卡夫卡
+## 写数据到 Kafka
 
-在这里，我们描述了对Apache Kafka编写流查询和批量查询的支持。注意，Apache Kafka只支持至少一次写语义。因此，当对卡夫卡进行流媒体查询或批量查询时，一些记录可能会被复制;例如，如果Kafka需要重试一个未被代理确认的消息，即使该代理收到并编写了消息记录。由于这些卡夫卡的写语义，结构化流不能防止这种重复发生。但是，如果写入查询是成功的，那么您可以假设查询输出至少编写一次。当阅读书面数据时，可能的解决方法是引入一个主键(唯一的)键，用于在读取时执行去复制。
+在这里，我们描述了对 Apache Kafka 编写流查询和批量查询的支持。
+请注意，Apache Kafka 只支持至少一次的写入语义。
+因此，当编写 --- 流式查询或批量查询 --- 到 Kafka 时，一些记录可能会被复制;
+这可能会发生的，例如，如果 Kafka 需要重试一个未被 Broker 确认的消息，即使该 Broker 接收并写入了消息记录。
+由于这些 Kafka 的写入语义，Structured Streaming 不能阻止这种重复情况的发生。
+但是，如果写入查询是成功的，则可以假设查询输出至少写入一次。
+读取写入数据时，删除重复项的一个可能的解决方案可能是引入一个 primary (unique) key（唯一主键），可以用于在读取时执行重复数据的删除。
 
-Dataframe写入Kafka应该在模式中有以下列：
+Dataframe 写入 Kafka 应该在 schema（模式）中有以下列:
 <table class="table">
 <tr><th>Column</th><th>Type</th></tr>
 <tr>
@@ -374,18 +380,18 @@ Dataframe写入Kafka应该在模式中有以下列：
   <td>string</td>
 </tr>
 </table>
-\* 如果没有指定“topic”配置选项，则需要主题列。<br>
+\* 如果没有指定 “topic” 配置选项，则需要 topic 列。<br>
 
-value列是惟一需要的选项。如果没有指定键列，则会自动添加一个空值键列(参见Kafka语义，以处理如何处理null值的键值)。如果主题列存在，那么当将给定的行写入Kafka时，它的值就被用作主题，除非“topic”配置选项设置为。，“topic”配置选项覆盖主题栏。
+value 列是惟一需要的选项。如果没有指定键列，则会自动添加一个空值键列(参见Kafka语义，以处理如何处理 null 值的键值)。如果主题列存在，那么当将给定的行写入 Kafka 时，它的值就被用作主题，除非 “topic” 配置选项设置为。，“topic” 配置选项覆盖主题栏。
 
-对于批处理和流查询，必须为Kafka接收器设置以下选项。
+对于批处理和流查询，必须为 Kafka 接收器设置以下选项。
 
 <table class="table">
 <tr><th>Option</th><th>value</th><th>meaning</th></tr>
 <tr>
   <td>kafka.bootstrap.servers</td>
   <td>A comma-separated list of host:port</td>
-  <td> Kafka的集群("bootstrap.servers")配置。</td>
+  <td> Kafka 的集群 ("bootstrap.servers") 配置。</td>
 </tr>
 </table>
 
@@ -398,11 +404,11 @@ value列是惟一需要的选项。如果没有指定键列，则会自动添加
   <td>string</td>
   <td>none</td>
   <td>streaming and batch</td>
-  <td>设置所有行写入卡夫卡的主题。此选项覆盖数据中可能存在的任何主题列。</td>
+  <td>设置所有行写入 Kafka 的 topic。此选项覆盖数据中可能存在的任何 topic 列。</td>
 </tr>
 </table>
 
-### 为流查询创建Kafka接收器：
+### 为流式查询创建 Kafka Sink:
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -539,25 +545,25 @@ df.selectExpr("topic", "CAST(key AS STRING)", "CAST(value AS STRING)") \
 </div>
 
 
-## 卡夫卡的具体配置：
+## Kafka 的具体配置：
 
-卡夫卡自己的配置可以通过`datastreamreader.option`中为`kafka.`的前缀设置,例如, 
-`stream.option("kafka.bootstrap.servers", "host:port")`. 对于合理的卡夫卡参数，请参阅[kafka的消费者配置文档](http://kafka.apache.org/documentation.html#newconsumerconfigs)，
-了解与读取数据相关的参数，以及[kafka生产者配置文档](http://kafka.apache.org/documentation/#producerconfigs)，以获得与写入数据相关的参数。
+Kafka 自己的配置可以通过 `datastreamreader.option` 中为 `kafka.` 的前缀设置,例如, 
+`stream.option("kafka.bootstrap.servers", "host:port")`. 对于合理的卡夫卡参数，请参阅 [kafka 的消费者配置文档](http://kafka.apache.org/documentation.html#newconsumerconfigs)，
+了解与读取数据相关的参数，以及[kafka 生产者配置文档](http://kafka.apache.org/documentation/#producerconfigs)，以获得与写入数据相关的参数。
 
-注意，以下卡夫卡的参数不能被设置，卡夫卡source或sink会抛出一个例外:
+注意，以下 Kafka 的参数不能被设置，Kafka source 或 sink 会抛出一个例外:
 
-- **group.id**: Kafka源将自动为每个查询创建一个唯一的组id。
-- **auto.offset.reset**:设置源选项`startingoffset`来指定从哪里开始。结构化流管理可以在内部消耗抵消，而不是依赖于kafka的消费者来完成。这将确保在动态订阅新主题/分区时不会遗漏任何数据。注意，`startingoffset`只适用于启动一个新的流查询时，并且恢复将总是从查询停止的地方开始。
-- **key.deserializer**: 键总是被反序列化为字节数组和`ByteArrayDeserializer`。使用`DataFrame`操作显式地反序列化键。
-- **value.deserializer**:值总是以字节数组和`ByteArrayDeserializer`进行反序列化。使用`DataFrame`操作显式地反序列化值。
-- **key.serializer**: 键总是用`ByteArraySerializer`或`StringSerializer`序列化。使用`DataFrame`操作显式地将键序列化为字符串或字节数组。
-- **value.serializer**: 值总是用`ByteArraySerializer`或`StringSerializer`序列化。使用`DataFrame oeprations`将值显式序列化到字符串或字节数组中。
-- **enable.auto.commit**: 卡夫卡源不能提交任何偏移量。
-- **interceptor.classes**: Kafka源总是将键和值读取为字节数组。使用`ConsumerInterceptor`是不安全的，因为它可能会破坏查询。
+- **group.id**: Kafka Source 将自动为每个查询创建一个唯一的 group id。
+- **auto.offset.reset**: 设置 Source 选项 `startingoffset` 来指定从哪里开始。结构化流管理可以在内部消耗抵消，而不是依赖于 kafka 的消费者来完成。这将确保在动态订阅新主题/分区时不会遗漏任何数据。注意，`startingoffset` 只适用于启动一个新的流查询时，并且恢复将总是从查询停止的地方开始。
+- **key.deserializer**: 键总是被反序列化为字节数组和 `ByteArrayDeserializer`。使用 `DataFrame` 操作显式地反序列化键。
+- **value.deserializer**:值总是以字节数组和 `ByteArrayDeserializer` 进行反序列化。使用 `DataFrame` 操作显式地反序列化值。
+- **key.serializer**: 键总是用 `ByteArraySerializer` 或 `StringSerializer` 序列化。使用 `DataFrame` 操作显式地将键序列化为字符串或字节数组。
+- **value.serializer**: 值总是用 `ByteArraySerializer` 或 `StringSerializer` 序列化。使用 `DataFrame oeprations` 将值显式序列化到字符串或字节数组中。
+- **enable.auto.commit**: Kafka Source 不能提交任何 offset。
+- **interceptor.classes**: Kafka Source 总是将 key 和 value 读取为字节数组。使用 `ConsumerInterceptor` 是不安全的，因为它可能会破坏查询。
 ## 部署
 
-与任何Spark应用程序一样，`spark-submit`用于启动应用程序。`spark-sql-kafka-0- 10_2.11`及其依赖关系可以直接添加到`spark-submit`中，例如，
+与任何 Spark 应用程序一样，`spark-submit` 用于启动应用程序。`spark-sql-kafka-0- 10_2.11` 及其依赖关系可以直接添加到`spark-submit` 中，例如，
 
     ./bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_{{site.SCALA_BINARY_VERSION}}:{{site.SPARK_VERSION_SHORT}} ...
-有关提交与外部依赖关系的应用程序的详细信息，请参阅应用[程序提交指南](submitting-applications.html)。
+有关提交与外部依赖关系的应用程序的详细信息，请参阅应用 [程序提交指南](submitting-applications.html)。
