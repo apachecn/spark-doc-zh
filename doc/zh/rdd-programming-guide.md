@@ -775,7 +775,7 @@ print("Counter value: ", counter)
 
 #### Local（本地）vs. cluster（集群）模式
 
-上面的代码行为是不确定的，并且可能无法按预期正常工作。执行作业时，Spark 会分解 RDD 操作到每个 executor 中的 task 里。在执行之前，Spark 计算任务的 **closure**（闭包）。闭包是指执行器要在RDD上进行计算时必须对执行节点可见的那些变量和方法（在这里是foreach()）。闭包被序列化并被发送到每个执行器。
+上面的代码行为是不确定的，并且可能无法按预期正常工作。执行作业时，Spark 会分解 RDD 操作到每个 executor 中的 task 里。在执行之前，Spark 计算任务的 **closure**（闭包）。闭包是指 executor 要在RDD上进行计算时必须对执行节点可见的那些变量和方法（在这里是foreach()）。闭包被序列化并被发送到每个 executor  。
 
 闭包的变量副本发给每个 **executor** ，当 **counter** 被 `foreach` 函数引用的时候，它已经不再是 driver node 的 **counter** 了。虽然在 driver node 仍然有一个 counter 在内存中，但是对 executors 已经不可见。executor 看到的只是序列化的闭包一个副本。所以 **counter** 最终的值还是 0，因为对 `counter` 所有的操作均引用序列化的 closure 内的值。
 
