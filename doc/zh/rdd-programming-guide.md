@@ -1061,9 +1061,6 @@ Spark 里的某些操作会触发 shuffle。shuffle 是spark 重新分配数据�
 
 在 spark 里，特定的操作需要数据不跨分区分布。在计算期间，一个任务在一个分区上执行，为了所有数据都在单个 `reduceByKey` 的 reduce 任务上运行，我们需要执行一个 all-to-all 操作。它必须从所有分区读取所有的 key 和 key对应的所有的值，并且跨分区聚集去计算每个 key 的结果 - 这个过程就叫做 **shuffle**.。
 
-Although the set of elements in each partition of newly shuffled data will be deterministic, and so
-is the ordering of partitions themselves, the ordering of these elements is not. If one desires predictably
-ordered data following shuffle then it's possible to use:
 
 尽管每个分区新 shuffle 的数据集将是确定的，分区本身的顺序也是这样，但是这些数据的顺序是不确定的。如果希望 shuffle 后的数据是有序的，可以使用:
 
