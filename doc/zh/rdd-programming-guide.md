@@ -775,7 +775,7 @@ print("Counter value: ", counter)
 
 #### Local（本地）vs. cluster（集群）模式
 
-上面的代码行为是不确定的，并且可能无法按预期正常工作。执行作业时，Spark 会分解 RDD 操作到每个 executor 中的 task 里。在执行之前，Spark 计算任务的 **closure**（闭包）。而闭包是在 RDD 上的 executor 必须能够访问的变量和方法（在此情况下的 `foreach()`）。闭包被序列化并被发送到每个执行器。
+上面的代码行为是不确定的，并且可能无法按预期正常工作。执行作业时，Spark 会分解 RDD 操作到每个 executor 中的 task 里。在执行之前，Spark 计算任务的 **closure**（闭包）。闭包是指 executor 要在RDD上进行计算时必须对执行节点可见的那些变量和方法（在这里是foreach()）。闭包被序列化并被发送到每个 executor  。
 
 闭包的变量副本发送给每个 **executor** ，当 **counter** 被 `foreach` 函数引用的时候，它已经不再是 driver node 的 **counter** 了。虽然在 driver node 仍然有一个 counter 在内存中，但是对 executors 已经不可见。executor 看到的只是序列化的闭包一个副本。所以 **counter** 最终的值还是 0，因为对 `counter` 所有的操作均引用序列化的 closure 内的值。
 
@@ -1061,9 +1061,6 @@ Spark 里的某些操作会触发 shuffle。shuffle 是spark 重新分配数据�
 
 在 spark 里，特定的操作需要数据不跨分区分布。在计算期间，一个任务在一个分区上执行，为了所有数据都在单个 `reduceByKey` 的 reduce 任务上运行，我们需要执行一个 all-to-all 操作。它必须从所有分区读取所有的 key 和 key对应的所有的值，并且跨分区聚集去计算每个 key 的结果 - 这个过程就叫做 **shuffle**.。
 
-Although the set of elements in each partition of newly shuffled data will be deterministic, and so
-is the ordering of partitions themselves, the ordering of these elements is not. If one desires predictably
-ordered data following shuffle then it's possible to use:
 
 尽管每个分区新 shuffle 的数据集将是确定的，分区本身的顺序也是这样，但是这些数据的顺序是不确定的。如果希望 shuffle 后的数据是有序的，可以使用:
 
