@@ -16,6 +16,7 @@ github: [https://github.com/apachecn/spark-doc-zh](https://github.com/apachecn/s
 
 ## Spark 2.2.0 官方文档中文版
 
+* 2017-10-12: 校验 sql-programming-guide.md 中 `Datasets 和 DataFrames` 部分的内容。
 * 2017-09-20: 校验 structured-streaming-kafka-integration.md 其中有问题的地方。
 * 2017-09-14: 修改 sql-programming-guide.md 中其它翻译有问题的地方, 更多细节请看: <https://github.com/apachecn/spark-doc-zh/issues/95>
 * 2017-09-13: 修改 sql-programming-guide.md 中的 `写作` 为 `写操作`, 英文原文为 `writing`. 更多细节请看 <https://github.com/apachecn/spark-doc-zh/issues/95>
