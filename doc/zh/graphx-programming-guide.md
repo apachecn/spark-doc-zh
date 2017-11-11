@@ -58,7 +58,7 @@ description: GraphX graph processing library guide for Spark SPARK_VERSION_SHORT
 
 # 概述
 
-GraphX 是 Spark 中用于图形和图形并行计算的新组件。在高层次上， GraphX 通过引入一个新的[图形](#property_graph)抽象来扩展 Spark [RDD](api/scala/index.html#org.apache.spark.rdd.RDD) ：一种具有附加到每个顶点和边缘的属性的定向多重图形。为了支持图形计算，GraphX 公开了一组基本运算符（例如： [subgraph](#structural_operators) ，[joinVertices](#join_operators) 和 [aggregateMessages](#aggregateMessages) ）以及 [Pregel](#pregel) API 的优化变体。此外，GraphX 还包括越来越多的图形[算法](#graph_algorithms) 和 [构建器](#graph_builders)，以简化图形分析任务。
+GraphX 是 Spark 中用于图形和图形并行计算的新组件。在高层次上， GraphX 通过引入一个新的[图形](#property_graph)抽象来扩展 Spark [RDD](api/scala/index.html#org.apache.spark.rdd.RDD) ：一种具有附加到每个顶点和边缘的属性的定向多重图形。为了支持图计算，GraphX 公开了一组基本运算符（例如： [subgraph](#structural_operators) ，[joinVertices](#join_operators) 和 [aggregateMessages](#aggregateMessages) ）以及 [Pregel](#pregel) API 的优化变体。此外，GraphX 还包括越来越多的图形[算法](#graph_algorithms) 和 [构建器](#graph_builders)，以简化图形分析任务。
 
 # 入门
 
@@ -104,7 +104,7 @@ class Graph[VD, ED] {
 }
 {% endhighlight %}
 
-`VertexRDD[VD]` 和 `EdgeRDD[ED]` 分别扩展了 `RDD[(VertexId, VD)]` 和 `RDD[Edge[ED]]` 的优化版本。 `VertexRDD[VD]` 和 `EdgeRDD[ED]` 都提供了围绕图形计算和利用内部优化的附加功能。 我们在[顶点和边缘 RDD](#vertex_and_edge_rdds) 部分更详细地讨论了 [`VertexRDD`][VertexRDD] 和 [`EdgeRDD`][EdgeRDD] API，但现在它们可以被认为是 `RDD[(VertexId, VD)]` 和 `RDD[Edge[ED]]` 的简单 RDD。
+`VertexRDD[VD]` 和 `EdgeRDD[ED]` 分别扩展了 `RDD[(VertexId, VD)]` 和 `RDD[Edge[ED]]` 的优化版本。 `VertexRDD[VD]` 和 `EdgeRDD[ED]` 都提供了围绕图计算和利用内部优化的附加功能。 我们在[顶点和边缘 RDD](#vertex_and_edge_rdds) 部分更详细地讨论了 [`VertexRDD`][VertexRDD] 和 [`EdgeRDD`][EdgeRDD] API，但现在它们可以被认为是 `RDD[(VertexId, VD)]` 和 `RDD[Edge[ED]]` 的简单 RDD。
 
 ### 示例属性 Graph
 
