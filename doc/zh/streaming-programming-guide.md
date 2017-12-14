@@ -2,12 +2,13 @@
 layout: global
 displayTitle: Spark Streaming 编程指南
 title: Spark Streaming
-description: 针对 Spark SPARK_VERSION_SHORT 的 Spark Streaming 编程指南和教程
+   description: 针对 Spark SPARK_VERSION_SHORT 的 Spark Streaming 编程指南和教程
 ---
 
 * This will become a table of contents (this text will be scraped).
 {:toc}
-
+               
+           
 # 概述
 Spark Streaming 是 Spark Core API 的扩展, 它支持弹性的, 高吞吐的, 容错的实时数据流的处理.
 数据可以通过多种数据源获取, 例如 Kafka, Flume, Kinesis 以及 TCP sockets, 也可以通过例如 `map`, `reduce`, `join`, `window` 等的高级函数组成的复杂算法处理.
@@ -23,7 +24,7 @@ Spark Streaming 是 Spark Core API 的扩展, 它支持弹性的, 高吞吐的, 
   />
 </p>
 
-在内部, 它工作原理如下, Spark Streaming 接收实时输入数据流并将数据切分成多个 batch（批）数据, 然后由 Spark 引擎处理它们以生成最终的 stream of results in batches（分批流结果）.
+本质上, 它工作原理如下, Spark Streaming 接收实时输入数据流并将数据切分成多个 batch（批）数据, 然后由 Spark 引擎处理它们以生成最终的 stream of results in batches（分批流结果）.
 
 <p style="text-align: center;">
   <img src="img/streaming-flow.png"
@@ -34,25 +35,25 @@ Spark Streaming 是 Spark Core API 的扩展, 它支持弹性的, 高吞吐的, 
 
 Spark Streaming 提供了一个名为 *discretized stream* 或 *DStream* 的高级抽象, 它代表一个连续的数据流.
 DStream 可以从数据源的输入数据流创建, 例如 Kafka, Flume 以及 Kinesis, 或者在其他 DStream 上进行高层次的操作以创建.
-在内部, 一个 DStream 是通过一系列的 [RDDs](api/scala/index.html#org.apache.spark.rdd.RDD) 来表示.
+在内部, 通过一个序列的 [RDDs](api/scala/index.html#org.apache.spark.rdd.RDD) 来表示一个 DStream .
 
 本指南告诉你如何使用 DStream 来编写一个 Spark Streaming 程序.
 你可以使用 Scala , Java 或者 Python（Spark 1.2 版本后引进）来编写 Spark Streaming 程序.
 所有这些都在本指南中介绍.
 您可以在本指南中找到标签, 让您可以选择不同语言的代码段.
 
-**Note（注意）:** 在 Python 有些 API 可能会有不同或不可用. 在本指南, 您将找到 <span class="badge" style="background-color: grey">Python API</span> 的标签来高亮显示不同的地方.
+**注意:** 有些 API 在 Python 中可能会有所不同或不可用. 在本指南, 您将找到 <span class="badge" style="background-color: grey">Python API</span> 的标签来高亮显示不同的地方.
 
 ***************************************************************************************************
 
 # 一个入门示例
-在我们详细介绍如何编写你自己的 Spark Streaming 程序的细节之前, 让我们先来看一看一个简单的 Spark Streaming 程序的样子.
-比方说, 我们想要计算从一个监听 TCP socket 的数据服务器接收到的文本数据（text data）中的字数.
+在我们详细介绍如何编写你自己的 Spark Streaming 程序的细节之前, 让我们先来看一个简单的 Spark Streaming 程序的样子.
+比方说, 我们想要统计从一个监听 TCP socket 的数据服务器接收到的文本数据（text data）中的字数.
 你需要做的就是照着下面的步骤做.
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1" >
-首先, 我们导入了 Spark Streaming 类和部分从 StreamingContext 隐式转换到我们的环境的名称, 目的是添加有用的方法到我们需要的其他类（如 DStream）.
+首先, 我们导入了 Spark Streaming 类和部分从 StreamingContext 隐式转换到我们的环境的名称, 目的是添加有用的方法到我们需要的其他类中（如 DStream）.
 [StreamingContext](api/scala/index.html#org.apache.spark.streaming.StreamingContext) 是所有流功能的主要入口点.
 我们创建了一个带有 2 个执行线程和间歇时间为 1 秒的本地 StreamingContext.
 
@@ -62,14 +63,12 @@ import org.apache.spark.streaming._
 import org.apache.spark.streaming.StreamingContext._ // 自从 Spark 1.3 开始, 不再是必要的了   
 
 // 创建一个具有两个工作线程（working thread）并且批次间隔为 1 秒的本地 StreamingContext .
-// master 需要 2 个核, 以防止饥饿情况（starvation scenario）.
+// master 用的核数至少要大于1，否则spark没有办法去一边接受数据一边处理数据(以防止饥饿情况).
 
 val conf = new SparkConf().setMaster("local[2]").setAppName("NetworkWordCount")
 val ssc = new StreamingContext(conf, Seconds(1))
 {% endhighlight %}
 
-Using this context, we can create a DStream that represents streaming data from a TCP
-source, specified as hostname (e.g. `localhost`) and port (e.g. `9999`).
 使用该 context, 我们可以创建一个代表从 TCP 源流数据的离散流（DStream）, 指定主机名（hostname）（例如 localhost）和端口（例如 9999）.
 
 {% highlight scala %}
@@ -79,7 +78,7 @@ val lines = ssc.socketTextStream("localhost", 9999)
 
 上一步的这个 `lines` DStream 表示将要从数据服务器接收到的数据流.
 在这个离散流（DStream）中的每一条记录都是一行文本（text）.
-接下来，我们想要通过空格字符（space characters）拆分这些数据行（lines）成单词（words）.
+接下来，我们想要通过空格字符（space characters）把这些数据行（lines）拆分成单词（words）.
 
 {% highlight scala %}
 // 将每一行拆分成 words（单词）
@@ -91,22 +90,17 @@ val words = lines.flatMap(_.split(" "))
 接下来，我们想要计算这些单词.
 
 {% highlight scala %}
-import org.apache.spark.streaming.StreamingContext._ // not necessary since Spark 1.3
+import org.apache.spark.streaming.StreamingContext._ // 自从 Spark 1.3 开始, 不再是必要的了
 // 计算每一个 batch（批次）中的每一个 word（单词）
 val pairs = words.map(word => (word, 1))
 val wordCounts = pairs.reduceByKey(_ + _)
 
 // 在控制台打印出在这个离散流（DStream）中生成的每个 RDD 的前十个元素
-// 注意: 必需要触发 action（很多初学者会忘记触发 action 操作，导致报错：No output operations registered, so nothing to execute） 
 wordCounts.print()
 {% endhighlight %}
 
 上一步的 `words` DStream 进行了进一步的映射（一对一的转换）为一个 (word, 1) paris 的离散流（DStream），这个 DStream 然后被规约（reduce）来获得数据中每个批次（batch）的单词频率.
 最后，`wordCounts.print()` 将会打印一些每秒生成的计数.
-
-Note that when these lines are executed, Spark Streaming only sets up the computation it
-will perform when it is started, and no real processing has started yet. To start the processing
-after all the transformations have been setup, we finally call
 
 请注意，当这些行（lines）被执行的时候， Spark Streaming 仅仅设置了计算, 只有在启动时才会执行，并没有开始真正地处理.
 为了在所有的转换都已经设置好之后开始处理，我们在最后调用:
@@ -361,7 +355,7 @@ Time: 2014-10-14 15:25:21
 
 # 基础概念
 
-接下来，我们了解完了简单的例子，开始阐述 Spark Streaming 的基本知识。
+接下来，我们将超越简单的示例，并开始详细阐述 Spark Streaming 的基础知识。
 
 ## 依赖
 
@@ -1776,7 +1770,7 @@ wordCounts.foreachRDD(echo)
 
 ***
 
-## Monitoring Applications （监控应用程序）
+## 应用程序监控
 除了 Spark 的 [monitoring capabilities（监控功能）](monitoring.html) , 还有其他功能特定于 Spark Streaming .当使用 StreamingContext 时, [Spark web UI](monitoring.html#web-interfaces) 显示一个额外的 `Streaming` 选项卡, 显示 running receivers （运行接收器）的统计信息（无论是 receivers （接收器）是否处于 active （活动状态）, 接收到的 records （记录）数,  receiver error （接收器错误）等）并完成 batches （批次）（batch processing times （批处理时间）,  queueing delays （排队延迟）等）.这可以用来监视 streaming application （流应用程序）的进度.
 
 web UI 中的以下两个 metrics （指标）特别重要:
@@ -1873,7 +1867,7 @@ unifiedStream.pprint()
 
 ***
 
-## Setting the Right Batch Interval （设置正确的批次间隔）
+## Setting the Right Batch Interval （设置正确的批处理间隔）
 对于在集群上稳定地运行的 Spark Streaming application, 该系统应该能够处理数据尽可能快地被接收.换句话说, 应该处理批次的数据就像生成它们一样快.这是否适用于 application 可以在 [monitoring](#monitoring-applications) streaming web UI 中的 processing times 中被找到,  processing time （批处理处理时间）应小于 batch interval （批间隔）.
 
 取决于 streaming computation （流式计算）的性质, 使用的 batch interval （批次间隔）可能对处理由应用程序持续一组固定的 cluster resources （集群资源）的数据速率有重大的影响.例如, 让我们考虑早期的 WordCountNetwork 示例.对于特定的 data rate （数据速率）, 系统可能能够跟踪每 2 秒报告 word counts （即 2 秒的 batch interval （批次间隔））, 但不能每 500 毫秒.因此, 需要设置 batch interval （批次间隔）, 使预期的数据速率在生产可以持续.
