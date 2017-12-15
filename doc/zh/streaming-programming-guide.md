@@ -411,10 +411,10 @@ val ssc = new StreamingContext(conf, Seconds(1))
 
 这个 `appName` 参数是展示在集群 UI 界面上的应用程序的名称.
 `master` 是一个 [Spark, Mesos or YARN cluster URL](submitting-applications.html#master-urls),
-或者一个特殊的 __"local[\*]"__ 字符串以使用 local mode（本地模式）来运行.
-在实践中，当在集群上运行时，你不会想在应用程序中硬编码 `master`，而是 [使用 `spark-submit` 来启动应用程序](submitting-applications.html) , 并且接受该参数.
+或者用一个特殊的 __"local[\*]"__ 字符串以实现在本地模式下运行.
+在实践中，当在集群上运行时，你不会想在应用程序中硬编码 `master`，而是 [使用 `spark-submit` 来启动应用程序](submitting-applications.html) , 并且得到该参数.
 然而，对于本地测试和单元测试，你可以传递 "local[*]" 来运行 Spark Streaming 进程（检测本地系统中内核的个数）.
-请注意，做个内部创建了一个 [SparkContext](api/scala/index.html#org.apache.spark.SparkContext)（所有 Spark 功能的出发点），它可以像 ssc.sparkContext 这样被访问.
+请注意，这在内部创建了一个 [SparkContext](api/scala/index.html#org.apache.spark.SparkContext)（所有 Spark 功能的出发点），它可以像 ssc.sparkContext 这样被访问.
 
 这个 batch interval（批间隔）必须根据您的应用程序和可用的集群资源的等待时间要求进行设置.
 更多详情请参阅 [优化指南](#setting-the-right-batch-interval) 部分.
@@ -492,16 +492,16 @@ section for more details.
 在定义一个 context 之后,您必须执行以下操作.
 
 1. 通过创建输入 DStreams 来定义输入源.
-1. 通过应用转换和输出操作 DStreams 定义流计算（streaming computations）.
-1. 开始接收输入并且使用 `streamingContext.start()` 来处理数据.
-1. 使用 `streamingContext.awaitTermination()` 等待处理被终止（手动或者由于任何错误）.
-1. 使用 `streamingContext.stop()` 来手动的停止处理.
+2. 通过应用转换和输出操作 DStreams 定义流计算（streaming computations）.
+3. 开始接收输入并且使用 `streamingContext.start()` 来处理数据.
+4. 使用 `streamingContext.awaitTermination()` 等待处理被终止（手动或者由于任何错误）.
+5. 使用 `streamingContext.stop()` 来手动的停止处理.
 
 ##### 需要记住的几点:
 {:.no_toc}
 - 一旦一个 context 已经启动，将不会有新的数据流的计算可以被创建或者添加到它。.
 - 一旦一个 context 已经停止，它不会被重新启动.
-- 同一时间内在 JVM 中只有一个 StreamingContext 可以被激活.
+- 在 JVM 中，同一时刻只有一个 StreamingContext 可以被激活.
 - 在 StreamingContext 上的 stop() 同样也停止了 SparkContext 。为了只停止 StreamingContext ，设置 `stop()` 的可选参数，名叫 `stopSparkContext` 为 false.
 - 一个 SparkContext 就可以被重用以创建多个 StreamingContexts，只要前一个 StreamingContext 在下一个StreamingContext 被创建之前停止（不停止 SparkContext）.
 
@@ -511,7 +511,7 @@ section for more details.
 **Discretized Stream** or **DStream** 是 Spark Streaming 提供的基本抽象.
 它代表了一个连续的数据流, 无论是从 source（数据源）接收到的输入数据流,
 还是通过转换输入流所产生的处理过的数据流.
-在内部, 一个 DStream 被表示为一系列连续的 RDDs, 它是 Spark 中一个不可改变的抽象,
+本质上, 一个 DStream 被表示为一系列连续的 RDDs, 它是 Spark 中一个不可改变的抽象,
 distributed dataset  (的更多细节请看 [Spark 编程指南](programming-guide.html#resilient-distributed-datasets-rdds).
 在一个 DStream 中的每个 RDD 包含来自一定的时间间隔的数据，如下图所示.
 
@@ -569,7 +569,7 @@ Spark Streaming 提供了两种内置的 streaming source（流的数据源）.
 ### 基础的 Sources（数据源）
 {:.no_toc}
 
-我们已经简单地了解过了在 [入门示例](#一个入门示例) 中 `ssc.socketTextStream(...)` 的例子，例子中是通过从一个 TCP socket 连接接收到的文本数据来创建了一个离散流（DStream）.
+在 [入门示例](#一个入门示例) 中,我们已经简单地了解过了`ssc.socketTextStream(...)` 的例子 ，其中是通过从一个 TCP socket 连接接收到的文本数据来创建了一个离散流（DStream）.
 除了 sockets 之外，StreamingContext API 也提供了根据文件作为输入来源创建离散流（DStreams）的方法。
 
 - **File Streams:** 用于从文件中读取数据，在任何与 HDFS API 兼容的文件系统中（即，HDFS，S3，NFS 等），一个 DStream 可以像下面这样创建:
@@ -589,7 +589,7 @@ Spark Streaming 提供了两种内置的 streaming source（流的数据源）.
 	Spark Streaming 将监控`dataDirectory` 目录并且该目录中任何新建的文件 (写在嵌套目录中的文件是不支持的). 注意
 
      + 文件必须具有相同的数据格式.
-     + 文件必须被创建在 `dataDirectory` 目录中, 通过 atomically（院子的） *moving（移动）* 或 *renaming（重命名）* 它们到数据目录.
+     + 文件必须被创建在 `dataDirectory` 目录中, 通过 atomically（原子的） *moving（移动）* 或 *renaming（重命名）* 它们到数据目录.
      + 一旦移动，这些文件必须不能再更改，因此如果文件被连续地追加，新的数据将不会被读取.
 
   对于简单的文本文件，还有一个更加简单的方法 `streamingContext.textFileStream(dataDirectory)`.
@@ -616,7 +616,7 @@ for Java 以及 [StreamingContext](api/python/pyspark.streaming.html#pyspark.str
 这一类别的 sources（数据源）需要使用非 Spark 库中的外部接口，它们中的其中一些还需要比较复杂的依赖关系（例如， Kafka 和 Flume）.
 因此，为了最小化有关的依赖关系的版本冲突的问题，这些资源本身不能创建 DStream 的功能，它是通过 [依赖](#依赖) 单独的类库实现创建 DStream 的功能.
 
-请注意, 这些高级 sources（数据源）不能再 Spark shell 中使用, 因此，基于这些高级 sources（数据源）的应用程序不能在 shell 中被测试.
+请注意, 这些高级 sources（数据源）不能在 Spark shell 中使用, 因此，基于这些高级 sources（数据源）的应用程序不能在 shell 中被测试.
 如果你真的想要在 Spark shell 中使用它们，你必须下载带有它的依赖的相应的 Maven 组件的 JAR ，并且将其添加到 classpath.
 
 一些高级的 sources（数据源）如下.
@@ -647,7 +647,7 @@ Input DStreams 也可以从自定义数据源中创建.
 1. *Reliable Receiver（可靠的接收器）* - 当数据被接收并存储在 Spark 中并带有备份副本时，一个可靠的接收器（reliable receiver）正确地发送确认（acknowledgment）给一个可靠的数据源（reliable source）.
 1. *Unreliable Receiver（不可靠的接收器）* - 一个不可靠的接收器（ unreliable receiver ）不发送确认（acknowledgment）到数据源。这可以用于不支持确认的数据源，或者甚至是可靠的数据源当你不想或者不需要进行复杂的确认的时候.
 
-在 [自定义 Receiver 指南](streaming-custom-receivers.html) 中描述了关于如何去编写一个 reliable receiver（可靠的接收器）的细节.
+在[自定义 Receiver 指南](streaming-custom-receivers.html) 中描述了关于如何去编写一个 reliable receiver（可靠的接收器）的细节.
 
 ***
 
@@ -663,7 +663,7 @@ DStreams 支持标准的 Spark RDD 上可用的许多转换.
 <tr><th style="width:25%">Transformation（转换）</th><th>Meaning（含义）</th></tr>
 <tr>
   <td> <b>map</b>(<i>func</i>) </td>
-  <td> 利用函数 <i>func</i> 处理原 DStream 的每个元素，返回一个新的 DStream. </td>
+  <td> 利用函数 <i>func</i> 处理源 DStream 的每个元素，返回一个新的 DStream. </td>
 </tr>
 <tr>
   <td> <b>flatMap</b>(<i>func</i>) </td>
@@ -691,7 +691,7 @@ DStreams 支持标准的 Spark RDD 上可用的许多转换.
 </tr>
 <tr>
   <td> <b>countByValue</b>() </td>
-  <td> 在元素类型为 K 的 DStream上，返回一个（K,long）pair 的新的 DStream，每个 key 的值是在原 DStream 的每个 RDD 中的次数.</td>
+  <td> 在元素类型为 K 的 DStream上，返回一个（K,long）pair 的新的 DStream，每个 key 的值是在源 DStream 的每个 RDD 中的次数.</td>
 </tr>
 <tr>
   <td> <b>reduceByKey</b>(<i>func</i>, [<i>numTasks</i>]) </td>
@@ -724,7 +724,7 @@ DStreams 支持标准的 Spark RDD 上可用的许多转换.
 该 `updateStateByKey` 操作允许您维护任意状态，同时不断更新新信息. 你需要通过两步来使用它.
 
 1. 定义 state - state 可以是任何的数据类型.
-1. 定义 state update function（状态更新函数） - 使用函数指定如何使用先前状态来更新状态，并从输入流中指定新值.
+2. 定义 state update function（状态更新函数） - 使用函数指定如何使用先前状态来更新状态，并从输入流中指定新值.
 
 在每个 batch 中，Spark 会使用状态更新函数为所有已有的 key 更新状态，不管在 batch 中是否含有新的数据。如果这个更新函数返回一个 none，这个 key-value pair 也会被消除.
 
@@ -736,7 +736,7 @@ DStreams 支持标准的 Spark RDD 上可用的许多转换.
 
 {% highlight scala %}
 def updateFunction(newValues: Seq[Int], runningCount: Option[Int]): Option[Int] = {
-    val newCount = ...  // add the new values with the previous running count to get the new count
+    val newCount = ...  // 添加新的值与以前的运行计数，以获得新的计数
     Some(newCount)
 }
 {% endhighlight %}
@@ -747,7 +747,7 @@ def updateFunction(newValues: Seq[Int], runningCount: Option[Int]): Option[Int] 
 val runningCounts = pairs.updateStateByKey[Int](updateFunction _)
 {% endhighlight %}
 
-update 函数将会被每个单词调用，`newValues` 拥有一系列的 1（来自 (word, 1) pairs），runningCount 拥有之前的次数.
+update 函数将会被每个单词调用，产生一系列1的 `newValues`（来自 (word, 1) pairs），runningCount 拥有之前的次数.
 
 </div>
 <div data-lang="java" markdown="1">
