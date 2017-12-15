@@ -2,13 +2,12 @@
 layout: global
 displayTitle: Spark Streaming 编程指南
 title: Spark Streaming
-   description: 针对 Spark SPARK_VERSION_SHORT 的 Spark Streaming 编程指南和教程
+description: 针对 Spark SPARK_VERSION_SHORT 的 Spark Streaming 编程指南和教程
 ---
 
 * This will become a table of contents (this text will be scraped).
 {:toc}
-               
-           
+                       
 # 概述
 Spark Streaming 是 Spark Core API 的扩展, 它支持弹性的, 高吞吐的, 容错的实时数据流的处理.
 数据可以通过多种数据源获取, 例如 Kafka, Flume, Kinesis 以及 TCP sockets, 也可以通过例如 `map`, `reduce`, `join`, `window` 等的高级函数组成的复杂算法处理.
