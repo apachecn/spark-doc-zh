@@ -6,7 +6,7 @@ title: Spark Standalone Mode
 * This will become a table of contents (this text will be scraped).
 {:toc}
 
-Spark 除了运行在 Mesos 或者 YARN 上以外，Spark 还提供了一个简单的 standalone 部署模式。您可以手动启动 master 和 worker 来启动 standalone 集群，或者使用我们提供的 [launch scripts](#cluster-launch-scripts) 脚本。同时也可以在单个机器上运行这些进程以进行测试。
+Spark 除了运行在 Mesos 或者 YARN 上以外，Spark 还提供了一个简单的 standalone 部署模式。您可以手动启动 master 和 worker 来启动 standalone 集群，或者使用官方提供的 [launch scripts](#cluster-launch-scripts) 脚本。同时也可以在单机上运行这些进程以进行测试。
 
 # 安装 Spark Standalone 集群 
 
@@ -18,7 +18,7 @@ Spark 除了运行在 Mesos 或者 YARN 上以外，Spark 还提供了一个简�
 
     ./sbin/start-master.sh
 
-一旦启动，master 将会打印出一个 `spark://HOST:PORT` URL，您可以使用它来连接 workers，或者像传递 "master" 参数一样传递到 `SparkContext` 。您在 master 的web UI 上也会找到这个 URL ，默认情况下是 [http://localhost:8080](http://localhost:8080) 。
+一旦启动，master 将会打印出一个 `spark://HOST:PORT` URL，您可以使用它来连接 workers，或者像传递 "master" 参数一样传递给 `SparkContext` 。您在 master 的web UI 上也会找到这个 URL ，默认情况下是 [http://localhost:8080](http://localhost:8080) 。
 
 类似地，您可以启动一个或多个 workers 并且通过下面的代码连接到 master ：
 
@@ -67,13 +67,13 @@ Spark 除了运行在 Mesos 或者 YARN 上以外，Spark 还提供了一个简�
 
 # 集群启动脚本
 
-通过脚本启动 Spark standalone 集群时，应该首先在 Spark 目录下创建一个叫做 conf/slaves 的文件，这个文件中必须包含所有您想要启动的 Spark workers 的机器的 hostname ，每个 hostname 占一行。
+通过脚本启动 Spark standalone 集群时，应该首先在 Spark 目录下创建一个名为 conf/slaves 的文件，这个文件中必须包含所有您想要启动的 Spark workers 机器的 hostname ，每个 hostname 占一行。
 如果 conf/slaves 不存在，启动脚本默认启动单个机器（localhost），这对于测试是有效的。
-注意， master 机器通过 ssh 访问所有的 worker 机器。默认情况下，ssh 是 parallel （并行）运行的并且需要配置无密码（使用一个私钥）的访问。
+注意， master 机器通过 ssh 访问所有的 worker 机器。默认情况下，ssh 是 parallel （并行）运行的并且需要配置无密码（使用一个私钥）访问。
 如果您没有设置无密码访问，您可以设置环境变量 SPARK_SSH_FOREGROUND 并且为每个 worker 提供一个密码。
 
 
-一旦您创建了这个文件，您就可以启动或者停止集群使用下面的 shell 脚本，基于 Hadoop 的部署脚本，并在 `SPARK_HOME/sbin` 中可用：
+一旦您创建了这个文件，您就可以使用下面的 shell 脚本启动或者停止集群，基于 Hadoop 的部署脚本，并且在 `SPARK_HOME/sbin` 中是可用的：
 
 - `sbin/start-master.sh` - 在执行的机器上启动一个 master 实例。
 - `sbin/start-slaves.sh` - 在 `conf/slaves` 文件中指定的每个机器上启动一个 slave 实例。
