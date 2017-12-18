@@ -22,15 +22,15 @@ Spark SQL 的功能之一是执行 SQL 查询.Spark SQL 也能够被用于从已
 
 一个 Dataset 是一个分布式的数据集合
 Dataset 是在 Spark 1.6 中被添加的新接口, 它提供了 RDD 的优点（强类型化, 能够使用强大的 lambda 函数）与Spark SQL执行引擎的优点.一个 Dataset 可以从 JVM 对象来 [构造](#creating-datasets) 并且使用转换功能（map, flatMap, filter, 等等）.
-Dataset API 在[Scala][scala-datasets] 和
-[Java][java-datasets]是可用的.Python 不支持 Dataset API.但是由于 Python 的动态特性, 许多 Dataset API 的优点已经可用了 (也就是说, 你可能通过 name 天生的`row.columnName`属性访问一行中的字段).这种情况和 R 相似.
+Dataset API 在[Scala](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.Dataset) 和
+[Java](http://spark.apache.org/docs/latest/api/java/index.html?org/apache/spark/sql/Dataset.html)是可用的.Python 不支持 Dataset API.但是由于 Python 的动态特性, 许多 Dataset API 的优点已经可用了 (也就是说, 你可能通过 name 天生的`row.columnName`属性访问一行中的字段).这种情况和 R 相似.
 
 一个 DataFrame 是一个 *Dataset* 组成的指定列.它的概念与一个在关系型数据库或者在 R/Python 中的表是相等的,  但是有很多优化. DataFrames 可以从大量的 [sources](#data-sources) 中构造出来, 比如: 结构化的文本文件, Hive中的表, 外部数据库, 或者已经存在的 RDDs.
 DataFrame API 可以在 Scala,
-Java, [Python](api/python/pyspark.sql.html#pyspark.sql.DataFrame), 和 [R](api/R/index.html)中实现.
+Java, [Python](http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame), 和 [R](http://spark.apache.org/docs/latest/api/R/index.html)中实现.
 在 Scala 和 Java 中, DataFrame 由 DataSet 中的 `RowS`（多个 Row）来表示.
-在 [the Scala API][scala-datasets] 中, `DataFrame` 仅仅是一个 `Dataset[Row]` 类型的别名.
-然而, 在 [Java API][java-datasets] 中, 用户需要去使用 `Dataset<Row>` 去代表一个 `DataFrame`.
+在 [the Scala API](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.Dataset) 中, `DataFrame` 仅仅是一个 `Dataset[Row]` 类型的别名.
+然而, 在 [Java API](http://spark.apache.org/docs/latest/api/java/index.html?org/apache/spark/sql/Dataset.html) 中, 用户需要去使用 `Dataset<Row>` 去代表一个 `DataFrame`.
 
 [scala-datasets]: api/scala/index.html#org.apache.spark.sql.Dataset
 [java-datasets]: api/java/index.html?org/apache/spark/sql/Dataset.html
@@ -44,36 +44,36 @@ Java, [Python](api/python/pyspark.sql.html#pyspark.sql.DataFrame), 和 [R](api/R
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
 
-Spark SQL中所有功能的入口点是 [`SparkSession`](api/scala/index.html#org.apache.spark.sql.SparkSession) 类. 要创建一个 `SparkSession`, 仅使用 `SparkSession.builder()`就可以了:
+Spark SQL中所有功能的入口点是 [`SparkSession`](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.SparkSession) 类. 要创建一个 `SparkSession`, 仅使用 `SparkSession.builder()`就可以了:
 
 {% include_example init_session scala/org/apache/spark/examples/sql/SparkSQLExample.scala %}
 </div>
 
 <div data-lang="java" markdown="1">
 
-Spark SQL中所有功能的入口点是 [`SparkSession`](api/java/index.html#org.apache.spark.sql.SparkSession) 类. 要创建一个 `SparkSession`, 仅使用 `SparkSession.builder()`就可以了:
+Spark SQL中所有功能的入口点是 [`SparkSession`](http://spark.apache.org/docs/latest/api/java/index.html#org.apache.spark.sql.SparkSession) 类. 要创建一个 `SparkSession`, 仅使用 `SparkSession.builder()`就可以了:
 
 {% include_example init_session java/org/apache/spark/examples/sql/JavaSparkSQLExample.java %}
 </div>
 
 <div data-lang="python"  markdown="1">
 
-Spark SQL中所有功能的入口点是 [`SparkSession`](api/python/pyspark.sql.html#pyspark.sql.SparkSession) 类. 要穿件一个 `SparkSession`, 仅使用 `SparkSession.builder`就可以了:
+Spark SQL中所有功能的入口点是 [`SparkSession`](http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.SparkSession) 类. 要创建一个 `SparkSession`, 仅使用 `SparkSession.builder`就可以了:
 
 {% include_example init_session python/sql/basic.py %}
 </div>
 
 <div data-lang="r"  markdown="1">
 
-Spark SQL中所有功能的入口点是 [`SparkSession`](api/R/sparkR.session.html) 类. 要初始化一个基本的 `SparkSession`, 仅调用 `sparkR.session()`即可:
+Spark SQL中所有功能的入口点是 [`SparkSession`](http://spark.apache.org/docs/latest/api/R/sparkR.session.html) 类. 要初始化一个基本的 `SparkSession`, 仅调用 `sparkR.session()`即可:
 
 {% include_example init_session r/RSparkSQLExample.R %}
 
-注意第一次调用时, `sparkR.session()` 初始化一个全局的 `SparkSession` 单实例, 并且总是返回一个引用此实例, 可以连续的调用. 通过这种方式, 用户仅需要创建一次 `SparkSession` , 然后像 `read.df` SparkR函数就能够立即获取全局的实例,用户不需要再 `SparkSession` 之间进行实例的传递.
+注意第一次调用时, `sparkR.session()` 初始化一个全局的 `SparkSession` 单实例, 并且始终返回一个引用的此实例,并可以连续的调用. 通过这种方式, 用户仅需要创建一次 `SparkSession` , 然后像 `read.df` SparkR函数就能够立即获取全局的实例,用户不需要再 `SparkSession` 之间进行实例的传递.
 </div>
 </div>
 
-Spark 2.0 中的`SparkSession` 为 Hive 特性提供了内嵌的支持, 包括使用 HiveQL 编写查询的能力, 访问 Hive UDF,以及从 Hive 表中读取数据的能力.为了使用这些特性, 你不需要去有一个已存在的 Hive 设置.
+Spark 2.0 中的`SparkSession` 为 Hive 特性提供了内嵌的支持, 包括使用 HiveQL 编写查询的能力, 访问 Hive UDF,以及从 Hive 表中读取数据的能力.为了使用这些特性, 你不需要去用一个已存在的 Hive 设置.
 
 ## 创建 DataFrames
 
@@ -119,7 +119,7 @@ Spark 2.0 中的`SparkSession` 为 Hive 特性提供了内嵌的支持, 包括�
 
 ## 无类型的Dataset操作 (aka DataFrame 操作)
 
-DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org.apache.spark.sql.Dataset), [Java](api/java/index.html?org/apache/spark/sql/Dataset.html), [Python](api/python/pyspark.sql.html#pyspark.sql.DataFrame) and [R](api/R/SparkDataFrame.html)中机构化数据的操作.
+DataFrames 提供了一个特定的语法用在 [Scala](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.Dataset), [Java](http://spark.apache.org/docs/latest/api/java/index.html?org/apache/spark/sql/Dataset.html), [Python](http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame) and [R](http://spark.apache.org/docs/latest/api/R/SparkDataFrame.html)中机构化数据的操作.
 
 正如上面提到的一样, Spark 2.0中, DataFrames在Scala 和 Java API中, 仅仅是多个 `Row`s的Dataset. 这些操作也参考了与强类型的Scala/Java Datasets中的"类型转换" 对应的"无类型转换" .
 
@@ -129,27 +129,27 @@ DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org
 <div data-lang="scala"  markdown="1">
 {% include_example untyped_ops scala/org/apache/spark/examples/sql/SparkSQLExample.scala %}
 
-能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/scala/index.html#org.apache.spark.sql.Dataset).
+能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.Dataset).
 
-除了简单的列引用和表达式之外, DataFrame 也有丰富的函数库, 包括 string 操作, date 算术, 常见的 math 操作以及更多.可用的完整列表请参考  [DataFrame 函数指南](api/scala/index.html#org.apache.spark.sql.functions$).
+除了简单的列引用和表达式之外, DataFrame 也有丰富的函数库, 包括 string 操作, date 算术, 常见的 math 操作以及更多.可用的完整列表请参考  [DataFrame 函数指南](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$).
 </div>
 
 <div data-lang="java"  markdown="1">
 
 {% include_example untyped_ops java/org/apache/spark/examples/sql/JavaSparkSQLExample.java %}
 
-为了能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/java/org/apache/spark/sql/Dataset.html).
+为了能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](http://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/Dataset.html).
 
-除了简单的列引用和表达式之外, DataFrame 也有丰富的函数库, 包括 string 操作, date 算术, 常见的 math 操作以及更多.可用的完整列表请参考  [DataFrame 函数指南](api/java/org/apache/spark/sql/functions.html).
+除了简单的列引用和表达式之外, DataFrame 也有丰富的函数库, 包括 string 操作, date 算术, 常见的 math 操作以及更多.可用的完整列表请参考  [DataFrame 函数指南](http://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/functions.html).
 </div>
 
 <div data-lang="python"  markdown="1">
 在Python中，可以通过(`df.age`) 或者(`df['age']`)来获取DataFrame的列. 虽然前者便于交互式操作, 但是还是建议用户使用后者, 这样不会破坏列名，也能引用DataFrame的类.
 
 {% include_example untyped_ops python/sql/basic.py %}
-为了能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/python/pyspark.sql.html#pyspark.sql.DataFrame).
+为了能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame).
 
-除了简单的列引用和表达式之外, DataFrame 也有丰富的函数库, 包括 string 操作, date 算术, 常见的 math 操作以及更多.可用的完整列表请参考  [DataFrame 函数指南](api/python/pyspark.sql.html#module-pyspark.sql.functions).
+除了简单的列引用和表达式之外, DataFrame 也有丰富的函数库, 包括 string 操作, date 算术, 常见的 math 操作以及更多.可用的完整列表请参考  [DataFrame 函数指南](http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#module-pyspark.sql.functions).
 
 </div>
 
@@ -157,9 +157,9 @@ DataFrames 提供了一个特定的语法用在 [Scala](api/scala/index.html#org
 
 {% include_example untyped_ops r/RSparkSQLExample.R %}
 
-为了能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](api/R/index.html).
+为了能够在 DataFrame 上被执行的操作类型的完整列表请参考 [API 文档](http://spark.apache.org/docs/latest/api/R/index.html).
 
-除了简单的列引用和表达式之外, DataFrame 也有丰富的函数库, 包括 string 操作, date 算术, 常见的 math 操作以及更多.可用的完整列表请参考  [DataFrame 函数指南](api/R/SparkDataFrame.html).
+除了简单的列引用和表达式之外, DataFrame 也有丰富的函数库, 包括 string 操作, date 算术, 常见的 math 操作以及更多.可用的完整列表请参考  [DataFrame 函数指南](http://spark.apache.org/docs/latest/api/R/SparkDataFrame.html).
 
 </div>
 
@@ -227,7 +227,7 @@ SELECT * FROM global_temp.temp_view
 
 ## 创建Datasets
 
-Dataset 与 RDD 相似, 然而, 并不是使用 Java 序列化或者 Kryo [编码器](api/scala/index.html#org.apache.spark.sql.Encoder) 来序列化用于处理或者通过网络进行传输的对象. 虽然编码器和标准的序列化都负责将一个对象序列化成字节, 编码器是动态生成的代码, 并且使用了一种允许 Spark 去执行许多像 filtering, sorting 以及 hashing 这样的操作, 不需要将字节反序列化成对象的格式.
+Dataset 与 RDD 相似, 然而, 并不是使用 Java 序列化或者 Kryo [编码器](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.Encoder) 来序列化用于处理或者通过网络进行传输的对象. 虽然编码器和标准的序列化都负责将一个对象序列化成字节, 编码器是动态生成的代码, 并且使用了一种允许 Spark 去执行许多像 filtering, sorting 以及 hashing 这样的操作, 不需要将字节反序列化成对象的格式.
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1">
@@ -326,11 +326,11 @@ For example:
 
 ## Aggregations
 
-The [built-in DataFrames functions](api/scala/index.html#org.apache.spark.sql.functions$) provide common
+The [built-in DataFrames functions](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$) provide common
 aggregations such as `count()`, `countDistinct()`, `avg()`, `max()`, `min()`, etc.
 While those functions are designed for DataFrames, Spark SQL also has type-safe versions for some of them in
-[Scala](api/scala/index.html#org.apache.spark.sql.expressions.scalalang.typed$) and
-[Java](api/java/org/apache/spark/sql/expressions/javalang/typed.html) to work with strongly typed Datasets.
+[Scala](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.expressions.scalalang.typed$) and
+[Java](http://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/expressions/javalang/typed.html) to work with strongly typed Datasets.
 Moreover, users are not limited to the predefined aggregate functions and can create their own.
 
 ### Untyped User-Defined Aggregate Functions
@@ -355,7 +355,7 @@ can look like:
 
 ### Type-Safe User-Defined Aggregate Functions
 
-User-defined aggregations for strongly typed Datasets revolve around the [Aggregator](api/scala/index.html#org.apache.spark.sql.expressions.Aggregator) abstract class.
+User-defined aggregations for strongly typed Datasets revolve around the [Aggregator](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.expressions.Aggregator) abstract class.
 For example, a type-safe user-defined average can look like:
 <div class="codetabs">
 
@@ -1060,7 +1060,7 @@ Spark SQL 的 Hive 支持的最重要的部分之一是与 Hive metastore 进行
 
 ## JDBC 连接其它数据库
 
-Spark SQL 还包括可以使用 JDBC 从其他数据库读取数据的数据源。此功能应优于使用 [JdbcRDD](api/scala/index.html#org.apache.spark.rdd.JdbcRDD)。 
+Spark SQL 还包括可以使用 JDBC 从其他数据库读取数据的数据源。此功能应优于使用 [JdbcRDD](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.rdd.JdbcRDD)。 
 这是因为结果作为 DataFrame 返回，并且可以轻松地在 Spark SQL 中处理或与其他数据源连接。 
 JDBC 数据源也更容易从 Java 或 Python 使用，因为它不需要用户提供 ClassTag。（请注意，这不同于 Spark SQL JDBC 服务器，允许其他应用程序使用 Spark SQL 运行查询）。
 
@@ -1436,13 +1436,13 @@ Spark SQL CLI 是在本地模式下运行 Hive 转移服务并执行从命令行
 基于用户反馈，我们创建了一个新的更流畅的 API，用于读取 (`SQLContext.read`) 中的数据并写入数据 (`DataFrame.write`), 并且旧的 API 将过时（例如，`SQLContext.parquetFile`, `SQLContext.jsonFile`）.
 
 针对 `SQLContext.read` (
-  <a href="api/scala/index.html#org.apache.spark.sql.SQLContext@read:DataFrameReader">Scala</a>,
-  <a href="api/java/org/apache/spark/sql/SQLContext.html#read()">Java</a>,
-  <a href="api/python/pyspark.sql.html#pyspark.sql.SQLContext.read">Python</a>
+  <a href="http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.SQLContext@read:DataFrameReader">Scala</a>,
+  <a href="http://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/SQLContext.html#read()">Java</a>,
+  <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.SQLContext.read">Python</a>
 ) 和 `DataFrame.write` (
-  <a href="api/scala/index.html#org.apache.spark.sql.DataFrame@write:DataFrameWriter">Scala</a>,
-  <a href="api/java/org/apache/spark/sql/DataFrame.html#write()">Java</a>,
-  <a href="api/python/pyspark.sql.html#pyspark.sql.DataFrame.write">Python</a>
+  <a href="http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.DataFrameWriter">Scala</a>,
+  <a href="http://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/DataFrameWriter.html">Java</a>,
+  <a href="http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame.write">Python</a>
 ) 的更多细节，请看 API 文档.
 
 #### DataFrame.groupBy 保留 grouping columns（分组的列）
