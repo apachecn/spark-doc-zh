@@ -68,8 +68,6 @@ val conf = new SparkConf().setMaster("local[2]").setAppName("NetworkWordCount")
 val ssc = new StreamingContext(conf, Seconds(1))
 {% endhighlight %}
 
-Using this context, we can create a DStream that represents streaming data from a TCP
-source, specified as hostname (e.g. `localhost`) and port (e.g. `9999`).
 使用该 context, 我们可以创建一个代表从 TCP 源流数据的离散流（DStream）, 指定主机名（hostname）（例如 localhost）和端口（例如 9999）.
 
 {% highlight scala %}
@@ -103,10 +101,6 @@ wordCounts.print()
 
 上一步的 `words` DStream 进行了进一步的映射（一对一的转换）为一个 (word, 1) paris 的离散流（DStream），这个 DStream 然后被规约（reduce）来获得数据中每个批次（batch）的单词频率.
 最后，`wordCounts.print()` 将会打印一些每秒生成的计数.
-
-Note that when these lines are executed, Spark Streaming only sets up the computation it
-will perform when it is started, and no real processing has started yet. To start the processing
-after all the transformations have been setup, we finally call
 
 请注意，当这些行（lines）被执行的时候， Spark Streaming 仅仅设置了计算, 只有在启动时才会执行，并没有开始真正地处理.
 为了在所有的转换都已经设置好之后开始处理，我们在最后调用:
