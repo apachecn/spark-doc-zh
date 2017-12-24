@@ -8,16 +8,16 @@ description: Tuning and performance optimization guide for Spark SPARK_VERSION_S
 * This will become a table of contents (this text will be scraped).
 {:toc}
 
-由于大多数 Spark 计算的内存性质， Spark 程序可能由集群中的任何资源（ CPU ，网络带宽或内存）导致瓶颈。
+由于大多数的Spark 计算的都是基于内存的， Spark 程序可能受到集群中的任何资源的限制（ CPU ，网络带宽或内存）导致瓶颈。
 通常情况下，如果数据有合适的内存，瓶颈就是网络带宽，但有时您还需要进行一些调整，例如 [以序列化形式存储 RDD ](programming-guide.html#rdd-persistence)来减少内存的使用。
 本指南将涵盖两个主要的主题：数据序列化，这对于良好的网络性能至关重要，并且还可以减少内存使用和内存优化。 我们选几个较小的主题进行展开。
 
 # 数据序列化
 
 序列化在任何分布式应用程序的性能中起着重要的作用。
-很慢的将对象序列化或消费大量字节的格式将会大大减慢计算速度。
+很慢的将对象序列化或消费大量字节的格式都将将会大大减慢计算速度。
 通常，这可能是您优化 Spark 应用程序的第一件事。
- Spark 宗旨在于方便和性能之间取得一个平衡（允许您使用操作中的任何 Java 类型）。 它提供了两种序列化库：
+ Spark 宗旨在于便利和性能之间取得一个平衡（允许您使用操作中的任何 Java 类型）。 它提供了两种序列化库：
 
 * [Java serialization](http://docs.oracle.com/javase/6/docs/api/java/io/Serializable.html):
   默认情况下，使用 Java `ObjectOutputStream` 框架的 Spark 序列化对象，并且可以与您创建的任何实现 [`java.io.Serializable`](http://docs.oracle.com/javase/6/docs/api/java/io/Serializable.html) 的类一起使用。
@@ -26,7 +26,7 @@ description: Tuning and performance optimization guide for Spark SPARK_VERSION_S
 * [Kryo serialization](https://github.com/EsotericSoftware/kryo): 
    Spark 也可以使用 Kryo 库（版本2）来更快地对对象进行序列化。 Kryo 比 Java 序列化（通常高达10x）要快得多，而且更紧凑，但并不支持所有的 `Serializable` 类型，并且需要先*注册*您将在程序中使用的类以获得最佳性能。
 
-您可以通过使用 [SparkConf](configuration.html#spark-properties) 初始化作业 并进行调用来切换到使用 Kryo `conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")`。此设置配置用于不仅在工作节点之间进行洗牌数据的串行器，而且还将 RDD 序列化到磁盘。 Kryo 不是默认的唯一原因是因为自定义注册要求，但我们建议您尝试在任何网络密集型应用程序。自从 Spark 2.0.0 以来，我们在使用简单类型，简单类型的数组或字符串类型对RDD进行混洗时，内部使用 Kryo serializer 。
+您可以通过使用 [SparkConf](configuration.html#spark-properties) 初始化作业 并进行调用来切换到使用 Kryo `conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")`。此设置配置用于不仅在工作节点之间进行shuffle数据的串行器，而且还将 RDD 序列化到磁盘。 Kryo 不是默认的唯一原因是因为自定义注册要求，但我们建议您尝试在任何网络密集型应用程序。自从 Spark 2.0.0 以来，我们在使用简单类型，简单类型的数组或字符串类型对RDD进行混洗时，内部使用 Kryo serializer 。
 
 Spark 自动包含 Kryo 序列化器，用于 [Twitter chill](https://github.com/twitter/chill) 中 AllScalaRegistrar 涵盖的许多常用的核心 Scala 类。
 
@@ -42,13 +42,13 @@ val sc = new SparkContext(conf)
 
 如果您的对象很大，您可能还需要增加 `spark.kryoserializer.buffer` [配置](configuration.html#compression-and-serialization)。该值需要足够大才能容纳您将序列化的最大对象。
 
-最后，如果您没有注册自定义类， Kryo 仍然可以工作，但它必须存储每个对象的完整类名称，这是浪费的。
+最后，如果您没有注册自定义类， Kryo 仍然可以工作，但它必须存储每个对象的完整类名称，这是相当浪费资源的。
 
 # 内存调优
 
-有三个方面的考虑在调整内存使用：该*量*的存储你的对象所使用的（你可能希望你的整个数据集，以适应在内存中），则*成本*访问这些对象，并且开销*垃圾收集*（如果你有高成交物品条款）。
+有三个方面的考虑在调整内存使用：对象所使用的内存量（您可能希望整个数据集适合于内存）、访问这些对象的成本以及垃圾收集的开销（如果您在对象方面有较高的周转率）。
 
-默认情况下， Java 对象可以快速访问，但可以轻松地消耗比其字段中的 "raw" 数据多2-5倍的空间。这是由于以下几个原因：
+默认情况下， Java 对象可以快速访问，但经常需要地消耗比其字段中的 "raw" 数据多2-5倍的空间。这是由于以下几个原因：
 
 * 每个不同的 Java 对象都有一个 "object header" ，它大约是16个字节，包含一个指向它的类的指针。对于一个数据很少的对象（比如说一个`Int`字段），这可以比数据大。
 * Java `String` 在原始字符串数据上具有大约40字节的开销（因为它们存储在 `Char` 数组中并保留额外的数据，例如长度），并且由于 UTF-16 的内部使用而将每个字符存储为*两个*字节 `String` 编码。因此，一个10个字符的字符串可以容易地消耗60个字节。
@@ -135,11 +135,11 @@ Spark 中 GC 调优的目的是确保只有长寿命的 RDD 存储在 Old 版本
 
 ## 并行度水平
 
-集群不会被充分利用，除非您将每个操作的并行级别设置得足够高。自动星火设置的 "地图" 任务的数量根据其大小对每个文件运行（尽管你可以通过可选的参数来控制它 `SparkContext.textFile` ，等等），以及用于分布式"减少"操作，如： `groupByKey` 和 `reduceByKey` ，它采用了最大父 RDD 的分区数。您可以将并行级别作为第二个参数传递（请参阅 [`spark.PairRDDFunctions`](api/scala/index.html#org.apache.spark.rdd.PairRDDFunctions) 文档），或者将 config 属性设置 `spark.default.parallelism` 为更改默认值。一般来说，我们建议您的群集中每个 CPU 内核有2-3个任务。
+集群不会被充分利用，除非您将每个操作的并行级别设置得足够高。spark自动设置的 "map" 任务的数量根据其大小对每个文件运行（尽管你可以通过可选的参数来控制它 `SparkContext.textFile` ，等等），以及用于分布式"reduce"操作，如： `groupByKey` 和 `reduceByKey` ，它采用了最大父 RDD 的分区数。您可以将并行级别作为第二个参数传递（请参阅 [`spark.PairRDDFunctions`](api/scala/index.html#org.apache.spark.rdd.PairRDDFunctions) 文档），或者将 config 属性设置 `spark.default.parallelism` 为更改默认值。一般来说，我们建议您的群集中每个 CPU 内核有2-3个任务。
 
 ## 减少任务的内存使用
 
-有时，您将得到一个 OutOfMemoryError ，因为您的 RDD 不适合内存，而是因为您的其中一个任务的工作集（如其中一个 reduce 任务`groupByKey`）太大。 Spark 的 shuffle 操作（`sortByKey`， `groupByKey`， `reduceByKey`， `join`，等）建立每个任务中的哈希表来进行分组，而这往往是很大的。这里最简单的解决方案是*增加并行级别*，以便每个任务的输入集都更小。 Spark 可以有效地支持短达200 ms 的任务，因为它可以将多个任务中的一个执行者JVM重用，并且任务启动成本低，因此您可以将并行级别安全地提高到集群中的核心数量。
+有时，您将得到一个 OutOfMemoryError ，不是因为您的 RDD 不适合内存，而是因为您的其中一个任务的工作集（如其中一个 reduce 任务`groupByKey`）太大。 Spark 的 shuffle 操作（`sortByKey`， `groupByKey`， `reduceByKey`， `join`，等）建立每个任务中的哈希表来进行分组，而这往往是很大的。这里最简单的解决方案是*增加并行级别*，以便每个任务的输入集都更小。 Spark 可以有效地支持短达200 ms 的任务，因为它可以将多个任务中的一个执行者JVM重用，并且任务启动成本低，因此您可以将并行级别安全地提高到集群中的核心数量。
 
 ## 广播大的变量
 
