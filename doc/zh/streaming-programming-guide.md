@@ -71,22 +71,22 @@ val ssc = new StreamingContext(conf, Seconds(1))
 使用该 context, 我们可以创建一个代表从 TCP 源流数据的离散流 (DStream) , 指定主机名(例如 localhost) 和端口 (例如 9999) .
 
 {% highlight scala %}
-// 创建一个将要连接到 hostname:port 的 DStream，如 localhost:9999 
+// 创建一个将要连接到 hostname:port 的 DStream, 如 localhost:9999 
 val lines = ssc.socketTextStream("localhost", 9999)
 {% endhighlight %}
 
 上一步的这个 `lines` DStream 表示将要从数据服务器接收到的数据流.
 在这个离散流 (DStream) 中的每一条记录都是一行文本 (text) .
-接下来，我们想要通过空格字符 (space characters) 拆分这些数据行 (lines) 成单词 (words) .
+接下来, 我们想要通过空格字符 (space characters) 拆分这些数据行 (lines) 成单词 (words) .
 
 {% highlight scala %}
 // 将每一行拆分成 words (单词) 
 val words = lines.flatMap(_.split(" "))
 {% endhighlight %}
 
-`flatMap` 是一种 one-to-many (一对多) 的离散流 (DStream) 操作，它会通过在源离散流 (source DStream) 中根据每个记录 (record) 生成多个新纪录的形式创建一个新的离散流 (DStream) .
-在这种情况下，在这种情况下，每一行 (each line) 都将被拆分成多个单词 (`words`) 和代表单词离散流 (words DStream) 的单词流.
-接下来，我们想要计算这些单词.
+`flatMap` 是一种 one-to-many (一对多) 的离散流 (DStream) 操作, 它会通过在源离散流 (source DStream) 中根据每个记录 (record) 生成多个新纪录的形式创建一个新的离散流 (DStream) .
+在这种情况下, 在这种情况下, 每一行 (each line) 都将被拆分成多个单词 (`words`) 和代表单词离散流 (words DStream) 的单词流.
+接下来, 我们想要计算这些单词.
 
 {% highlight scala %}
 import org.apache.spark.streaming.StreamingContext._ // 自从 Spark 1.3 开始, 不再是必要的了
@@ -95,15 +95,15 @@ val pairs = words.map(word => (word, 1))
 val wordCounts = pairs.reduceByKey(_ + _)
 
 // 在控制台打印出在这个离散流 (DStream) 中生成的每个 RDD 的前十个元素
-// 注意: 必需要触发 action (很多初学者会忘记触发 action 操作，导致报错：No output operations registered, so nothing to execute)  
+// 注意: 必需要触发 action (很多初学者会忘记触发 action 操作, 导致报错：No output operations registered, so nothing to execute)  
 wordCounts.print()
 {% endhighlight %}
 
-上一步的 `words` DStream 进行了进一步的映射 (一对一的转换) 为一个 (word, 1) paris 的离散流 (DStream) ，这个 DStream 然后被规约 (reduce) 来获得数据中每个批次 (batch) 的单词频率.
-最后，`wordCounts.print()` 将会打印一些每秒生成的计数.
+上一步的 `words` DStream 进行了进一步的映射 (一对一的转换) 为一个 (word, 1) paris 的离散流 (DStream) , 这个 DStream 然后被规约 (reduce) 来获得数据中每个批次 (batch) 的单词频率.
+最后, `wordCounts.print()` 将会打印一些每秒生成的计数.
 
-请注意，当这些行 (lines) 被执行的时候， Spark Streaming 仅仅设置了计算, 只有在启动时才会执行，并没有开始真正地处理.
-为了在所有的转换都已经设置好之后开始处理，我们在最后调用:
+请注意, 当这些行 (lines) 被执行的时候,  Spark Streaming 仅仅设置了计算, 只有在启动时才会执行, 并没有开始真正地处理.
+为了在所有的转换都已经设置好之后开始处理, 我们在最后调用:
 
 {% highlight scala %}
 ssc.start()             // 开始计算
@@ -117,7 +117,7 @@ ssc.awaitTermination()  // 等待计算被中断
 </div>
 <div data-lang="java" markdown="1">
 
-首先, 我们创建一个 [JavaStreamingContext](api/java/index.html?org/apache/spark/streaming/api/java/JavaStreamingContext.html) 对象, 这是所有流处理函数(streaming functionality)的主要切入点. 我们创建一个具有两个执行线程的本地StreamingContext，批处理间隔为1秒.
+首先, 我们创建一个 [JavaStreamingContext](api/java/index.html?org/apache/spark/streaming/api/java/JavaStreamingContext.html) 对象, 这是所有流处理函数(streaming functionality)的主要切入点. 我们创建一个具有两个执行线程的本地StreamingContext, 批处理间隔为1秒.
 
 {% highlight java %}
 import org.apache.spark.*;
@@ -126,12 +126,12 @@ import org.apache.spark.streaming.*;
 import org.apache.spark.streaming.api.java.*;
 import scala.Tuple2;
 
-//创建一个具有两个执行线程的本地StreamingContext，批处理间隔为1秒.
+//创建一个具有两个执行线程的本地StreamingContext, 批处理间隔为1秒.
 SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("NetworkWordCount");
 JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 {% endhighlight %}
 
-使用这个 context ，我们可以创建一个代表从 TCP 源流数据的离散流 (DStream) , 指定主机名(例如 localhost) 和端口 (例如 9999) .
+使用这个 context , 我们可以创建一个代表从 TCP 源流数据的离散流 (DStream) , 指定主机名(例如 localhost) 和端口 (例如 9999) .
 
 {% highlight java %}
 // Create a DStream that will connect to hostname:port, like localhost:9999
@@ -140,20 +140,20 @@ JavaReceiverInputDStream<String> lines = jssc.socketTextStream("localhost", 9999
 
 上一步的这个 `lines` DStream 表示将要从数据服务器接收到的数据流.
 在这个离散流 (DStream) 中的每一条记录都是一行文本 (text) .
-接下来，我们想要通过空格字符 (space characters) 拆分这些数据行 (lines) 成单词 (words) .
+接下来, 我们想要通过空格字符 (space characters) 拆分这些数据行 (lines) 成单词 (words) .
 
 {% highlight java %}
 // 将每一行拆分成 words (单词) 
 JavaDStream<String> words = lines.flatMap(x -> Arrays.asList(x.split(" ")).iterator());
 {% endhighlight %}
 
-`flatMap` 是一种离散流 (DStream) 操作，它会通过在源离散流 (source DStream) 中根据每个记录 (record) 生成多个新纪录的形式创建一个新的离散流 (DStream) .
-在这种情况下，在这种情况下，每一行 (each line) 都将被拆分成多个单词 (`words`) 和代表单词离散流 (words DStream) 的单词流.
+`flatMap` 是一种离散流 (DStream) 操作, 它会通过在源离散流 (source DStream) 中根据每个记录 (record) 生成多个新纪录的形式创建一个新的离散流 (DStream) .
+在这种情况下, 在这种情况下, 每一行 (each line) 都将被拆分成多个单词 (`words`) 和代表单词离散流 (words DStream) 的单词流.
 注意, 我们使用
 [FlatMapFunction](api/scala/index.html#org.apache.spark.api.java.function.FlatMapFunction)
-对象定义了转换 (transformation) . 正如我们将要发现的那样，Java API中有许多这样的便利类来帮助定义 DStream 转换.
+对象定义了转换 (transformation) . 正如我们将要发现的那样, Java API中有许多这样的便利类来帮助定义 DStream 转换.
 
-接下来，我们想要计算这些单词.
+接下来, 我们想要计算这些单词.
 
 {% highlight java %}
 // 计算每一个 batch (批次) 中的每一个 word (单词)
@@ -182,12 +182,12 @@ jssc.awaitTermination();   // 等待计算被中断
 </div>
 <div data-lang="python"  markdown="1" >
 First, we import [StreamingContext](api/python/pyspark.streaming.html#pyspark.streaming.StreamingContext), which is the main entry point for all streaming functionality. We create a local StreamingContext with two execution threads, and batch interval of 1 second.
-首先, 导入[StreamingContext](api/python/pyspark.streaming.html#pyspark.streaming.StreamingContext), 这是所有流处理函数(streaming functionality)的主要切入点. 我们创建一个具有两个执行线程的本地StreamingContext，批处理间隔为1秒.
+首先, 导入[StreamingContext](api/python/pyspark.streaming.html#pyspark.streaming.StreamingContext), 这是所有流处理函数(streaming functionality)的主要切入点. 我们创建一个具有两个执行线程的本地StreamingContext, 批处理间隔为1秒.
 {% highlight python %}
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 
-# 创建一个具有两个执行线程的本地StreamingContext，批处理间隔为1秒.
+# 创建一个具有两个执行线程的本地StreamingContext, 批处理间隔为1秒.
 
 sc = SparkContext("local[2]", "NetworkWordCount")
 ssc = StreamingContext(sc, 1)
@@ -197,19 +197,19 @@ ssc = StreamingContext(sc, 1)
 
 {% highlight python %}
 
-# 创建一个将要连接到 hostname:port 的 DStream，如 localhost:9999 
+# 创建一个将要连接到 hostname:port 的 DStream, 如 localhost:9999 
 
 lines = ssc.socketTextStream("localhost", 9999)
 {% endhighlight %}
 
-上一步的这个 lines DStream 表示将要从数据服务器接收到的数据流. 在这个离散流（DStream）中的每一条记录都是一行文本（text）. 接下来，我们想要通过空格字符（space characters）拆分这些数据行（lines）成单词（words）.
+上一步的这个 lines DStream 表示将要从数据服务器接收到的数据流. 在这个离散流（DStream）中的每一条记录都是一行文本（text）. 接下来, 我们想要通过空格字符（space characters）拆分这些数据行（lines）成单词（words）.
 
 {% highlight python %}
 # 将每一行拆分成 words（单词）
 words = lines.flatMap(lambda line: line.split(" "))
 {% endhighlight %}
 
-flatMap 是一种 one-to-many（一对多）的离散流（DStream）操作，它会通过在源离散流（source DStream）中根据每个记录（record）生成多个新纪录的形式创建一个新的离散流（DStream）. 在这种情况下，在这种情况下，每一行（each line）都将被拆分成多个单词（words）和代表单词离散流（words DStream）的单词流. 接下来，我们想要计算这些单词.
+flatMap 是一种 one-to-many（一对多）的离散流（DStream）操作, 它会通过在源离散流（source DStream）中根据每个记录（record）生成多个新纪录的形式创建一个新的离散流（DStream）. 在这种情况下, 在这种情况下, 每一行（each line）都将被拆分成多个单词（words）和代表单词离散流（words DStream）的单词流. 接下来, 我们想要计算这些单词.
 
 {% highlight python %}
 # 计算每一个 batch（批次）中的每一个 word（单词）
@@ -220,9 +220,9 @@ wordCounts = pairs.reduceByKey(lambda x, y: x + y)
 wordCounts.pprint()
 {% endhighlight %}
 
-上一步的 words DStream 进行了进一步的映射（一对一的转换）为一个 (word, 1) paris 的离散流（DStream），这个 DStream 然后被规约（reduce）来获得数据中每个批次（batch）的单词频率. 最后，wordCounts.print() 将会打印一些每秒生成的计数.
+上一步的 words DStream 进行了进一步的映射（一对一的转换）为一个 (word, 1) paris 的离散流（DStream）, 这个 DStream 然后被规约（reduce）来获得数据中每个批次（batch）的单词频率. 最后, wordCounts.print() 将会打印一些每秒生成的计数.
 
-请注意，当这些行（lines）被执行的时候， Spark Streaming 仅仅设置了计算, 只有在启动时才会执行，并没有开始真正地处理. 为了在所有的转换都已经设置好之后开始处理，我们在最后调用:
+请注意, 当这些行（lines）被执行的时候,  Spark Streaming 仅仅设置了计算, 只有在启动时才会执行, 并没有开始真正地处理. 为了在所有的转换都已经设置好之后开始处理, 我们在最后调用:
 
 {% highlight python %}
 ssc.start()             # 开始计算
@@ -243,7 +243,7 @@ ssc.awaitTermination()  # 等待计算被中断
 $ nc -lk 9999
 {% endhighlight %}
 
-然后，在另一个不同的终端，你可以通过执行如下命令来运行该示例:
+然后, 在另一个不同的终端, 你可以通过执行如下命令来运行该示例:
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -264,13 +264,13 @@ $ ./bin/spark-submit examples/src/main/python/streaming/network_wordcount.py loc
 </div>
 
 
-然后，在运行在 netcat 服务器上的终端输入的任何行 (lines) ，都将被计算，并且每一秒都显示在屏幕上，它看起来就像下面这样:
+然后, 在运行在 netcat 服务器上的终端输入的任何行 (lines) , 都将被计算, 并且每一秒都显示在屏幕上, 它看起来就像下面这样:
 
 <table width="100%">
     <td>
 {% highlight bash %}
-# TERMINAL 1:
-# Running Netcat
+# 终端 1:
+# 执行 Netcat
 
 $ nc -lk 9999
 
@@ -287,7 +287,7 @@ hello world
 
 <div data-lang="scala" markdown="1">
 {% highlight bash %}
-# TERMINAL 2: RUNNING NetworkWordCount
+# 终端 2: 执行 NetworkWordCount
 
 $ ./bin/run-example streaming.NetworkWordCount localhost 9999
 ...
@@ -302,7 +302,7 @@ Time: 1357008430000 ms
 
 <div data-lang="java" markdown="1">
 {% highlight bash %}
-# TERMINAL 2: RUNNING JavaNetworkWordCount
+# 终端 2: 执行 JavaNetworkWordCount
 
 $ ./bin/run-example streaming.JavaNetworkWordCount localhost 9999
 ...
@@ -316,7 +316,7 @@ Time: 1357008430000 ms
 </div>
 <div data-lang="python" markdown="1">
 {% highlight bash %}
-# TERMINAL 2: RUNNING network_wordcount.py
+# 终端 2: 执行 network_wordcount.py
 
 $ ./bin/spark-submit examples/src/main/python/streaming/network_wordcount.py localhost 9999
 ...
@@ -338,12 +338,12 @@ Time: 2014-10-14 15:25:21
 
 # 基础概念
 
-接下来，我们了解完了简单的例子，开始阐述 Spark Streaming 的基本知识.
+接下来, 我们了解完了简单的例子, 开始阐述 Spark Streaming 的基本知识.
 
 ## 依赖
 
-与 Spark 类似，Spark Streaming 可以通过 Maven 来管理依赖.
-为了编写你自己的 Spark Streaming 程序，你必须添加以下的依赖到你的 SBT 或者 Maven 项目中.
+与 Spark 类似, Spark Streaming 可以通过 Maven 来管理依赖.
+为了编写你自己的 Spark Streaming 程序, 你必须添加以下的依赖到你的 SBT 或者 Maven 项目中.
 
 <div class="codetabs">
 <div data-lang="Maven" markdown="1">
@@ -360,8 +360,8 @@ Time: 2014-10-14 15:25:21
 </div>
 </div>
 
-针对从 Spark Streaming Core API 中不存在的数据源中获取数据，如 Kafka， Flume，Kinesis ，你必须添加相应的坐标  `spark-streaming-xyz_{{site.SCALA_BINARY_VERSION}}` 到依赖中.
-例如，有一些常见的依赖如下.
+针对从 Spark Streaming Core API 中不存在的数据源中获取数据, 如 Kafka,  Flume, Kinesis , 你必须添加相应的坐标  `spark-streaming-xyz_{{site.SCALA_BINARY_VERSION}}` 到依赖中.
+例如, 有一些常见的依赖如下.
 
 
 <table class="table">
@@ -372,13 +372,13 @@ Time: 2014-10-14 15:25:21
 <tr><td></td><td></td></tr>
 </table>
 
-想要查看一个实时更新的列表，请参阅 [Maven repository](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.apache.spark%22%20AND%20v%3A%22{{site.SPARK_VERSION_SHORT}}%22) 来了解支持的 sources (数据源) 和 artifacts (坐标) 的完整列表.
+想要查看一个实时更新的列表, 请参阅 [Maven repository](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.apache.spark%22%20AND%20v%3A%22{{site.SPARK_VERSION_SHORT}}%22) 来了解支持的 sources (数据源) 和 artifacts (坐标) 的完整列表.
 
 ***
 
 ## 初始化 StreamingContext
 
-为了初始化一个 Spark Streaming 程序, 一个 **StreamingContext** 对象必须要被创建出来，它是所有的 Spark Streaming 功能的主入口点.
+为了初始化一个 Spark Streaming 程序, 一个 **StreamingContext** 对象必须要被创建出来, 它是所有的 Spark Streaming 功能的主入口点.
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -396,9 +396,9 @@ val ssc = new StreamingContext(conf, Seconds(1))
 这个 `appName` 参数是展示在集群 UI 界面上的应用程序的名称.
 `master` 是一个 [Spark, Mesos or YARN cluster URL](submitting-applications.html#master-urls),
 或者一个特殊的 __"local[\*]"__ 字符串以使用 local mode (本地模式) 来运行.
-在实践中，当在集群上运行时，你不会想在应用程序中硬编码 `master`，而是 [使用 `spark-submit` 来启动应用程序](submitting-applications.html) , 并且接受该参数.
-然而，对于本地测试和单元测试，你可以传递 "local[*]" 来运行 Spark Streaming 进程 (检测本地系统中内核的个数) .
-请注意，做个内部创建了一个 [SparkContext](api/scala/index.html#org.apache.spark.SparkContext) (所有 Spark 功能的出发点) ，它可以像 ssc.sparkContext 这样被访问.
+在实践中, 当在集群上运行时, 你不会想在应用程序中硬编码 `master`, 而是 [使用 `spark-submit` 来启动应用程序](submitting-applications.html) , 并且接受该参数.
+然而, 对于本地测试和单元测试, 你可以传递 "local[*]" 来运行 Spark Streaming 进程 (检测本地系统中内核的个数) .
+请注意, 这在内部创建了一个 [SparkContext](api/scala/index.html#org.apache.spark.SparkContext) (所有 Spark 功能的出发点) , 它可以像 ssc.sparkContext 这样被访问.
 
 这个 batch interval (批间隔) 必须根据您的应用程序和可用的集群资源的等待时间要求进行设置.
 更多详情请参阅 [优化指南](#setting-the-right-batch-interval) 部分.
@@ -416,7 +416,7 @@ val ssc = new StreamingContext(sc, Seconds(1))
 </div>
 <div data-lang="java" markdown="1">
 
-A [JavaStreamingContext](api/java/index.html?org/apache/spark/streaming/api/java/JavaStreamingContext.html) object can be created from a [SparkConf](api/java/index.html?org/apache/spark/SparkConf.html) object.
+一个 [JavaStreamingContext](api/java/index.html?org/apache/spark/streaming/api/java/JavaStreamingContext.html) 对象可以通过 [SparkConf](api/java/index.html?org/apache/spark/SparkConf.html) 对象来创建.
 
 {% highlight java %}
 import org.apache.spark.*;
@@ -426,30 +426,28 @@ SparkConf conf = new SparkConf().setAppName(appName).setMaster(master);
 JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(1000));
 {% endhighlight %}
 
-The `appName` parameter is a name for your application to show on the cluster UI.
-`master` is a [Spark, Mesos or YARN cluster URL](submitting-applications.html#master-urls),
-or a special __"local[\*]"__ string to run in local mode. In practice, when running on a cluster,
-you will not want to hardcode `master` in the program,
-but rather [launch the application with `spark-submit`](submitting-applications.html) and
-receive it there. However, for local testing and unit tests, you can pass "local[*]" to run Spark Streaming
-in-process. Note that this internally creates a [JavaSparkContext](api/java/index.html?org/apache/spark/api/java/JavaSparkContext.html) (starting point of all Spark functionality) which can be accessed as `ssc.sparkContext`.
+这个 `appName` 参数是展示在集群 UI 界面上的应用程序的名称.
+`master` 是一个 [Spark, Mesos or YARN cluster URL](submitting-applications.html#master-urls),
+或者一个特殊的 __"local[\*]"__ 字符串以使用 local mode (本地模式) 来运行.
+在实践中, 当在集群上运行时, 你不会想在应用程序中硬编码 `master`, 而是 [使用 `spark-submit` 来启动应用程序](submitting-applications.html) , 并且接受该参数.
+然而, 对于本地测试和单元测试, 你可以传递 "local[*]" 来运行 Spark Streaming 进程.
+请注意, 这在内部创建了一个 [JavaSparkContext](api/java/index.html?org/apache/spark/api/java/JavaSparkContext.html) (所有 Spark 功能的出发点) , 它可以像 ssc.sparkContext 这样被访问.
 
-The batch interval must be set based on the latency requirements of your application
-and available cluster resources. See the [Performance Tuning](#setting-the-right-batch-interval)
-section for more details.
+这个批处理间隔必须根据您的应用程序和可用的集群资源的等待时间要求进行设置.
+更多详情请参阅 [优化指南](#setting-the-right-batch-interval) 部分.
 
-A `JavaStreamingContext` object can also be created from an existing `JavaSparkContext`.
+一个 `JavaStreamingContext` 对象也可以从一个现有的 `JavaSparkContext` 对象来创建.
 
 {% highlight java %}
 import org.apache.spark.streaming.api.java.*;
 
-JavaSparkContext sc = ...   //existing JavaSparkContext
+JavaSparkContext sc = ...   //已存在的 JavaSparkContext
 JavaStreamingContext ssc = new JavaStreamingContext(sc, Durations.seconds(1));
 {% endhighlight %}
 </div>
 <div data-lang="python" markdown="1">
 
-A [StreamingContext](api/python/pyspark.streaming.html#pyspark.streaming.StreamingContext) object can be created from a [SparkContext](api/python/pyspark.html#pyspark.SparkContext) object.
+一个 [StreamingContext](api/python/pyspark.streaming.html#pyspark.streaming.StreamingContext) 对象可以通过 [SparkContext](api/python/pyspark.html#pyspark.SparkContext) 对象来创建.
 
 {% highlight python %}
 from pyspark import SparkContext
@@ -459,17 +457,14 @@ sc = SparkContext(master, appName)
 ssc = StreamingContext(sc, 1)
 {% endhighlight %}
 
-The `appName` parameter is a name for your application to show on the cluster UI.
-`master` is a [Spark, Mesos or YARN cluster URL](submitting-applications.html#master-urls),
-or a special __"local[\*]"__ string to run in local mode. In practice, when running on a cluster,
-you will not want to hardcode `master` in the program,
-but rather [launch the application with `spark-submit`](submitting-applications.html) and
-receive it there. However, for local testing and unit tests, you can pass "local[\*]" to run Spark Streaming
-in-process (detects the number of cores in the local system).
+这个 `appName` 参数是展示在集群 UI 界面上的应用程序的名称.
+`master` 是一个[Spark, Mesos or YARN cluster URL](submitting-applications.html#master-urls),
+或者一个特殊的 __"local[\*]"__ 字符串以使用 local mode (本地模式) 来运行. 在实践中, 当在集群上运行时, 你不会想在应用程序中硬编码 `master`,
+而是 [使用 `spark-submit` 来启动应用程序](submitting-applications.html) , 并且接受该参数. 然而, 对于本地测试和单元测试, 你可以传递 "local[*]" 来运行 Spark Streaming 进程 (检测本地系统中内核的个数) .
 
-The batch interval must be set based on the latency requirements of your application
-and available cluster resources. See the [Performance Tuning](#setting-the-right-batch-interval)
-section for more details.
+这个批处理间隔必须根据您的应用程序和可用的集群资源的等待时间要求进行设置.
+更多详情请参阅 [优化指南](#setting-the-right-batch-interval) 部分.
+
 </div>
 </div>
 
@@ -483,11 +478,11 @@ section for more details.
 
 ##### 需要记住的几点:
 {:.no_toc}
-- 一旦一个 context 已经启动，将不会有新的数据流的计算可以被创建或者添加到它..
-- 一旦一个 context 已经停止，它不会被重新启动.
+- 一旦一个 context 已经启动, 将不会有新的数据流的计算可以被创建或者添加到它..
+- 一旦一个 context 已经停止, 它不会被重新启动.
 - 同一时间内在 JVM 中只有一个 StreamingContext 可以被激活.
-- 在 StreamingContext 上的 stop() 同样也停止了 SparkContext .为了只停止 StreamingContext ，设置 `stop()` 的可选参数，名叫 `stopSparkContext` 为 false.
-- 一个 SparkContext 就可以被重用以创建多个 StreamingContexts，只要前一个 StreamingContext 在下一个StreamingContext 被创建之前停止 (不停止 SparkContext) .
+- 在 StreamingContext 上的 stop() 同样也停止了 SparkContext .为了只停止 StreamingContext , 设置 `stop()` 的可选参数, 名叫 `stopSparkContext` 为 false.
+- 一个 SparkContext 就可以被重用以创建多个 StreamingContexts, 只要前一个 StreamingContext 在下一个StreamingContext 被创建之前停止 (不停止 SparkContext) .
 
 ***
 
@@ -497,7 +492,7 @@ section for more details.
 还是通过转换输入流所产生的处理过的数据流.
 在内部, 一个 DStream 被表示为一系列连续的 RDDs, 它是 Spark 中一个不可改变的抽象,
 distributed dataset  (的更多细节请看 [Spark 编程指南](programming-guide.html#resilient-distributed-datasets-rdds).
-在一个 DStream 中的每个 RDD 包含来自一定的时间间隔的数据，如下图所示.
+在一个 DStream 中的每个 RDD 包含来自一定的时间间隔的数据, 如下图所示.
 
 <p style="text-align: center;">
   <img src="img/streaming-dstream.png"
@@ -507,7 +502,7 @@ distributed dataset  (的更多细节请看 [Spark 编程指南](programming-gui
 </p>
 
 应用于 DStream 的任何操作转化为对于底层的 RDDs 的操作.
-例如，在 [先前的示例](#一个入门示例)，转换一个行 (lines) 流成为单词 (words) 中，flatMap 操作被应用于在行离散流 (lines DStream) 中的每个 RDD 来生成单词离散流 (words DStream) 的 RDDs .
+例如, 在 [先前的示例](#一个入门示例), 转换一个行 (lines) 流成为单词 (words) 中, flatMap 操作被应用于在行离散流 (lines DStream) 中的每个 RDD 来生成单词离散流 (words DStream) 的 RDDs .
 如下所示.
 
 <p style="text-align: center;">
@@ -517,7 +512,7 @@ distributed dataset  (的更多细节请看 [Spark 编程指南](programming-gui
        width="70%" />
 </p>
 
-这些底层的 RDD 变换由 Spark 引擎 (engine) 计算. DStream 操作隐藏了大多数这些细节并为了方便起见，提供给了开发者一个更高级别的 API .这些操作细节会在后边的章节中讨论.
+这些底层的 RDD 变换由 Spark 引擎 (engine) 计算. DStream 操作隐藏了大多数这些细节并为了方便起见, 提供给了开发者一个更高级别的 API .这些操作细节会在后边的章节中讨论.
 
 ***
 
@@ -525,7 +520,7 @@ distributed dataset  (的更多细节请看 [Spark 编程指南](programming-gui
 输入 DStreams 是代表输入数据是从流的源数据 (streaming sources) 接收到的流的 DStream.
 在 [一个入门示例](#一个入门示例) 中, `lines` 是一个 input DStream, 因为它代表着从 netcat 服务器接收到的数据的流.
 每一个 input DStream (除了 file stream 之外, 会在本章的后面来讨论) 与一个 **Receiver** ([Scala doc](api/scala/index.html#org.apache.spark.streaming.receiver.Receiver),
-[Java doc](api/java/org/apache/spark/streaming/receiver/Receiver.html)) 对象关联, 它从 source (数据源) 中获取数据，并且存储它到 Sparl 的内存中用于处理.
+[Java doc](api/java/org/apache/spark/streaming/receiver/Receiver.html)) 对象关联, 它从 source (数据源) 中获取数据, 并且存储它到 Sparl 的内存中用于处理.
 
 Spark Streaming 提供了两种内置的 streaming source (流的数据源) .
 
@@ -533,30 +528,30 @@ Spark Streaming 提供了两种内置的 streaming source (流的数据源) .
   例如: file systems 和 socket connections.
 - *Advanced sources (高级的数据源) *: 像 Kafka, Flume, Kinesis, 等等这样的数据源. 可以通过额外的 utility classes 来使用. 像在 [依赖](#依赖) 中讨论的一样, 这些都需要额外的外部依赖.
 
-在本节的后边，我们将讨论每种类别中的现有的一些数据源.
+在本节的后边, 我们将讨论每种类别中的现有的一些数据源.
 
 请注意, 如果你想要在你的流处理程序中并行的接收多个数据流, 你可以创建多个 input DStreams (在 [性能优化](#level-of-parallelism-in-data-receiving) 部分进一步讨论) .
 这将创建同时接收多个数据流的多个 receivers (接收器) .
-但需要注意，一个 Spark 的 worker/executor 是一个长期运行的任务 (task) ，因此它将占用分配给 Spark Streaming 的应用程序的所有核中的一个核 (core) .
-因此，要记住，一个 Spark Streaming 应用需要分配足够的核 (core)  (或线程 (threads) ，如果本地运行的话) 来处理所接收的数据，以及来运行接收器 (receiver(s)) .
+但需要注意, 一个 Spark 的 worker/executor 是一个长期运行的任务 (task) , 因此它将占用分配给 Spark Streaming 的应用程序的所有核中的一个核 (core) .
+因此, 要记住, 一个 Spark Streaming 应用需要分配足够的核 (core)  (或线程 (threads) , 如果本地运行的话) 来处理所接收的数据, 以及来运行接收器 (receiver(s)) .
 
 ##### 要记住的几点
 {:.no_toc}
 
-- 当在本地运行一个 Spark Streaming 程序的时候，不要使用 "local" 或者 "local[1]" 作为 master 的 URL.
+- 当在本地运行一个 Spark Streaming 程序的时候, 不要使用 "local" 或者 "local[1]" 作为 master 的 URL.
   这两种方法中的任何一个都意味着只有一个线程将用于运行本地任务.
-  如果你正在使用一个基于接收器 (receiver) 的输入离散流 (input DStream)  (例如， sockets ，Kafka ，Flume 等) ，则该单独的线程将用于运行接收器 (receiver) ，而没有留下任何的线程用于处理接收到的数据.
-  因此，在本地运行时，总是用 "local[n]" 作为 master URL ，其中的 n > 运行接收器的数量 (查看 [Spark 属性](configuration.html#spark-properties) 来了解怎样去设置 master 的信息) .
+  如果你正在使用一个基于接收器 (receiver) 的输入离散流 (input DStream)  (例如,  sockets , Kafka , Flume 等) , 则该单独的线程将用于运行接收器 (receiver) , 而没有留下任何的线程用于处理接收到的数据.
+  因此, 在本地运行时, 总是用 "local[n]" 作为 master URL , 其中的 n > 运行接收器的数量 (查看 [Spark 属性](configuration.html#spark-properties) 来了解怎样去设置 master 的信息) .
 
-- 将逻辑扩展到集群上去运行，分配给 Spark Streaming 应用程序的内核 (core) 的内核数必须大于接收器 (receiver) 的数量.否则系统将接收数据，但是无法处理它.
+- 将逻辑扩展到集群上去运行, 分配给 Spark Streaming 应用程序的内核 (core) 的内核数必须大于接收器 (receiver) 的数量.否则系统将接收数据, 但是无法处理它.
 
 ### 基础的 Sources (数据源) 
 {:.no_toc}
 
-我们已经简单地了解过了在 [入门示例](#一个入门示例) 中 `ssc.socketTextStream(...)` 的例子，例子中是通过从一个 TCP socket 连接接收到的文本数据来创建了一个离散流 (DStream) .
-除了 sockets 之外，StreamingContext API 也提供了根据文件作为输入来源创建离散流 (DStreams) 的方法.
+我们已经简单地了解过了在 [入门示例](#一个入门示例) 中 `ssc.socketTextStream(...)` 的例子, 例子中是通过从一个 TCP socket 连接接收到的文本数据来创建了一个离散流 (DStream) .
+除了 sockets 之外, StreamingContext API 也提供了根据文件作为输入来源创建离散流 (DStreams) 的方法.
 
-- **File Streams:** 用于从文件中读取数据，在任何与 HDFS API 兼容的文件系统中 (即，HDFS，S3，NFS 等) ，一个 DStream 可以像下面这样创建:
+- **File Streams:** 用于从文件中读取数据, 在任何与 HDFS API 兼容的文件系统中 (即, HDFS, S3, NFS 等) , 一个 DStream 可以像下面这样创建:
 
     <div class="codetabs">
     <div data-lang="scala" markdown="1">
@@ -574,17 +569,17 @@ Spark Streaming 提供了两种内置的 streaming source (流的数据源) .
 
      + 文件必须具有相同的数据格式.
      + 文件必须被创建在 `dataDirectory` 目录中, 通过 atomically (院子的)  *moving (移动) * 或 *renaming (重命名) * 它们到数据目录.
-     + 一旦移动，这些文件必须不能再更改，因此如果文件被连续地追加，新的数据将不会被读取.
+     + 一旦移动, 这些文件必须不能再更改, 因此如果文件被连续地追加, 新的数据将不会被读取.
 
-  对于简单的文本文件，还有一个更加简单的方法 `streamingContext.textFileStream(dataDirectory)`.
-  并且文件流 (file streams) 不需要运行一个接收器 (receiver) ，因此，不需要分配内核 (core) .
+  对于简单的文本文件, 还有一个更加简单的方法 `streamingContext.textFileStream(dataDirectory)`.
+  并且文件流 (file streams) 不需要运行一个接收器 (receiver) , 因此, 不需要分配内核 (core) .
 
 	<span class="badge" style="background-color: grey">Python API</span> 在 Python API 中 `fileStream` 是不可用的, 只有	`textFileStream` 是可用的.
 
 - **Streams based on Custom Receivers (基于自定义的接收器的流) :** DStreams 可以使用通过自定义的 receiver (接收器) 接收到的数据来创建. 更多细节请参阅 [自定义 Receiver
   指南](streaming-custom-receivers.html).
 
-- **Queue of RDDs as a Stream (RDDs 队列作为一个流) :** 为了使用测试数据测试 Spark Streaming 应用程序，还可以使用 `streamingContext.queueStream(queueOfRDDs)` 创建一个基于 RDDs 队列的 DStream，每个进入队列的 RDD 都将被视为 DStream 中的一个批次数据，并且就像一个流进行处理.
+- **Queue of RDDs as a Stream (RDDs 队列作为一个流) :** 为了使用测试数据测试 Spark Streaming 应用程序, 还可以使用 `streamingContext.queueStream(queueOfRDDs)` 创建一个基于 RDDs 队列的 DStream, 每个进入队列的 RDD 都将被视为 DStream 中的一个批次数据, 并且就像一个流进行处理.
 
 想要了解更多的关于从 sockets 和文件 (files) 创建的流的细节, 请参阅相关函数的 API文档, 它们在
 [StreamingContext](api/scala/index.html#org.apache.spark.streaming.StreamingContext) for
@@ -597,11 +592,11 @@ for Java 以及 [StreamingContext](api/python/pyspark.streaming.html#pyspark.str
 <span class="badge" style="background-color: grey">Python API</span> 从 Spark {{site.SPARK_VERSION_SHORT}} 开始,
 在 Python API 中的 Kafka, Kinesis 和 Flume 这样的外部数据源都是可用的.
 
-这一类别的 sources (数据源) 需要使用非 Spark 库中的外部接口，它们中的其中一些还需要比较复杂的依赖关系 (例如， Kafka 和 Flume) .
-因此，为了最小化有关的依赖关系的版本冲突的问题，这些资源本身不能创建 DStream 的功能，它是通过 [依赖](#依赖) 单独的类库实现创建 DStream 的功能.
+这一类别的 sources (数据源) 需要使用非 Spark 库中的外部接口, 它们中的其中一些还需要比较复杂的依赖关系 (例如,  Kafka 和 Flume) .
+因此, 为了最小化有关的依赖关系的版本冲突的问题, 这些资源本身不能创建 DStream 的功能, 它是通过 [依赖](#依赖) 单独的类库实现创建 DStream 的功能.
 
-请注意, 这些高级 sources (数据源) 不能再 Spark shell 中使用, 因此，基于这些高级 sources (数据源) 的应用程序不能在 shell 中被测试.
-如果你真的想要在 Spark shell 中使用它们，你必须下载带有它的依赖的相应的 Maven 组件的 JAR ，并且将其添加到 classpath.
+请注意, 这些高级 sources (数据源) 不能再 Spark shell 中使用, 因此, 基于这些高级 sources (数据源) 的应用程序不能在 shell 中被测试.
+如果你真的想要在 Spark shell 中使用它们, 你必须下载带有它的依赖的相应的 Maven 组件的 JAR , 并且将其添加到 classpath.
 
 一些高级的 sources (数据源) 如下.
 
@@ -625,21 +620,21 @@ Input DStreams 也可以从自定义数据源中创建.
 
 可以有两种基于他们的 *reliability可靠性* 的数据源.
 数据源 (如 Kafka 和 Flume) 允许传输的数据被确认.
-如果系统从这些可靠的数据来源接收数据，并且被确认 (acknowledges) 正确地接收数据，它可以确保数据不会因为任何类型的失败而导致数据丢失.
+如果系统从这些可靠的数据来源接收数据, 并且被确认 (acknowledges) 正确地接收数据, 它可以确保数据不会因为任何类型的失败而导致数据丢失.
 这样就出现了 2 种接收器 (receivers) :
 
-1. *Reliable Receiver (可靠的接收器) * - 当数据被接收并存储在 Spark 中并带有备份副本时，一个可靠的接收器 (reliable receiver) 正确地发送确认 (acknowledgment) 给一个可靠的数据源 (reliable source) .
-1. *Unreliable Receiver (不可靠的接收器) * - 一个不可靠的接收器 ( unreliable receiver ) 不发送确认 (acknowledgment) 到数据源.这可以用于不支持确认的数据源，或者甚至是可靠的数据源当你不想或者不需要进行复杂的确认的时候.
+1. *Reliable Receiver (可靠的接收器) * - 当数据被接收并存储在 Spark 中并带有备份副本时, 一个可靠的接收器 (reliable receiver) 正确地发送确认 (acknowledgment) 给一个可靠的数据源 (reliable source) .
+1. *Unreliable Receiver (不可靠的接收器) * - 一个不可靠的接收器 ( unreliable receiver ) 不发送确认 (acknowledgment) 到数据源.这可以用于不支持确认的数据源, 或者甚至是可靠的数据源当你不想或者不需要进行复杂的确认的时候.
 
 在 [自定义 Receiver 指南](streaming-custom-receivers.html) 中描述了关于如何去编写一个 reliable receiver (可靠的接收器) 的细节.
 
 ***
 
 ##  DStreams 上的 Transformations (转换) 
-与 RDD 类似，transformation 允许从 input DStream 输入的数据做修改.
+与 RDD 类似, transformation 允许从 input DStream 输入的数据做修改.
 DStreams 支持很多在 RDD 中可用的 transformation 算子.一些常用的如下所示 : 
 
-与RDD类似，类似，transformation 允许修改来自 input DStream 的数据.
+与RDD类似, 类似, transformation 允许修改来自 input DStream 的数据.
 DStreams 支持标准的 Spark RDD 上可用的许多转换.
 一些常见的如下.
 
@@ -647,15 +642,15 @@ DStreams 支持标准的 Spark RDD 上可用的许多转换.
 <tr><th style="width:25%">Transformation (转换) </th><th>Meaning (含义) </th></tr>
 <tr>
   <td> <b>map</b>(<i>func</i>) </td>
-  <td> 利用函数 <i>func</i> 处理原 DStream 的每个元素，返回一个新的 DStream. </td>
+  <td> 利用函数 <i>func</i> 处理原 DStream 的每个元素, 返回一个新的 DStream. </td>
 </tr>
 <tr>
   <td> <b>flatMap</b>(<i>func</i>) </td>
-  <td> 与 map 相似，但是每个输入项可用被映射为 0 个或者多个输出项.. </td>
+  <td> 与 map 相似, 但是每个输入项可用被映射为 0 个或者多个输出项.. </td>
 </tr>
 <tr>
   <td> <b>filter</b>(<i>func</i>) </td>
-  <td> 返回一个新的 DStream，它仅仅包含原 DStream 中函数 <i>func</i> 返回值为 true 的项.</td>
+  <td> 返回一个新的 DStream, 它仅仅包含原 DStream 中函数 <i>func</i> 返回值为 true 的项.</td>
 </tr>
 <tr>
   <td> <b>repartition</b>(<i>numPartitions</i>) </td>
@@ -663,40 +658,40 @@ DStreams 支持标准的 Spark RDD 上可用的许多转换.
 </tr>
 <tr>
   <td> <b>union</b>(<i>otherStream</i>) </td>
-  <td> 返回一个新的 DStream，它包含源 DStream 和 <i>otherDStream</i> 的所有元素.</td>
+  <td> 返回一个新的 DStream, 它包含源 DStream 和 <i>otherDStream</i> 的所有元素.</td>
 </tr>
 <tr>
   <td> <b>count</b>() </td>
-  <td> 通过 count 源 DStream 中每个 RDD 的元素数量，返回一个包含单元素 (single-element) RDDs 的新 DStream. </td>
+  <td> 通过 count 源 DStream 中每个 RDD 的元素数量, 返回一个包含单元素 (single-element) RDDs 的新 DStream. </td>
 </tr>
 <tr>
   <td> <b>reduce</b>(<i>func</i>) </td>
-  <td> 利用函数 <i>func</i> 聚集源 DStream 中每个 RDD 的元素，返回一个包含单元素 (single-element) RDDs 的新 DStream.函数应该是相关联的，以使计算可以并行化.</td>
+  <td> 利用函数 <i>func</i> 聚集源 DStream 中每个 RDD 的元素, 返回一个包含单元素 (single-element) RDDs 的新 DStream.函数应该是相关联的, 以使计算可以并行化.</td>
 </tr>
 <tr>
   <td> <b>countByValue</b>() </td>
-  <td> 在元素类型为 K 的 DStream上，返回一个 (K,long) pair 的新的 DStream，每个 key 的值是在原 DStream 的每个 RDD 中的次数.</td>
+  <td> 在元素类型为 K 的 DStream上, 返回一个 (K,long) pair 的新的 DStream, 每个 key 的值是在原 DStream 的每个 RDD 中的次数.</td>
 </tr>
 <tr>
   <td> <b>reduceByKey</b>(<i>func</i>, [<i>numTasks</i>]) </td>
-  <td> 当在一个由 (K,V) pairs 组成的 DStream 上调用这个算子时，返回一个新的, 由 (K,V) pairs 组成的 DStream，每一个 key 的值均由给定的 reduce 函数聚合起来.
-  <b>注意</b>：在默认情况下，这个算子利用了 Spark 默认的并发任务数去分组.你可以用 numTasks 参数设置不同的任务数.</td>
+  <td> 当在一个由 (K,V) pairs 组成的 DStream 上调用这个算子时, 返回一个新的, 由 (K,V) pairs 组成的 DStream, 每一个 key 的值均由给定的 reduce 函数聚合起来.
+  <b>注意</b>：在默认情况下, 这个算子利用了 Spark 默认的并发任务数去分组.你可以用 numTasks 参数设置不同的任务数.</td>
 </tr>
 <tr>
   <td> <b>join</b>(<i>otherStream</i>, [<i>numTasks</i>]) </td>
-  <td> 当应用于两个 DStream (一个包含 (K,V) 对，一个包含 (K,W) 对) ，返回一个包含 (K, (V, W)) 对的新 DStream. </td>
+  <td> 当应用于两个 DStream (一个包含 (K,V) 对, 一个包含 (K,W) 对) , 返回一个包含 (K, (V, W)) 对的新 DStream. </td>
 </tr>
 <tr>
   <td> <b>cogroup</b>(<i>otherStream</i>, [<i>numTasks</i>]) </td>
-  <td>当应用于两个 DStream (一个包含 (K,V) 对，一个包含 (K,W) 对) ，返回一个包含 (K, Seq[V], Seq[W]) 的 tuples (元组) .</td>
+  <td>当应用于两个 DStream (一个包含 (K,V) 对, 一个包含 (K,W) 对) , 返回一个包含 (K, Seq[V], Seq[W]) 的 tuples (元组) .</td>
 </tr>
 <tr>
   <td> <b>transform</b>(<i>func</i>) </td>
-  <td> 通过对源 DStream 的每个 RDD 应用 RDD-to-RDD 函数，创建一个新的 DStream. 这个可以在 DStream 中的任何 RDD 操作中使用. </td>
+  <td> 通过对源 DStream 的每个 RDD 应用 RDD-to-RDD 函数, 创建一个新的 DStream. 这个可以在 DStream 中的任何 RDD 操作中使用. </td>
 </tr>
 <tr>
   <td> <b>updateStateByKey</b>(<i>func</i>) </td>
-  <td> 返回一个新的 "状态" 的 DStream，其中每个 key 的状态通过在 key 的先前状态应用给定的函数和 key 的新 valyes 来更新. 这可以用于维护每个 key 的任意状态数据.</td>
+  <td> 返回一个新的 "状态" 的 DStream, 其中每个 key 的状态通过在 key 的先前状态应用给定的函数和 key 的新 valyes 来更新. 这可以用于维护每个 key 的任意状态数据.</td>
 </tr>
 <tr><td></td><td></td></tr>
 </table>
@@ -705,15 +700,15 @@ DStreams 支持标准的 Spark RDD 上可用的许多转换.
 
 #### UpdateStateByKey 操作
 {:.no_toc}
-该 `updateStateByKey` 操作允许您维护任意状态，同时不断更新新信息. 你需要通过两步来使用它.
+该 `updateStateByKey` 操作允许您维护任意状态, 同时不断更新新信息. 你需要通过两步来使用它.
 
 1. 定义 state - state 可以是任何的数据类型.
-1. 定义 state update function (状态更新函数)  - 使用函数指定如何使用先前状态来更新状态，并从输入流中指定新值.
+1. 定义 state update function (状态更新函数)  - 使用函数指定如何使用先前状态来更新状态, 并从输入流中指定新值.
 
-在每个 batch 中，Spark 会使用状态更新函数为所有已有的 key 更新状态，不管在 batch 中是否含有新的数据.如果这个更新函数返回一个 none，这个 key-value pair 也会被消除.
+在每个 batch 中, Spark 会使用状态更新函数为所有已有的 key 更新状态, 不管在 batch 中是否含有新的数据.如果这个更新函数返回一个 none, 这个 key-value pair 也会被消除.
 
 让我们举个例子来说明.
-在例子中，假设你想保持在文本数据流中看到的每个单词的运行计数，运行次数用一个 state 表示，它的类型是整数, 我们可以使用如下方式来定义 update 函数:
+在例子中, 假设你想保持在文本数据流中看到的每个单词的运行计数, 运行次数用一个 state 表示, 它的类型是整数, 我们可以使用如下方式来定义 update 函数:
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -725,13 +720,13 @@ def updateFunction(newValues: Seq[Int], runningCount: Option[Int]): Option[Int] 
 }
 {% endhighlight %}
 
-这里是一个应用于包含 words (单词) 的 DStream 上 (也就是说，在 [先前的示例](#一个入门示例)中，该 `pairs` DStream 包含了 (word, 1) pair) .
+这里是一个应用于包含 words (单词) 的 DStream 上 (也就是说, 在 [先前的示例](#一个入门示例)中, 该 `pairs` DStream 包含了 (word, 1) pair) .
 
 {% highlight scala %}
 val runningCounts = pairs.updateStateByKey[Int](updateFunction _)
 {% endhighlight %}
 
-update 函数将会被每个单词调用，`newValues` 拥有一系列的 1 (来自 (word, 1) pairs) ，runningCount 拥有之前的次数.
+update 函数将会被每个单词调用, `newValues` 拥有一系列的 1 (来自 (word, 1) pairs) , runningCount 拥有之前的次数.
 
 </div>
 <div data-lang="java" markdown="1">
@@ -782,15 +777,15 @@ Python code, take a look at the example
 </div>
 </div>
 
-请注意, 使用 `updateStateByKey` 需要配置的 `checkpoint`  (检查点) 的目录，这里是更详细关于讨论 [checkpointing](#checkpointing) 的部分.
+请注意, 使用 `updateStateByKey` 需要配置的 `checkpoint`  (检查点) 的目录, 这里是更详细关于讨论 [checkpointing](#checkpointing) 的部分.
 
 #### Transform Operation* (转换操作) 
 {:.no_toc}
 transform 操作 (以及它的变化形式如 `transformWith`) 允许在 DStream 运行任何 RDD-to-RDD 函数.
 它能够被用来应用任何没在 DStream API 中提供的 RDD 操作.
-例如，连接数据流中的每个批 (batch) 和另外一个数据集的功能并没有在 DStream API 中提供，然而你可以简单的利用 `transform` 方法做到.
+例如, 连接数据流中的每个批 (batch) 和另外一个数据集的功能并没有在 DStream API 中提供, 然而你可以简单的利用 `transform` 方法做到.
 这使得有非常强大的可能性.
-例如，可以通过将输入数据流与预先计算的垃圾邮件信息 (也可以使用 Spark 一起生成) 进行实时数据清理，然后根据它进行过滤.
+例如, 可以通过将输入数据流与预先计算的垃圾邮件信息 (也可以使用 Spark 一起生成) 进行实时数据清理, 然后根据它进行过滤.
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -830,13 +825,13 @@ cleanedDStream = wordCounts.transform(lambda rdd: rdd.join(spamInfoRDD).filter(.
 </div>
 </div>
 
-请注意，每个 batch interval (批间隔) 提供的函数被调用.
-这允许你做随时间变动的 RDD 操作, 即 RDD 操作, 分区的数量，广播变量，等等.
+请注意, 每个 batch interval (批间隔) 提供的函数被调用.
+这允许你做随时间变动的 RDD 操作, 即 RDD 操作, 分区的数量, 广播变量, 等等.
 batch 之间等可以改变.
 
 #### Window Operations (窗口操作) 
 {:.no_toc}
-Spark Streaming 也支持 *windowed computations (窗口计算) *，它允许你在数据的一个滑动窗口上应用 transformation (转换) .
+Spark Streaming 也支持 *windowed computations (窗口计算) *, 它允许你在数据的一个滑动窗口上应用 transformation (转换) .
 下图说明了这个滑动窗口.
 
 <p style="text-align: center;">
@@ -846,7 +841,7 @@ Spark Streaming 也支持 *windowed computations (窗口计算) *，它允许你
        width="60%" />
 </p>
 
-如上图显示，窗口在源 DStream 上 *slides (滑动) *，合并和操作落入窗内的源 RDDs，产生窗口化的 DStream 的 RDDs.在这个具体的例子中，程序在三个时间单元的数据上进行窗口操作，并且每两个时间单元滑动一次. 这说明，任何一个窗口操作都需要指定两个参数.
+如上图显示, 窗口在源 DStream 上 *slides (滑动) *, 合并和操作落入窗内的源 RDDs, 产生窗口化的 DStream 的 RDDs.在这个具体的例子中, 程序在三个时间单元的数据上进行窗口操作, 并且每两个时间单元滑动一次. 这说明, 任何一个窗口操作都需要指定两个参数.
 
  * <i>window length (窗口长度) </i> - 窗口的持续时间 (图 3) .
  * <i>sliding interval (滑动间隔) </i> - 执行窗口操作的间隔 (图 2) .
@@ -854,8 +849,8 @@ Spark Streaming 也支持 *windowed computations (窗口计算) *，它允许你
 这两个参数必须是 source DStream 的 batch interval (批间隔) 的倍数 (图 1) .  
 
 让我们举例以说明窗口操作.
-例如，你想扩展前面的例子用来计算过去 30 秒的词频，间隔时间是 10 秒.
-为了达到这个目的，我们必须在过去 30 秒的 `(wrod, 1)` pairs 的 `pairs` DStream 上应用 `reduceByKey` 操作.
+例如, 你想扩展前面的例子用来计算过去 30 秒的词频, 间隔时间是 10 秒.
+为了达到这个目的, 我们必须在过去 30 秒的 `(wrod, 1)` pairs 的 `pairs` DStream 上应用 `reduceByKey` 操作.
 用方法 `reduceByKeyAndWindow` 实现.
 
 <div class="codetabs">
@@ -885,7 +880,7 @@ windowedWordCounts = pairs.reduceByKeyAndWindow(lambda x, y: x + y, lambda x, y:
 </div>
 </div>
 
-一些常用的窗口操作如下所示，这些操作都需要用到上文提到的两个参数 - <i>windowLength (窗口长度) </i> 和 <i>slideInterval (滑动的时间间隔) </i>.
+一些常用的窗口操作如下所示, 这些操作都需要用到上文提到的两个参数 - <i>windowLength (窗口长度) </i> 和 <i>slideInterval (滑动的时间间隔) </i>.
 
 <table class="table">
 <tr><th style="width:25%">Transformation (转换) </th><th>Meaning (含义) </th></tr>
@@ -899,7 +894,7 @@ windowedWordCounts = pairs.reduceByKeyAndWindow(lambda x, y: x + y, lambda x, y:
 </tr>
 <tr>
   <td> <b>reduceByWindow</b>(<i>func</i>, <i>windowLength</i>, <i>slideInterval</i>) </td>
-  <td> 返回一个新的单元素 stream (流) ，它通过在一个滑动间隔的 stream 中使用 <i>func</i> 来聚合以创建. 该函数应该是 associative (关联的) 且 commutative (可交换的) ，以便它可以并行计算</td>
+  <td> 返回一个新的单元素 stream (流) , 它通过在一个滑动间隔的 stream 中使用 <i>func</i> 来聚合以创建. 该函数应该是 associative (关联的) 且 commutative (可交换的) , 以便它可以并行计算</td>
 </tr>
 <tr>
   <td> <b>reduceByKeyAndWindow</b>(<i>func</i>, <i>windowLength</i>, <i>slideInterval</i>,
@@ -911,7 +906,7 @@ windowedWordCounts = pairs.reduceByKeyAndWindow(lambda x, y: x + y, lambda x, y:
 <tr>
   <td> <b>reduceByKeyAndWindow</b>(<i>func</i>, <i>invFunc</i>, <i>windowLength</i>,
   <i>slideInterval</i>, [<i>numTasks</i>]) </td>
-  <td markdown="1"> 上述 <code>reduceByKeyAndWindow()</code> 的更有效的一个版本，其中使用前一窗口的 reduce 值逐渐计算每个窗口的 reduce值. 这是通过减少进入滑动窗口的新数据，以及 "inverse reducing (逆减) " 离开窗口的旧数据来完成的. 一个例子是当窗口滑动时"添加" 和 "减" keys 的数量. 然而，它仅适用于 “invertible reduce functions (可逆减少函数) ”，即具有相应 "inverse reduce (反向减少) " 函数的 reduce 函数 (作为参数<i> invFunc </ i>) . 像在 <code>reduceByKeyAndWindow</code> 中的那样, reduce 任务的数量可以通过可选参数进行配置. 请注意, 针对该操作的使用必须启用 [checkpointing](#checkpointing).
+  <td markdown="1"> 上述 <code>reduceByKeyAndWindow()</code> 的更有效的一个版本, 其中使用前一窗口的 reduce 值逐渐计算每个窗口的 reduce值. 这是通过减少进入滑动窗口的新数据, 以及 "inverse reducing (逆减) " 离开窗口的旧数据来完成的. 一个例子是当窗口滑动时"添加" 和 "减" keys 的数量. 然而, 它仅适用于 “invertible reduce functions (可逆减少函数) ”, 即具有相应 "inverse reduce (反向减少) " 函数的 reduce 函数 (作为参数<i> invFunc </ i>) . 像在 <code>reduceByKeyAndWindow</code> 中的那样, reduce 任务的数量可以通过可选参数进行配置. 请注意, 针对该操作的使用必须启用 [checkpointing](#checkpointing).
 </td>
 </tr>
 <tr>
@@ -925,7 +920,7 @@ windowedWordCounts = pairs.reduceByKeyAndWindow(lambda x, y: x + y, lambda x, y:
 
 #### Join 操作
 {:.no_toc}
-最后，它值得强调的是，您可以轻松地在 Spark Streaming 中执行不同类型的 join.
+最后, 它值得强调的是, 您可以轻松地在 Spark Streaming 中执行不同类型的 join.
 
 ##### Stream-stream joins
 {:.no_toc}
@@ -955,9 +950,9 @@ joinedStream = stream1.join(stream2)
 </div>
 </div>
 
-这里，在每个 batch interval (批间隔) 中，由 `stream1` 生成的 RDD 将与 `stream2` 生成的 RDD 进行 jion.
-你也可以做 `leftOuterJoin`，`rightOuterJoin`，`fullOuterJoin`.
-此外，在 stream (流) 的窗口上进行 join 通常是非常有用的.
+这里, 在每个 batch interval (批间隔) 中, 由 `stream1` 生成的 RDD 将与 `stream2` 生成的 RDD 进行 jion.
+你也可以做 `leftOuterJoin`, `rightOuterJoin`, `fullOuterJoin`.
+此外, 在 stream (流) 的窗口上进行 join 通常是非常有用的.
 这也很容易做到.
 
 <div class="codetabs">
@@ -1013,13 +1008,13 @@ joinedStream = windowedStream.transform(lambda rdd: rdd.join(dataset))
 </div>
 </div>
 
-实际上，您也可以动态更改要加入的 dataset.
-提供给 `transform` 的函数是每个 batch interval (批次间隔) 进行评估，因此将使用 `dataset` 引用指向当前的 dataset.
+实际上, 您也可以动态更改要加入的 dataset.
+提供给 `transform` 的函数是每个 batch interval (批次间隔) 进行评估, 因此将使用 `dataset` 引用指向当前的 dataset.
 
 DStream 转换的完整列表可在 API 文档中找到.
-针对 Scala API，请看 [DStream](api/scala/index.html#org.apache.spark.streaming.dstream.DStream) 和 [PairDStreamFunctions](api/scala/index.html#org.apache.spark.streaming.dstream.PairDStreamFunctions).
-针对 Java API，请看 [JavaDStream](api/java/index.html?org/apache/spark/streaming/api/java/JavaDStream.html) 和 [JavaPairDStream](api/java/index.html?org/apache/spark/streaming/api/java/JavaPairDStream.html).
-针对 Python API，请看 [DStream](api/python/pyspark.streaming.html#pyspark.streaming.DStream).
+针对 Scala API, 请看 [DStream](api/scala/index.html#org.apache.spark.streaming.dstream.DStream) 和 [PairDStreamFunctions](api/scala/index.html#org.apache.spark.streaming.dstream.PairDStreamFunctions).
+针对 Java API, 请看 [JavaDStream](api/java/index.html?org/apache/spark/streaming/api/java/JavaDStream.html) 和 [JavaPairDStream](api/java/index.html?org/apache/spark/streaming/api/java/JavaPairDStream.html).
+针对 Python API, 请看 [DStream](api/python/pyspark.streaming.html#pyspark.streaming.DStream).
 
 ***
 
