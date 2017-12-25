@@ -715,7 +715,7 @@ DStreams 支持标准的 Spark RDD 上可用的许多转换.
 
 {% highlight scala %}
 def updateFunction(newValues: Seq[Int], runningCount: Option[Int]): Option[Int] = {
-    val newCount = ...  // add the new values with the previous running count to get the new count
+    val newCount = ...  // 添加新的值与以前的运行计数, 以获得新的计数
     Some(newCount)
 }
 {% endhighlight %}
@@ -734,21 +734,18 @@ update 函数将会被每个单词调用, `newValues` 拥有一系列的 1 (来�
 {% highlight java %}
 Function2<List<Integer>, Optional<Integer>, Optional<Integer>> updateFunction =
   (values, state) -> {
-    Integer newSum = ...  // add the new values with the previous running count to get the new count
+    Integer newSum = ...  // 添加新的值与以前的运行计数, 以获得新的计数
     return Optional.of(newSum);
   };
 {% endhighlight %}
 
-This is applied on a DStream containing words (say, the `pairs` DStream containing `(word,
-1)` pairs in the [quick example](#a-quick-example)).
+这里是一个应用于包含 words (单词) 的 DStream 上 (也就是说, 在 [先前的示例](#一个入门示例)中, 该 `pairs` DStream 包含了 (word, 1) pair) .
 
 {% highlight java %}
 JavaPairDStream<String, Integer> runningCounts = pairs.updateStateByKey(updateFunction);
 {% endhighlight %}
 
-The update function will be called for each word, with `newValues` having a sequence of 1's (from
-the `(word, 1)` pairs) and the `runningCount` having the previous count. For the complete
-Java code, take a look at the example
+update 函数将会被每个单词调用, `newValues` 拥有一系列的 1 (来自 (word, 1) pairs) , runningCount 拥有之前的次数. 对于完整的 Java 代码 , 可以看看这个例子
 [JavaStatefulNetworkWordCount.java]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/streaming
 /JavaStatefulNetworkWordCount.java).
 
@@ -759,19 +756,16 @@ Java code, take a look at the example
 def updateFunction(newValues, runningCount):
     if runningCount is None:
         runningCount = 0
-    return sum(newValues, runningCount)  # add the new values with the previous running count to get the new count
+    return sum(newValues, runningCount)  # 添加新的值与以前的运行计数, 以获得新的计数
 {% endhighlight %}
 
-This is applied on a DStream containing words (say, the `pairs` DStream containing `(word,
-1)` pairs in the [earlier example](#a-quick-example)).
+这里是一个应用于包含 words (单词) 的 DStream 上 (也就是说, 在 [先前的示例](#一个入门示例)中, 该 `pairs` DStream 包含了 (word, 1) pair) 
 
 {% highlight python %}
 runningCounts = pairs.updateStateByKey(updateFunction)
 {% endhighlight %}
 
-The update function will be called for each word, with `newValues` having a sequence of 1's (from
-the `(word, 1)` pairs) and the `runningCount` having the previous count. For the complete
-Python code, take a look at the example
+update 函数将会被每个单词调用, `newValues` 拥有一系列的 1 (来自 (word, 1) pairs) , runningCount 拥有之前的次数. 对于完整的 Python 代码 , 可以看看这个例子
 [stateful_network_wordcount.py]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/streaming/stateful_network_wordcount.py).
 
 </div>
@@ -791,10 +785,10 @@ transform 操作 (以及它的变化形式如 `transformWith`) 允许在 DStream
 <div data-lang="scala" markdown="1">
 
 {% highlight scala %}
-val spamInfoRDD = ssc.sparkContext.newAPIHadoopRDD(...) // RDD containing spam information
+val spamInfoRDD = ssc.sparkContext.newAPIHadoopRDD(...) // 包含垃圾信息 (spam information) 的 RDD
 
 val cleanedDStream = wordCounts.transform { rdd =>
-  rdd.join(spamInfoRDD).filter(...) // join data stream with spam information to do data cleaning
+  rdd.join(spamInfoRDD).filter(...) // 加入垃圾信息数据流去做数据清理
   ...
 }
 {% endhighlight %}
@@ -804,11 +798,11 @@ val cleanedDStream = wordCounts.transform { rdd =>
 
 {% highlight java %}
 import org.apache.spark.streaming.api.java.*;
-// RDD containing spam information
+// 包含垃圾信息 (spam information) 的 RDD
 JavaPairRDD<String, Double> spamInfoRDD = jssc.sparkContext().newAPIHadoopRDD(...);
 
 JavaPairDStream<String, Integer> cleanedDStream = wordCounts.transform(rdd -> {
-  rdd.join(spamInfoRDD).filter(...); // join data stream with spam information to do data cleaning
+  rdd.join(spamInfoRDD).filter(...); // 加入垃圾信息数据流去做数据清理
   ...
 });
 {% endhighlight %}
@@ -817,9 +811,9 @@ JavaPairDStream<String, Integer> cleanedDStream = wordCounts.transform(rdd -> {
 <div data-lang="python" markdown="1">
 
 {% highlight python %}
-spamInfoRDD = sc.pickleFile(...)  # RDD containing spam information
+spamInfoRDD = sc.pickleFile(...)  # 包含垃圾信息 (spam information) 的 RDD
 
-# join data stream with spam information to do data cleaning
+# 加入垃圾信息数据流去做数据清理
 cleanedDStream = wordCounts.transform(lambda rdd: rdd.join(spamInfoRDD).filter(...))
 {% endhighlight %}
 </div>
@@ -857,7 +851,7 @@ Spark Streaming 也支持 *windowed computations (窗口计算) *, 它允许你�
 <div data-lang="scala" markdown="1">
 
 {% highlight scala %}
-// Reduce last 30 seconds of data, every 10 seconds
+// 每10秒计算 (Reduce 减少) 过去30秒的数据
 val windowedWordCounts = pairs.reduceByKeyAndWindow((a:Int,b:Int) => (a + b), Seconds(30), Seconds(10))
 {% endhighlight %}
 
@@ -865,7 +859,7 @@ val windowedWordCounts = pairs.reduceByKeyAndWindow((a:Int,b:Int) => (a + b), Se
 <div data-lang="java" markdown="1">
 
 {% highlight java %}
-// Reduce last 30 seconds of data, every 10 seconds
+// 每10秒计算 (Reduce 减少) 过去30秒的数据
 JavaPairDStream<String, Integer> windowedWordCounts = pairs.reduceByKeyAndWindow((i1, i2) -> i1 + i2, Durations.seconds(30), Durations.seconds(10));
 {% endhighlight %}
 
@@ -873,7 +867,7 @@ JavaPairDStream<String, Integer> windowedWordCounts = pairs.reduceByKeyAndWindow
 <div data-lang="python" markdown="1">
 
 {% highlight python %}
-# Reduce last 30 seconds of data, every 10 seconds
+# 每10秒计算 (Reduce 减少) 过去30秒的数据
 windowedWordCounts = pairs.reduceByKeyAndWindow(lambda x, y: x + y, lambda x, y: x - y, 30, 10)
 {% endhighlight %}
 
@@ -1071,9 +1065,9 @@ DStream 转换的完整列表可在 API 文档中找到.
 <div data-lang="scala" markdown="1">
 {% highlight scala %}
 dstream.foreachRDD { rdd =>
-  val connection = createNewConnection()  // executed at the driver
+  val connection = createNewConnection()  // 在 driver 中执行
   rdd.foreach { record =>
-    connection.send(record) // executed at the worker
+    connection.send(record) // 在 worker 中执行
   }
 }
 {% endhighlight %}
@@ -1081,9 +1075,9 @@ dstream.foreachRDD { rdd =>
 <div data-lang="java" markdown="1">
 {% highlight java %}
 dstream.foreachRDD(rdd -> {
-  Connection connection = createNewConnection(); // executed at the driver
+  Connection connection = createNewConnection(); // 在 driver 中执行
   rdd.foreach(record -> {
-    connection.send(record); // executed at the worker
+    connection.send(record); // 在 worker 中执行
   });
 });
 {% endhighlight %}
@@ -1091,7 +1085,7 @@ dstream.foreachRDD(rdd -> {
 <div data-lang="python" markdown="1">
 {% highlight python %}
 def sendRecord(rdd):
-    connection = createNewConnection()  # executed at the driver
+    connection = createNewConnection()  # 在 driver 中执行
     rdd.foreach(lambda record: connection.send(record))
     connection.close()
 
@@ -1250,23 +1244,23 @@ dstream.foreachRDD(lambda rdd: rdd.foreachPartition(sendPartition))
 <div data-lang="scala" markdown="1">
 {% highlight scala %}
 
-/** DataFrame operations inside your streaming program */
+/** 在你的 streaming 程序中的 DataFrame 操作  */
 
 val words: DStream[String] = ...
 
 words.foreachRDD { rdd =>
 
-  // Get the singleton instance of SparkSession
+  // 获取 SparkSession 的单例实例
   val spark = SparkSession.builder.config(rdd.sparkContext.getConf).getOrCreate()
   import spark.implicits._
 
-  // Convert RDD[String] to DataFrame
+  // 将 RDD[String] 转换为 DataFrame
   val wordsDataFrame = rdd.toDF("word")
 
-  // Create a temporary view
+  // 创建一个临时视图
   wordsDataFrame.createOrReplaceTempView("words")
 
-  // Do word count on DataFrame using SQL and print it
+  // 使用 SQL 对 DataFrame 进行统计并打印
   val wordCountsDataFrame = 
     spark.sql("select word, count(*) as total from words group by word")
   wordCountsDataFrame.show()
@@ -1279,7 +1273,7 @@ words.foreachRDD { rdd =>
 <div data-lang="java" markdown="1">
 {% highlight java %}
 
-/** Java Bean class for converting RDD to DataFrame */
+/** RDD 转换 DataFrame 的 Java Bean class*/
 public class JavaRow implements java.io.Serializable {
   private String word;
 
@@ -1294,15 +1288,15 @@ public class JavaRow implements java.io.Serializable {
 
 ...
 
-/** DataFrame operations inside your streaming program */
+/** 在你的 streaming 程序中的 DataFrame 操作 */
 
 JavaDStream<String> words = ... 
 
 words.foreachRDD((rdd, time) -> {
-  // Get the singleton instance of SparkSession
+  // 获取 SparkSession 的单例实例
   SparkSession spark = SparkSession.builder().config(rdd.sparkContext().getConf()).getOrCreate();
 
-  // Convert RDD[String] to RDD[case class] to DataFrame
+  // 将 RDD[String] 转换为 DataFrame
   JavaRDD<JavaRow> rowRDD = rdd.map(word -> {
     JavaRow record = new JavaRow();
     record.setWord(word);
@@ -1310,10 +1304,10 @@ words.foreachRDD((rdd, time) -> {
   });
   DataFrame wordsDataFrame = spark.createDataFrame(rowRDD, JavaRow.class);
 
-  // Creates a temporary view using the DataFrame
+  // 使用 DataFrame 创建一个临时视图
   wordsDataFrame.createOrReplaceTempView("words");
 
-  // Do word count on table using SQL and print it
+  // 使用 SQL 对 DataFrame 进行统计并打印
   DataFrame wordCountsDataFrame =
     spark.sql("select word, count(*) as total from words group by word");
   wordCountsDataFrame.show();
@@ -1336,24 +1330,24 @@ def getSparkSessionInstance(sparkConf):
 
 ...
 
-# DataFrame operations inside your streaming program
+# 在你的 streaming 程序中的 DataFrame 操作
 
-words = ... # DStream of strings
+words = ... # 字符串格式的 DStream
 
 def process(time, rdd):
     print("========= %s =========" % str(time))
     try:
-        # Get the singleton instance of SparkSession
+        # 获取 SparkSession 的单例实例
         spark = getSparkSessionInstance(rdd.context.getConf())
 
-        # Convert RDD[String] to RDD[Row] to DataFrame
+        # 将 RDD[String] 转换为 DataFrame
         rowRdd = rdd.map(lambda w: Row(word=w))
         wordsDataFrame = spark.createDataFrame(rowRdd)
 
-        # Creates a temporary view using the DataFrame
+        # 使用 DataFrame 创建一个临时视图
         wordsDataFrame.createOrReplaceTempView("words")
 
-        # Do word count on table using SQL and print it
+        # 使用 SQL 对 DataFrame 进行统计并打印
         wordCountsDataFrame = spark.sql("select word, count(*) as total from words group by word")
         wordCountsDataFrame.show()
     except:
@@ -1438,77 +1432,77 @@ words.foreachRDD(process)
 使用 `StreamingContext.getOrCreate` 可以简化此行为. 这样使用如下.
 
 {% highlight scala %}
-// Function to create and setup a new StreamingContext
+// 创建并配置一个新的 StreamingContext 的函数
 def functionToCreateContext(): StreamingContext = {
-  val ssc = new StreamingContext(...)   // new context
-  val lines = ssc.socketTextStream(...) // create DStreams
+  val ssc = new StreamingContext(...)   // new context 对象
+  val lines = ssc.socketTextStream(...) // 创建 DStreams
   ...
-  ssc.checkpoint(checkpointDirectory)   // set checkpoint directory
+  ssc.checkpoint(checkpointDirectory)   // 设置 checkpoint 目录
   ssc
 }
 
-// Get StreamingContext from checkpoint data or create a new one
+// 通过 checkpoint 数据来获取 StreamingContext或者 new 一个新的
 val context = StreamingContext.getOrCreate(checkpointDirectory, functionToCreateContext _)
 
-// Do additional setup on context that needs to be done,
-// irrespective of whether it is being started or restarted
+// 在需要完成的 context 进行额外的配置,
+// 无论是启动或者重新启动
 context. ...
 
-// Start the context
+// 启动 context
 context.start()
 context.awaitTermination()
 {% endhighlight %}
 
-If the `checkpointDirectory` exists, then the context will be recreated from the checkpoint data.
-If the directory does not exist (i.e., running for the first time),
-then the function `functionToCreateContext` will be called to create a new
-context and set up the DStreams. See the Scala example
+如果 `checkpointDirectory` 存在, context 将被从 checkpoint 数据创建.
+如果目录不存在 (即第一次运行),
+那么函数 `functionToCreateContext` 将被调用去创建一个新的
+context 并且配置 DStreams. 参见 Scala 示例
 [RecoverableNetworkWordCount]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/scala/org/apache/spark/examples/streaming/RecoverableNetworkWordCount.scala).
-This example appends the word counts of network data into a file.
+本示例将网络数据的字数统计附加到文件中.
 
 </div>
 <div data-lang="java" markdown="1">
 
-This behavior is made simple by using `JavaStreamingContext.getOrCreate`. This is used as follows.
+使用 `JavaStreamingContext.getOrCreate` 可以简化这种行为, 用法如下.
 
 {% highlight java %}
-// Create a factory object that can create and setup a new JavaStreamingContext
+// 创建一个工厂对象来创建并配置一个新的 JavaStreamingContext
 JavaStreamingContextFactory contextFactory = new JavaStreamingContextFactory() {
   @Override public JavaStreamingContext create() {
-    JavaStreamingContext jssc = new JavaStreamingContext(...);  // new context
-    JavaDStream<String> lines = jssc.socketTextStream(...);     // create DStreams
+    JavaStreamingContext jssc = new JavaStreamingContext(...);  // new context 对象
+    JavaDStream<String> lines = jssc.socketTextStream(...);     // 创建 DStreams
     ...
-    jssc.checkpoint(checkpointDirectory);                       // set checkpoint directory
+    jssc.checkpoint(checkpointDirectory);                       // 配置 checkpoint 目录
     return jssc;
   }
 };
 
-// Get JavaStreamingContext from checkpoint data or create a new one
+// 通过 checkpoint 数据来获取 JavaStreamingContext 或者 new 一个新的
 JavaStreamingContext context = JavaStreamingContext.getOrCreate(checkpointDirectory, contextFactory);
 
-// Do additional setup on context that needs to be done,
-// irrespective of whether it is being started or restarted
+// 在需要完成的 context 进行额外的配置,
+// 无论是启动或者重新启动
 context. ...
 
-// Start the context
+// 启动 context
 context.start();
 context.awaitTermination();
 {% endhighlight %}
 
-If the `checkpointDirectory` exists, then the context will be recreated from the checkpoint data.
-If the directory does not exist (i.e., running for the first time),
-then the function `contextFactory` will be called to create a new
-context and set up the DStreams. See the Java example
+如果 `checkpointDirectory` 存在, context 将被从 checkpoint 数据创建.
+如果目录不存在 (即第一次运行),
+那么函数 `contextFactory` 将被调用去创建一个新的
+context 并且配置 DStreams. 参见 Java 示例
 [JavaRecoverableNetworkWordCount]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/java/org/apache/spark/examples/streaming/JavaRecoverableNetworkWordCount.java).
-This example appends the word counts of network data into a file.
+本示例将网络数据的字数统计附加到文件中.
 
 </div>
 <div data-lang="python" markdown="1">
 
-This behavior is made simple by using `StreamingContext.getOrCreate`. This is used as follows.
+使用 `StreamingContext.getOrCreate` 可以简化这种行为, 用法如下.
 
 {% highlight python %}
-# Function to create and setup a new StreamingContext
+# 创建并配置一个新的 StreamingContext 的函数
 def functionToCreateContext():
     sc = SparkContext(...)  # new context
     ssc = StreamingContext(...)
@@ -1517,27 +1511,26 @@ def functionToCreateContext():
     ssc.checkpoint(checkpointDirectory)  # set checkpoint directory
     return ssc
 
-# Get StreamingContext from checkpoint data or create a new one
+# 通过 checkpoint 数据来获取 JavaStreamingContext 或者 new 一个新的
 context = StreamingContext.getOrCreate(checkpointDirectory, functionToCreateContext)
 
-# Do additional setup on context that needs to be done,
-# irrespective of whether it is being started or restarted
+# 在需要完成的 context 进行额外的配置,
+# 无论是启动或者重新启动
 context. ...
 
-# Start the context
+# 启动 the context
 context.start()
 context.awaitTermination()
 {% endhighlight %}
 
-If the `checkpointDirectory` exists, then the context will be recreated from the checkpoint data.
-If the directory does not exist (i.e., running for the first time),
-then the function `functionToCreateContext` will be called to create a new
-context and set up the DStreams. See the Python example
+如果 `checkpointDirectory` 存在, context 将被从 checkpoint 数据创建.
+如果目录不存在 (即第一次运行),
+那么函数 `functionToCreateContext` 将被调用去创建一个新的
+context 并且配置 DStreams. 参见 Python 示例
 [recoverable_network_wordcount.py]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/python/streaming/recoverable_network_wordcount.py).
-This example appends the word counts of network data into a file.
+本示例将网络数据的字数统计附加到文件中.
 
-You can also explicitly create a `StreamingContext` from the checkpoint data and start the
- computation by using `StreamingContext.getOrCreate(checkpointDirectory, None)`.
+你也可以从 checkpoint 数据中显式地创建一个 `StreamingContext` 并使用 `StreamingContext.getOrCreate(checkpointDirectory, None)` 来启动计算.
 
 </div>
 </div>
