@@ -23,7 +23,7 @@ Spark Streaming 是 Spark Core API 的扩展, 它支持弹性的, 高吞吐的, 
   />
 </p>
 
-本质上, 它工作原理如下, Spark Streaming 接收实时输入数据流并将数据切分成多个 batch(批)数据, 然后由 Spark 引擎处理它们以生成最终的 stream of results in batches(分批流结果).
+本质上, 它工作原理如下, Spark Streaming 接收实时输入数据流并将数据切分成多个 batch(批)数据, 然后由 Spark 引擎处理它们以生成最终的 stream of results in batches (分批流结果).
 
 <p style="text-align: center;">
   <img src="img/streaming-flow.png"
@@ -52,7 +52,7 @@ DStream 可以从数据源的输入数据流创建, 例如 Kafka, Flume 以及 K
 
 <div class="codetabs">
 <div data-lang="scala"  markdown="1" >
-首先, 我们导入了 Spark Streaming 类和部分从 StreamingContext 隐式转换到我们的环境的名称, 目的是添加有用的方法到我们需要的其他类中(如 DStream).
+首先, 我们导入了 Spark Streaming 类和部分从 StreamingContext 隐式转换到我们的环境的名称, 目的是添加有用的方法到我们需要的其他类中(如 DStream ).
 [StreamingContext](api/scala/index.html#org.apache.spark.streaming.StreamingContext) 是所有流功能的主要入口点.
 我们创建了一个带有 2 个执行线程和间歇时间为 1 秒的本地 StreamingContext.
 
@@ -68,7 +68,7 @@ val conf = new SparkConf().setMaster("local[2]").setAppName("NetworkWordCount")
 val ssc = new StreamingContext(conf, Seconds(1))
 {% endhighlight %}
 
-使用该 context, 我们可以创建一个代表从 TCP 源流数据的离散流(DStream), 指定主机名(hostname)(例如 localhost)和端口(例如 9999).
+使用该 context, 我们可以创建一个代表从 TCP 源流数据的离散流( DStream ), 指定主机名( hostname )(例如 localhost )和端口(例如 9999).
 
 {% highlight scala %}
 // 创建一个将要连接到 hostname:port 的 DStream,如 localhost:9999 
@@ -76,15 +76,15 @@ val lines = ssc.socketTextStream("localhost", 9999)
 {% endhighlight %}
 
 上一步的这个 `lines` DStream 表示将要从数据服务器接收到的数据流.
-在这个离散流(DStream)中的每一条记录都是一行文本(text).
-接下来,我们想要通过空格字符(space characters)把这些数据行(lines)拆分成单词(words).
+在这个离散流( DStream )中的每一条记录都是一行文本( text ).
+接下来,我们想要通过空格字符( space characters )把这些数据行( lines )拆分成单词( words ).
 
 {% highlight scala %}
 // 将每一行拆分成 words(单词)
 val words = lines.flatMap(_.split(" "))
 {% endhighlight %}
 
-`flatMap` 是一种 one-to-many(一对多)的离散流(DStream)操作,它会通过在源离散流(source DStream)中根据每个记录(record)生成多个新纪录的形式创建一个新的离散流(DStream).
+`flatMap` 是一种 one-to-many(一对多)的离散流( DStream )操作,它会通过在源离散流( source DStream )中根据每个记录( record )生成多个新纪录的形式创建一个新的离散流( DStream ).
 在这种情况下,在这种情况下,每一行(each line)都将被拆分成多个单词(`words`)和代表单词离散流(words DStream)的单词流.
 接下来,我们想要计算这些单词.
 
@@ -94,11 +94,11 @@ import org.apache.spark.streaming.StreamingContext._ // 自从 Spark 1.3 开始,
 val pairs = words.map(word => (word, 1))
 val wordCounts = pairs.reduceByKey(_ + _)
 
-// 在控制台打印出在这个离散流(DStream)中生成的每个 RDD 的前十个元素
+// 在控制台打印出在这个离散流( DStream )中生成的每个 RDD 的前十个元素
 wordCounts.print()
 {% endhighlight %}
 
-上一步的 `words` DStream 进行了进一步的映射(一对一的转换)为一个 (word, 1) paris 的离散流(DStream),这个 DStream 然后被规约(reduce)来获得数据中每个批次(batch)的单词频率.
+上一步的 `words` DStream 进行了进一步的映射(一对一的转换)为一个 ( word, 1) paris 的离散流( DStream ),这个 DStream 然后被规约( reduce )来获得数据中每个批次( batch )的单词频率.
 最后,`wordCounts.print()` 将会打印一些每秒生成的计数.
 
 请注意,当这些行(lines)被执行的时候, Spark Streaming 仅仅设置了计算, 只有在启动时才会执行,并没有开始真正地处理.
@@ -133,7 +133,7 @@ SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("NetworkWordCo
 JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 {% endhighlight %}
 
-使用这个上下文,我们可以创建一个表示来自TCP的流数据的DStream
+使用这个上下文,我们可以创建一个表示来自 TCP 的流数据的 DStream
 源,指定为主机名(例如`localhost`)和端口(例如`9999`).
 
 {% highlight java %}
@@ -199,7 +199,7 @@ sc = SparkContext("local[2]", "NetworkWordCount")
 ssc = StreamingContext(sc, 1)
 {% endhighlight %}
 
-使用该 context, 我们可以创建一个代表从 TCP 源流数据的离散流(DStream), 指定主机名(hostname)(例如 localhost)和端口(例如 9999).
+使用该 context, 我们可以创建一个代表从 TCP 源流数据的离散流( DStream ), 指定主机名( hostname )(例如 localhost)和端口(例如 9999).
 
 {% highlight python %}
 # 创建一个将要连接到 hostname:port 的 DStream,如 localhost:9999 
@@ -207,8 +207,8 @@ lines = ssc.socketTextStream("localhost", 9999)
 {% endhighlight %}
 
 上一步的这个 `lines` DStream 表示将要从数据服务器接收到的数据流.
-在这个离散流(DStream)中的每一条记录都是一行文本(text).
-接下来,我们想要通过空格字符(space characters)把这些数据行(lines)拆分成单词(words).
+在这个离散流( DStream )中的每一条记录都是一行文本( text ).
+接下来,我们想要通过空格字符( space characters )把这些数据行( lines )拆分成单词( words ).
 
 
 {% highlight python %}
@@ -216,8 +216,8 @@ lines = ssc.socketTextStream("localhost", 9999)
 words = lines.flatMap(lambda line: line.split(" "))
 {% endhighlight %}
 
-`flatMap` 是一种 one-to-many(一对多)的离散流(DStream)操作,它会通过在源离散流(source DStream)中根据每个记录(record)生成多个新纪录的形式创建一个新的离散流(DStream).
-在这种情况下,在这种情况下,每一行(each line)都将被拆分成多个单词(`words`)和代表单词离散流(words DStream)的单词流.
+`flatMap` 是一种 one-to-many(一对多)的离散流( DStream )操作,它会通过在源离散流(source DStream )中根据每个记录( record )生成多个新纪录的形式创建一个新的离散流( DStream ).
+在这种情况下,在这种情况下,每一行(each line)都将被拆分成多个单词(`words`)和代表单词离散流( words DStream )的单词流.
 接下来,我们想要计算这些单词.
 
 {% highlight python %}
@@ -229,7 +229,7 @@ wordCounts = pairs.reduceByKey(lambda x, y: x + y)
 wordCounts.pprint()
 {% endhighlight %}
 
-上一步的 `words` DStream 进行了进一步的映射(一对一的转换)为一个 (word, 1) paris 的离散流(DStream),这个 DStream 然后被规约(reduce)来获得数据中每个批次(batch)的单词频率.
+上一步的 `words` DStream 进行了进一步的映射(一对一的转换)为一个 (word, 1) paris 的离散流( DStream ),这个 DStream 然后被规约( reduce )来获得数据中每个批次( batch )的单词频率.
 最后,`wordCounts.pprint()` 将会打印一些每秒生成的计数.
 
 请注意,当这些行(lines)被执行的时候, Spark Streaming 仅仅设置了计算, 只有在启动时才会执行,并没有开始真正地处理.
@@ -275,7 +275,7 @@ $ ./bin/spark-submit examples/src/main/python/streaming/network_wordcount.py loc
 </div>
 
 
-然后,在运行在 netcat 服务器上的终端输入的任何行(lines),都将被计算,并且每一秒都显示在屏幕上,它看起来就像下面这样:
+然后,在运行在 netcat 服务器上的终端输入的任何行( lines ),都将被计算,并且每一秒都显示在屏幕上,它看起来就像下面这样:
 
 <table width="100%">
     <td>
