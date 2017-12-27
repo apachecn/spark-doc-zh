@@ -118,8 +118,8 @@ ssc.awaitTermination()  // 等待计算被中断
 
 First, we create a
 [JavaStreamingContext](api/java/index.html?org/apache/spark/streaming/api/java/JavaStreamingContext.html) object,
-which is the main entry point for all streaming
-functionality. We create a local StreamingContext with two execution threads, and a batch interval of 1 second.
+这是所有 streaming 的主要切入点.
+功能, 我们创建一个具有两个执行线程的本地 StreamingContext ,批处理间隔为1秒.
 
 {% highlight java %}
 import org.apache.spark.*;
@@ -128,124 +128,119 @@ import org.apache.spark.streaming.*;
 import org.apache.spark.streaming.api.java.*;
 import scala.Tuple2;
 
-// Create a local StreamingContext with two working thread and batch interval of 1 second
+//  创建一个具有两个工作线程和批间隔为1秒的本地 StreamingContext 
 SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("NetworkWordCount");
 JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 {% endhighlight %}
 
-Using this context, we can create a DStream that represents streaming data from a TCP
-source, specified as hostname (e.g. `localhost`) and port (e.g. `9999`).
+使用这个上下文,我们可以创建一个表示来自TCP的流数据的DStream
+源,指定为主机名(例如`localhost`)和端口(例如`9999`).
 
 {% highlight java %}
-// Create a DStream that will connect to hostname:port, like localhost:9999
+// 创建一个连接到 hostname:port 的 DStream ,如 localhost:9999
 JavaReceiverInputDStream<String> lines = jssc.socketTextStream("localhost", 9999);
 {% endhighlight %}
 
-This `lines` DStream represents the stream of data that will be received from the data
-server. Each record in this stream is a line of text. Then, we want to split the lines by
-space into words.
+这个 `lines` DStream 表示将从数据接收的数据流服务器.这个流中的每条记录都是一行文本. 
+然后,我们要分割线空间转化为单词.
 
 {% highlight java %}
-// Split each line into words
+// 分隔每一行单词
 JavaDStream<String> words = lines.flatMap(x -> Arrays.asList(x.split(" ")).iterator());
 {% endhighlight %}
 
-`flatMap` is a DStream operation that creates a new DStream by
-generating multiple new records from each record in the source DStream. In this case,
-each line will be split into multiple words and the stream of words is represented as the
-`words` DStream. Note that we defined the transformation using a
-[FlatMapFunction](api/scala/index.html#org.apache.spark.api.java.function.FlatMapFunction) object.
-As we will discover along the way, there are a number of such convenience classes in the Java API
-that help define DStream transformations.
+`flatMap` 是一个 DStream 操作,通过创建一个新的 DStream 
+从源 DStream 中的每个记录生成多个新记录. 在这种情况下,
+每行将被分割成多个单词,单词流被表示为 DStream . 
+请注意,我们使用一个定义了转换
+[FlatMapFunction](api/scala/index.html#org.apache.spark.api.java.function.FlatMapFunction) 的对象.
+正如我们将要发现的那样,Java API 中有许多这样的便利类,这有助于定义 DStream 转换.
 
-Next, we want to count these words.
+下一步,我们将统计单词数量.
 
 {% highlight java %}
-// Count each word in each batch
+// 统计每个批次中的每个单词
 JavaPairDStream<String, Integer> pairs = words.mapToPair(s -> new Tuple2<>(s, 1));
 JavaPairDStream<String, Integer> wordCounts = pairs.reduceByKey((i1, i2) -> i1 + i2);
 
-// Print the first ten elements of each RDD generated in this DStream to the console
+// 将此 DStream 中生成的每个 RDD 的前十个元素打印到控制台
 wordCounts.print();
 {% endhighlight %}
 
-The `words` DStream is further mapped (one-to-one transformation) to a DStream of `(word,
-1)` pairs, using a [PairFunction](api/scala/index.html#org.apache.spark.api.java.function.PairFunction)
-object. Then, it is reduced to get the frequency of words in each batch of data,
-using a [Function2](api/scala/index.html#org.apache.spark.api.java.function.Function2) object.
-Finally, `wordCounts.print()` will print a few of the counts generated every second.
+`DStream` 进一步映射(一对一转换)为 `(word,1)`对,
+ 使用一个 [PairFunction](api/scala/index.html#org.apache.spark.api.java.function.PairFunction)
+对象.然后,减少得到每批数据中文字的频率,
+使用一个 [Function2](api/scala/index.html#org.apache.spark.api.java.function.Function2) 对象.
+最后, `wordCounts.print()` 会打印每秒生成的一些计数.
 
-Note that when these lines are executed, Spark Streaming only sets up the computation it
-will perform after it is started, and no real processing has started yet. To start the processing
-after all the transformations have been setup, we finally call `start` method.
+请注意,执行这些行时, Spark Streaming 只会设置它的计算
+将在启动后执行, 而且还没有开始真正的处理. 开始处理
+在所有的转换完成之后,我们最后调用 `start` 方法.
 
 {% highlight java %}
-jssc.start();              // Start the computation
-jssc.awaitTermination();   // Wait for the computation to terminate
+jssc.start();              // 开始处理
+jssc.awaitTermination();   // 等待计算结束
 {% endhighlight %}
 
-The complete code can be found in the Spark Streaming example
+完整的代码可以在 Spark Streaming 示例中找到
 [JavaNetworkWordCount]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/streaming/JavaNetworkWordCount.java).
 <br>
 
 </div>
 <div data-lang="python"  markdown="1" >
-First, we import [StreamingContext](api/python/pyspark.streaming.html#pyspark.streaming.StreamingContext), which is the main entry point for all streaming functionality. We create a local StreamingContext with two execution threads, and batch interval of 1 second.
+首先, 我们导入 [StreamingContext](api/python/pyspark.streaming.html#pyspark.streaming.StreamingContext), 这是所有 streaming 功能的主要入口点.功能, 我们创建一个具有两个执行线程的本地 StreamingContext ,批处理间隔为1秒.
 
 {% highlight python %}
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 
-# Create a local StreamingContext with two working thread and batch interval of 1 second
+# 创建一个具有两个工作线程和批间隔为1秒的本地 StreamingContext
 sc = SparkContext("local[2]", "NetworkWordCount")
 ssc = StreamingContext(sc, 1)
 {% endhighlight %}
 
-Using this context, we can create a DStream that represents streaming data from a TCP
-source, specified as hostname (e.g. `localhost`) and port (e.g. `9999`).
+使用该 context, 我们可以创建一个代表从 TCP 源流数据的离散流(DStream), 指定主机名(hostname)(例如 localhost)和端口(例如 9999).
 
 {% highlight python %}
-# Create a DStream that will connect to hostname:port, like localhost:9999
+# 创建一个将要连接到 hostname:port 的 DStream,如 localhost:9999 
 lines = ssc.socketTextStream("localhost", 9999)
 {% endhighlight %}
 
-This `lines` DStream represents the stream of data that will be received from the data
-server. Each record in this DStream is a line of text. Next, we want to split the lines by
-space into words.
+上一步的这个 `lines` DStream 表示将要从数据服务器接收到的数据流.
+在这个离散流(DStream)中的每一条记录都是一行文本(text).
+接下来,我们想要通过空格字符(space characters)把这些数据行(lines)拆分成单词(words).
+
 
 {% highlight python %}
-# Split each line into words
+# 将每一行拆分成 words(单词)
 words = lines.flatMap(lambda line: line.split(" "))
 {% endhighlight %}
 
-`flatMap` is a one-to-many DStream operation that creates a new DStream by
-generating multiple new records from each record in the source DStream. In this case,
-each line will be split into multiple words and the stream of words is represented as the
-`words` DStream.  Next, we want to count these words.
+`flatMap` 是一种 one-to-many(一对多)的离散流(DStream)操作,它会通过在源离散流(source DStream)中根据每个记录(record)生成多个新纪录的形式创建一个新的离散流(DStream).
+在这种情况下,在这种情况下,每一行(each line)都将被拆分成多个单词(`words`)和代表单词离散流(words DStream)的单词流.
+接下来,我们想要计算这些单词.
 
 {% highlight python %}
-# Count each word in each batch
+# 计算每一个 batch(批次)中的每一个 word(单词)
 pairs = words.map(lambda word: (word, 1))
 wordCounts = pairs.reduceByKey(lambda x, y: x + y)
 
-# Print the first ten elements of each RDD generated in this DStream to the console
+# 在控制台打印出在这个离散流(DStream)中生成的每个 RDD 的前十个元素
 wordCounts.pprint()
 {% endhighlight %}
 
-The `words` DStream is further mapped (one-to-one transformation) to a DStream of `(word,
-1)` pairs, which is then reduced to get the frequency of words in each batch of data.
-Finally, `wordCounts.pprint()` will print a few of the counts generated every second.
+上一步的 `words` DStream 进行了进一步的映射(一对一的转换)为一个 (word, 1) paris 的离散流(DStream),这个 DStream 然后被规约(reduce)来获得数据中每个批次(batch)的单词频率.
+最后,`wordCounts.pprint()` 将会打印一些每秒生成的计数.
 
-Note that when these lines are executed, Spark Streaming only sets up the computation it
-will perform when it is started, and no real processing has started yet. To start the processing
-after all the transformations have been setup, we finally call
+请注意,当这些行(lines)被执行的时候, Spark Streaming 仅仅设置了计算, 只有在启动时才会执行,并没有开始真正地处理.
+为了在所有的转换都已经设置好之后开始处理,我们在最后调用:
 
 {% highlight python %}
-ssc.start()             # Start the computation
-ssc.awaitTermination()  # Wait for the computation to terminate
+ssc.start()             # 开始计算
+ssc.awaitTermination()  # 等待计算被中断
 {% endhighlight %}
 
-The complete code can be found in the Spark Streaming example
+该部分完整的代码可以在 Spark Streaming 示例
 [NetworkWordCount]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/streaming/network_wordcount.py).
 <br>
 
@@ -432,7 +427,7 @@ val ssc = new StreamingContext(sc, Seconds(1))
 </div>
 <div data-lang="java" markdown="1">
 
-A [JavaStreamingContext](api/java/index.html?org/apache/spark/streaming/api/java/JavaStreamingContext.html) object can be created from a [SparkConf](api/java/index.html?org/apache/spark/SparkConf.html) object.
+一个[JavaStreamingContext](api/java/index.html?org/apache/spark/streaming/api/java/JavaStreamingContext.html) 对象被创建于一个 [SparkConf](api/java/index.html?org/apache/spark/SparkConf.html) 对象中.
 
 {% highlight java %}
 import org.apache.spark.*;
@@ -442,30 +437,30 @@ SparkConf conf = new SparkConf().setAppName(appName).setMaster(master);
 JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(1000));
 {% endhighlight %}
 
-The `appName` parameter is a name for your application to show on the cluster UI.
-`master` is a [Spark, Mesos or YARN cluster URL](submitting-applications.html#master-urls),
-or a special __"local[\*]"__ string to run in local mode. In practice, when running on a cluster,
-you will not want to hardcode `master` in the program,
-but rather [launch the application with `spark-submit`](submitting-applications.html) and
-receive it there. However, for local testing and unit tests, you can pass "local[*]" to run Spark Streaming
-in-process. Note that this internally creates a [JavaSparkContext](api/java/index.html?org/apache/spark/api/java/JavaSparkContext.html) (starting point of all Spark functionality) which can be accessed as `ssc.sparkContext`.
+`appName` 参数是您的应用程序在集群UI上显示的名称.
+`master` 是[Spark,Mesos或YARN集群URL](submitting-applications.html＃master-urls),
+或一个特殊的  __"local[\*]"__ 字符串以本地模式运行. 实际上,在群集上运行时,
+你不会在程序中硬编码 master,
+而是[使用`spark-submit`](submitting-applications.html)启动应用程序
+在那里接收.但是,对于本地测试和单元测试,您可以通过 "local[*]" 来运行 Spark Streaming 程序.
 
-The batch interval must be set based on the latency requirements of your application
-and available cluster resources. See the [Performance Tuning](#setting-the-right-batch-interval)
-section for more details.
+请注意,这在内部创建了一个[JavaSparkContext](api/java/index.html?org/apache/spark/api/java/JavaSparkContext.html)(所有 Spark 功能的起点),它们可以作为 `ssc.sparkContext` .
 
-A `JavaStreamingContext` object can also be created from an existing `JavaSparkContext`.
+批处理间隔必须根据应用程序的延迟要求来设置
+和可用的群集资源. 请参阅 [Performance Tuning](#setting-the-right-batch-interval)
+部分更多细节.
+一个 `JavaStreamingContext` 对象也可以从现有的 `JavaSparkContext` 创建.
 
 {% highlight java %}
 import org.apache.spark.streaming.api.java.*;
 
-JavaSparkContext sc = ...   //existing JavaSparkContext
+JavaSparkContext sc = ...   //现有的JavaSparkContext
 JavaStreamingContext ssc = new JavaStreamingContext(sc, Durations.seconds(1));
 {% endhighlight %}
 </div>
 <div data-lang="python" markdown="1">
 
-A [StreamingContext](api/python/pyspark.streaming.html#pyspark.streaming.StreamingContext) object can be created from a [SparkContext](api/python/pyspark.html#pyspark.SparkContext) object.
+可以从 [SparkContext](api/python/pyspark.html#pyspark.SparkContext)对象创建[StreamingContext](api/python/pyspark.streaming.html#pyspark.streaming.StreamingContext)对象.
 
 {% highlight python %}
 from pyspark import SparkContext
@@ -475,17 +470,17 @@ sc = SparkContext(master, appName)
 ssc = StreamingContext(sc, 1)
 {% endhighlight %}
 
-The `appName` parameter is a name for your application to show on the cluster UI.
-`master` is a [Spark, Mesos or YARN cluster URL](submitting-applications.html#master-urls),
-or a special __"local[\*]"__ string to run in local mode. In practice, when running on a cluster,
-you will not want to hardcode `master` in the program,
-but rather [launch the application with `spark-submit`](submitting-applications.html) and
-receive it there. However, for local testing and unit tests, you can pass "local[\*]" to run Spark Streaming
-in-process (detects the number of cores in the local system).
+ `appName` 参数是您的应用程序在集群UI上显示的名称.
+`master` 是Spark, Mesos or YARN cluster URL](submitting-applications.html#master-urls),
+或一个特殊的 __"local[\*]"__ 字符串以本地模式运行. 实际上,在群集上运行时,
+你不会在程序中硬编码 master,
+而是[使用 `spark-submit` ](submitting-applications.html) 启动应用程序
+在那里接收. 但是,对于本地测试和单元测试,可以通过 "local[\*]" 运行 Spark Streaming 
+(检测本地系统中的核心数量).
 
-The batch interval must be set based on the latency requirements of your application
-and available cluster resources. See the [Performance Tuning](#setting-the-right-batch-interval)
-section for more details.
+批处理间隔必须根据应用程序的延迟要求来设置
+和可用的群集资源. 请参阅 [Performance Tuning](#setting-the-right-batch-interval)中
+部分更多细节.
 </div>
 </div>
 
@@ -696,7 +691,7 @@ DStreams 支持标准的 Spark RDD 上可用的许多转换.
 <tr>
   <td> <b>reduceByKey</b>(<i>func</i>, [<i>numTasks</i>]) </td>
   <td> 当在一个由 (K,V) pairs 组成的 DStream 上调用这个算子时,返回一个新的, 由 (K,V) pairs 组成的 DStream,每一个 key 的值均由给定的 reduce 函数聚合起来.
-  <b>注意</b>：在默认情况下,这个算子利用了 Spark 默认的并发任务数去分组.你可以用 numTasks 参数设置不同的任务数.</td>
+  <b>注意</b>:在默认情况下,这个算子利用了 Spark 默认的并发任务数去分组.你可以用 numTasks 参数设置不同的任务数.</td>
 </tr>
 <tr>
   <td> <b>join</b>(<i>otherStream</i>, [<i>numTasks</i>]) </td>
@@ -760,16 +755,15 @@ Function2<List<Integer>, Optional<Integer>, Optional<Integer>> updateFunction =
   };
 {% endhighlight %}
 
-This is applied on a DStream containing words (say, the `pairs` DStream containing `(word,
-1)` pairs in the [quick example](#a-quick-example)).
+这适用于包含单词的 DStream (比如, DStream 包含 `(word,1)` 快速示例中的对[quick example](#a-quick-example)).
 
 {% highlight java %}
 JavaPairDStream<String, Integer> runningCounts = pairs.updateStateByKey(updateFunction);
 {% endhighlight %}
 
-The update function will be called for each word, with `newValues` having a sequence of 1's (from
-the `(word, 1)` pairs) and the `runningCount` having the previous count. For the complete
-Java code, take a look at the example
+更新函数将为每个单词调用, `newValues` 具有1的序列(从
+`(word, 1)` 对)和具有前一个计数的 `runningCount`. 为完整
+Java代码,看看这个例子
 [JavaStatefulNetworkWordCount.java]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/java/org/apache/spark/examples/streaming
 /JavaStatefulNetworkWordCount.java).
 
@@ -780,20 +774,18 @@ Java code, take a look at the example
 def updateFunction(newValues, runningCount):
     if runningCount is None:
         runningCount = 0
-    return sum(newValues, runningCount)  # add the new values with the previous running count to get the new count
+    return sum(newValues, runningCount)  # 添加新的值与以前的运行计数,以获得新的计数
 {% endhighlight %}
 
-This is applied on a DStream containing words (say, the `pairs` DStream containing `(word,
-1)` pairs in the [earlier example](#a-quick-example)).
+这适用于包含单词的DStream(比如,包含 `(word,1)` 的DStream `pairs` 在前面的例子中 [earlier example](#a-quick-example)).
 
 {% highlight python %}
 runningCounts = pairs.updateStateByKey(updateFunction)
 {% endhighlight %}
 
-The update function will be called for each word, with `newValues` having a sequence of 1's (from
-the `(word, 1)` pairs) and the `runningCount` having the previous count. For the complete
-Python code, take a look at the example
-[stateful_network_wordcount.py]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/streaming/stateful_network_wordcount.py).
+更新函数将为每个单词调用, `newValues` 具有1的序列(从 `(word, 1)` 对中)和具有前一个计数的 `runningCount` . 为完整
+Python代码,看看这个例子
+stateful_network_wordcount.py]({{site.SPARK_GITHUB_URL}}/blob/v{{site.SPARK_VERSION_SHORT}}/examples/src/main/python/streaming/stateful_network_wordcount.py).
 
 </div>
 </div>
@@ -812,10 +804,10 @@ transform 操作(以及它的变化形式如 `transformWith`)允许在 DStream �
 <div data-lang="scala" markdown="1">
 
 {% highlight scala %}
-val spamInfoRDD = ssc.sparkContext.newAPIHadoopRDD(...) // RDD containing spam information
+val spamInfoRDD = ssc.sparkContext.newAPIHadoopRDD(...) // 包含垃圾信息的 RDD
 
 val cleanedDStream = wordCounts.transform { rdd =>
-  rdd.join(spamInfoRDD).filter(...) // join data stream with spam information to do data cleaning
+  rdd.join(spamInfoRDD).filter(...) // 加入垃圾信息数据流做数据清理
   ...
 }
 {% endhighlight %}
@@ -825,11 +817,11 @@ val cleanedDStream = wordCounts.transform { rdd =>
 
 {% highlight java %}
 import org.apache.spark.streaming.api.java.*;
-// RDD containing spam information
+// 包含垃圾信息的 RDD
 JavaPairRDD<String, Double> spamInfoRDD = jssc.sparkContext().newAPIHadoopRDD(...);
 
 JavaPairDStream<String, Integer> cleanedDStream = wordCounts.transform(rdd -> {
-  rdd.join(spamInfoRDD).filter(...); // join data stream with spam information to do data cleaning
+  rdd.join(spamInfoRDD).filter(...); // 加入垃圾信息数据流做数据清理
   ...
 });
 {% endhighlight %}
@@ -838,9 +830,8 @@ JavaPairDStream<String, Integer> cleanedDStream = wordCounts.transform(rdd -> {
 <div data-lang="python" markdown="1">
 
 {% highlight python %}
-spamInfoRDD = sc.pickleFile(...)  # RDD containing spam information
-
-# join data stream with spam information to do data cleaning
+spamInfoRDD = sc.pickleFile(...)  # 包含垃圾信息的RDD
+# 加入垃圾信息数据流做数据清理
 cleanedDStream = wordCounts.transform(lambda rdd: rdd.join(spamInfoRDD).filter(...))
 {% endhighlight %}
 </div>
@@ -878,7 +869,7 @@ Spark Streaming 也支持 *windowed computations(窗口计算)*,它允许你在�
 <div data-lang="scala" markdown="1">
 
 {% highlight scala %}
-// Reduce last 30 seconds of data, every 10 seconds
+// 每10秒钟减少最后30秒的数据
 val windowedWordCounts = pairs.reduceByKeyAndWindow((a:Int,b:Int) => (a + b), Seconds(30), Seconds(10))
 {% endhighlight %}
 
@@ -886,7 +877,7 @@ val windowedWordCounts = pairs.reduceByKeyAndWindow((a:Int,b:Int) => (a + b), Se
 <div data-lang="java" markdown="1">
 
 {% highlight java %}
-// Reduce last 30 seconds of data, every 10 seconds
+// 每10秒钟减少最后30秒的数据
 JavaPairDStream<String, Integer> windowedWordCounts = pairs.reduceByKeyAndWindow((i1, i2) -> i1 + i2, Durations.seconds(30), Durations.seconds(10));
 {% endhighlight %}
 
@@ -894,7 +885,7 @@ JavaPairDStream<String, Integer> windowedWordCounts = pairs.reduceByKeyAndWindow
 <div data-lang="python" markdown="1">
 
 {% highlight python %}
-# Reduce last 30 seconds of data, every 10 seconds
+# 每10秒钟减少最后30秒的数据
 windowedWordCounts = pairs.reduceByKeyAndWindow(lambda x, y: x + y, lambda x, y: x - y, 30, 10)
 {% endhighlight %}
 
@@ -1043,7 +1034,7 @@ DStream 转换的完整列表可在 API 文档中找到.
 
 输出操作允许将 DStream 的数据推送到外部系统, 如数据库或文件系统.
 由于输出操作实际上允许外部系统使用变换后的数据, 所以它们触发所有 DStream 变换的实际执行(类似于RDD的动作).
-目前, 定义了以下输出操作：
+目前, 定义了以下输出操作:
 
 <table class="table">
 <tr><th style="width:30%">Output Operation</th><th>Meaning</th></tr>
@@ -1092,9 +1083,9 @@ DStream 转换的完整列表可在 API 文档中找到.
 <div data-lang="scala" markdown="1">
 {% highlight scala %}
 dstream.foreachRDD { rdd =>
-  val connection = createNewConnection()  // executed at the driver
+  val connection = createNewConnection()  // 在 driver上执行
   rdd.foreach { record =>
-    connection.send(record) // executed at the worker
+    connection.send(record) // 在 worker 上执行
   }
 }
 {% endhighlight %}
@@ -1102,9 +1093,9 @@ dstream.foreachRDD { rdd =>
 <div data-lang="java" markdown="1">
 {% highlight java %}
 dstream.foreachRDD(rdd -> {
-  Connection connection = createNewConnection(); // executed at the driver
+  Connection connection = createNewConnection(); // 在 driver上执行
   rdd.foreach(record -> {
-    connection.send(record); // executed at the worker
+    connection.send(record); // 在 worker 上执行
   });
 });
 {% endhighlight %}
@@ -1112,7 +1103,7 @@ dstream.foreachRDD(rdd -> {
 <div data-lang="python" markdown="1">
 {% highlight python %}
 def sendRecord(rdd):
-    connection = createNewConnection()  # executed at the driver
+    connection = createNewConnection()  # 在 driver上执行
     rdd.foreach(lambda record: connection.send(record))
     connection.close()
 
@@ -1226,12 +1217,12 @@ dstream.foreachRDD { rdd =>
 {% highlight java %}
 dstream.foreachRDD(rdd -> {
   rdd.foreachPartition(partitionOfRecords -> {
-    // ConnectionPool is a static, lazily initialized pool of connections
+    // ConnectionPool是一个静态的,延迟初始化的连接池
     Connection connection = ConnectionPool.getConnection();
     while (partitionOfRecords.hasNext()) {
       connection.send(partitionOfRecords.next());
     }
-    ConnectionPool.returnConnection(connection); // return to the pool for future reuse
+    ConnectionPool.returnConnection(connection); // 返回到池中以备将来重复使用
   });
 });
 {% endhighlight %}
@@ -1239,11 +1230,11 @@ dstream.foreachRDD(rdd -> {
 <div data-lang="python" markdown="1">
 {% highlight python %}
 def sendPartition(iter):
-    # ConnectionPool is a static, lazily initialized pool of connections
+    # ConnectionPool是一个静态的,延迟初始化的连接池
     connection = ConnectionPool.getConnection()
     for record in iter:
         connection.send(record)
-    # return to the pool for future reuse
+    # 返回到池中以备将来重复使用
     ConnectionPool.returnConnection(connection)
 
 dstream.foreachRDD(lambda rdd: rdd.foreachPartition(sendPartition))
@@ -1281,7 +1272,7 @@ words.foreachRDD { rdd =>
   val spark = SparkSession.builder.config(rdd.sparkContext.getConf).getOrCreate()
   import spark.implicits._
 
-  // Convert RDD[String] to DataFrame
+  // 转换 RDD[String] 到 DataFrame
   val wordsDataFrame = rdd.toDF("word")
 
   // 创建一个临时视图
@@ -1300,7 +1291,7 @@ words.foreachRDD { rdd =>
 <div data-lang="java" markdown="1">
 {% highlight java %}
 
-/** Java Bean class for converting RDD to DataFrame */
+/** 用于将 RDD 转换为 DataFrame 的 Java Bean 类 */
 public class JavaRow implements java.io.Serializable {
   private String word;
 
@@ -1315,15 +1306,15 @@ public class JavaRow implements java.io.Serializable {
 
 ...
 
-/** DataFrame operations inside your streaming program */
+/** 您的 streaming 程序中的 DataFrame 操作 */
 
 JavaDStream<String> words = ... 
 
 words.foreachRDD((rdd, time) -> {
-  // Get the singleton instance of SparkSession
+  // 获取 SparkSession 的单例实例
   SparkSession spark = SparkSession.builder().config(rdd.sparkContext().getConf()).getOrCreate();
 
-  // Convert RDD[String] to RDD[case class] to DataFrame
+  // 将 RDD [String]转换为 RDD [case class] 到 DataFrame
   JavaRDD<JavaRow> rowRDD = rdd.map(word -> {
     JavaRow record = new JavaRow();
     record.setWord(word);
@@ -1331,10 +1322,10 @@ words.foreachRDD((rdd, time) -> {
   });
   DataFrame wordsDataFrame = spark.createDataFrame(rowRDD, JavaRow.class);
 
-  // Creates a temporary view using the DataFrame
+  // 使用 DataFrame 创建一个临时视图
   wordsDataFrame.createOrReplaceTempView("words");
 
-  // Do word count on table using SQL and print it
+  // 使用 SQL 对表格进行统计并打印
   DataFrame wordCountsDataFrame =
     spark.sql("select word, count(*) as total from words group by word");
   wordCountsDataFrame.show();
@@ -1346,7 +1337,7 @@ words.foreachRDD((rdd, time) -> {
 <div data-lang="python" markdown="1">
 {% highlight python %}
 
-# Lazily instantiated global instance of SparkSession
+# 懒惰地实例化 SparkSession 的全局实例
 def getSparkSessionInstance(sparkConf):
     if ("sparkSessionSingletonInstance" not in globals()):
         globals()["sparkSessionSingletonInstance"] = SparkSession \
@@ -1357,24 +1348,24 @@ def getSparkSessionInstance(sparkConf):
 
 ...
 
-# DataFrame operations inside your streaming program
+#  您的 streaming 程序中的 DataFrame 操作 
 
-words = ... # DStream of strings
+words = ... # DStream 字符串
 
 def process(time, rdd):
     print("========= %s =========" % str(time))
     try:
-        # Get the singleton instance of SparkSession
+        # 获得一个单例的 SparkSession 实例
         spark = getSparkSessionInstance(rdd.context.getConf())
 
-        # Convert RDD[String] to RDD[Row] to DataFrame
+        #将RDD [String] 转换为 RDD [Row]到 DataFrame 
         rowRdd = rdd.map(lambda w: Row(word=w))
         wordsDataFrame = spark.createDataFrame(rowRdd)
 
-        # Creates a temporary view using the DataFrame
+        # 使用 DataFrame 创建一个临时视图
         wordsDataFrame.createOrReplaceTempView("words")
 
-        # Do word count on table using SQL and print it
+        # 使用 SQL 对表格进行统计并打印
         wordCountsDataFrame = spark.sql("select word, count(*) as total from words group by word")
         wordCountsDataFrame.show()
     except:
@@ -1459,7 +1450,7 @@ words.foreachRDD(process)
 使用 `StreamingContext.getOrCreate` 可以简化此行为. 可以如下使用.
 
 {% highlight scala %}
-// 使用函数来创建和设置一个新的StreamingContext
+// 使用函数来创建和设置一个新的 StreamingContext
 def functionToCreateContext(): StreamingContext = {
   val ssc = new StreamingContext(...)   // new context
   val lines = ssc.socketTextStream(...) // create DStreams
@@ -1468,7 +1459,7 @@ def functionToCreateContext(): StreamingContext = {
   ssc
 }
 
-// 从检查点数据中获取StreamingContext或创建一个新的
+// 从检查点数据中获取 StreamingContext 或创建一个新的
 val context = StreamingContext.getOrCreate(checkpointDirectory, functionToCreateContext _)
 
 // 在需要完成的上下文上做额外的设置,
@@ -1489,10 +1480,10 @@ context.awaitTermination()
 </div>
 <div data-lang="java" markdown="1">
 
-This behavior is made simple by using `JavaStreamingContext.getOrCreate`. This is used as follows.
+这种行为通过使用 `JavaStreamingContext.getOrCreate` 变得简单. 这用于如下.
 
 {% highlight java %}
-// Create a factory object that can create and setup a new JavaStreamingContext
+// 创建一个可以创建和设置新的 JavaStreamingContext 的工厂对象
 JavaStreamingContextFactory contextFactory = new JavaStreamingContextFactory() {
   @Override public JavaStreamingContext create() {
     JavaStreamingContext jssc = new JavaStreamingContext(...);  // new context
@@ -1503,32 +1494,32 @@ JavaStreamingContextFactory contextFactory = new JavaStreamingContextFactory() {
   }
 };
 
-// Get JavaStreamingContext from checkpoint data or create a new one
+// 从检查点数据获取 JavaStreamingContext 或创建一个新的
 JavaStreamingContext context = JavaStreamingContext.getOrCreate(checkpointDirectory, contextFactory);
 
-// Do additional setup on context that needs to be done,
-// irrespective of whether it is being started or restarted
+// 在需要完成的上下文上做额外的设置,
+// 不管是否正在启动或重新启动
 context. ...
 
-// Start the context
+// 启动上下文
 context.start();
 context.awaitTermination();
 {% endhighlight %}
 
-If the `checkpointDirectory` exists, then the context will be recreated from the checkpoint data.
-If the directory does not exist (i.e., running for the first time),
-then the function `contextFactory` will be called to create a new
-context and set up the DStreams. See the Java example
+如果 `checkpointDirectory` 存在,则将从检查点数据重新创建上下文.
+如果目录不存在(即第一次运行),
+那么函数 `contextFactory` 将被调用来创建一个新的
+上下文并设置 DStreams . 请参阅Java示例
 [JavaRecoverableNetworkWordCount]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/java/org/apache/spark/examples/streaming/JavaRecoverableNetworkWordCount.java).
-This example appends the word counts of network data into a file.
+本示例将网络数据的字数附加到文件中.
 
 </div>
 <div data-lang="python" markdown="1">
 
-This behavior is made simple by using `StreamingContext.getOrCreate`. This is used as follows.
+使用 `StreamingContext.getOrCreate` 可以简化此行为. 可以如下使用.
 
 {% highlight python %}
-# Function to create and setup a new StreamingContext
+// 使用函数来创建和设置一个新的 StreamingContext
 def functionToCreateContext():
     sc = SparkContext(...)  # new context
     ssc = StreamingContext(...)
@@ -1537,11 +1528,11 @@ def functionToCreateContext():
     ssc.checkpoint(checkpointDirectory)  # set checkpoint directory
     return ssc
 
-# Get StreamingContext from checkpoint data or create a new one
+// 从检查点数据中获取 StreamingContext 或创建一个新的
 context = StreamingContext.getOrCreate(checkpointDirectory, functionToCreateContext)
 
-# Do additional setup on context that needs to be done,
-# irrespective of whether it is being started or restarted
+// 在需要完成的上下文上做额外的设置,
+// 不管是否正在启动或重新启动
 context. ...
 
 # Start the context
@@ -1549,15 +1540,13 @@ context.start()
 context.awaitTermination()
 {% endhighlight %}
 
-If the `checkpointDirectory` exists, then the context will be recreated from the checkpoint data.
-If the directory does not exist (i.e., running for the first time),
-then the function `functionToCreateContext` will be called to create a new
-context and set up the DStreams. See the Python example
-[recoverable_network_wordcount.py]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/python/streaming/recoverable_network_wordcount.py).
-This example appends the word counts of network data into a file.
-
-You can also explicitly create a `StreamingContext` from the checkpoint data and start the
- computation by using `StreamingContext.getOrCreate(checkpointDirectory, None)`.
+如果 `checkpointDirectory` 存在,则将从检查点数据重新创建上下文. 
+如果该目录不存在(即,第一次运行),
+则函数 `functionToCreateContext` 将被调用以创建新的上下文并设置 DStream.
+请参阅 Python 示例[recoverable_network_wordcount.py]({{site.SPARK_GITHUB_URL}}/tree/master/examples/src/main/python/streaming/recoverable_network_wordcount.py).
+本示例将网络数据的字数追加到文件中.
+你也可以显式地从检查点数据创建一个StreamingContext并启动它
+  通过使用 `StreamingContext.getOrCreate(checkpointDirectory, None)` 计算.
 
 </div>
 </div>
@@ -1672,11 +1661,11 @@ class JavaDroppedWordsCounter {
 }
 
 wordCounts.foreachRDD((rdd, time) -> {
-  // Get or register the blacklist Broadcast
+  // 获取或注册黑名单广播
   Broadcast<List<String>> blacklist = JavaWordBlacklist.getInstance(new JavaSparkContext(rdd.context()));
-  // Get or register the droppedWordsCounter Accumulator
+  // 获取或注册 droppedWordsCounter 累加器
   LongAccumulator droppedWordsCounter = JavaDroppedWordsCounter.getInstance(new JavaSparkContext(rdd.context()));
-  // Use blacklist to drop words and use droppedWordsCounter to count them
+  // 使用黑名单放行单词,并使用 droppedWordsCounter 对它们进行计数
   String counts = rdd.filter(wordCount -> {
     if (blacklist.value().contains(wordCount._1())) {
       droppedWordsCounter.add(wordCount._2());
@@ -1705,12 +1694,12 @@ def getDroppedWordsCounter(sparkContext):
     return globals()["droppedWordsCounter"]
 
 def echo(time, rdd):
-    # Get or register the blacklist Broadcast
+    # 获取或注册黑名单广播
     blacklist = getWordBlacklist(rdd.context)
-    # Get or register the droppedWordsCounter Accumulator
+    # 获取或注册 droppedWordsCounter 累加器
     droppedWordsCounter = getDroppedWordsCounter(rdd.context)
 
-    # Use blacklist to drop words and use droppedWordsCounter to count them
+    # 使用黑名单放行单词,并使用 droppedWordsCounter 对它们进行计数
     def filterFunc(wordCount):
         if wordCount[0] in blacklist.value:
             droppedWordsCounter.add(wordCount[1])
@@ -1746,7 +1735,7 @@ wordCounts.foreachRDD(echo)
 
 - *为 executor 配置足够的内存* - 由于接收到的数据必须存储在内存中, 所以 executor 必须配置足够的内存来保存接收到的数据. 请注意, 如果您正在进行10分钟的窗口操作, 系统必须至少保留最近10分钟的内存中的数据. 因此, 应用程序的内存要求取决于其中使用的操作.
 
-- *配置 checkpoint* - 如果 streaming 应用程序需要它, 则 Hadoop API 兼容容错存储(例如：HDFS, S3等)中的目录必须配置为 checkpoint 目录, 并且流程应用程序以 checkpoint 信息的方式编写 用于故障恢复. 有关详细信息, 请参阅 [checkpoint](#checkpointing) 部分.
+- *配置 checkpoint* - 如果 streaming 应用程序需要它, 则 Hadoop API 兼容容错存储(例如:HDFS, S3等)中的目录必须配置为 checkpoint 目录, 并且流程应用程序以 checkpoint 信息的方式编写 用于故障恢复. 有关详细信息, 请参阅 [checkpoint](#checkpointing) 部分.
 
 - *配置应用程序 driver 的自动重新启动* - 要从 driver 故障自动恢复, 用于运行流应用程序的部署基础架构必须监视 driver 进程, 并在 driver 发生故障时重新启动 driver.不同的 [集群管理者](cluster-overview.html#cluster-manager-types) 有不同的工具来实现这一点.
     + *Spark Standalone* - 可以提交 Spark 应用程序 driver 以在Spark Standalone集群中运行(请参阅 [集群部署模式](spark-standalone.html#launching-spark-applications) ), 即应用程序 driver 本身在其中一个工作节点上运行. 此外, 可以指示独立的群集管理器来监督 driver, 如果由于非零退出代码而导致 driver 发生故障, 或由于运行 driver 的节点发生故障, 则可以重新启动它. 有关详细信息, 请参阅 [Spark Standalone 指南]](spark-standalone.html) 中的群集模式和监督.
