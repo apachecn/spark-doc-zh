@@ -1,6 +1,6 @@
 ---
 layout: global
-title: Spark Streaming + Kafka Integration Guide (Kafka broker version 0.10.0 or higher)
+title: Spark Streaming + Kafka 集成指南 (Kafka版本0.10.0或更高版本)
 ---
 
 Kafka 0.10的Spark Streaming集成在设计上类似于0.8 [Direct Stream approach](streaming-kafka-0-8-integration.html#approach-2-direct-approach-no-receivers)。 它提供简单的并行性，Kafka分区和Spark分区之间的1：1对应，以及访问偏移和元数据。 然而，因为新的集成使用了 [新的Kafka消费者API](http://kafka.apache.org/documentation.html#newconsumerapi) 而不是简单的API，所以在使用上有显着的差异。 此版本的集成被标记为实验性的，因此API可能会更改。
