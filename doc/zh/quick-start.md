@@ -94,7 +94,7 @@ We can chain together transformations and actions:
 
 
 ## Dataset 上的更多操作
-Dataset actions（操作）和 transformations（转换）可以用于更复杂的计算。例如, 统计出现次数最多的单词 : 
+Dataset actions（操作）和 transformations（转换）可以用于更复杂的计算。例如, 统计出现次数最多的行 : 
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
