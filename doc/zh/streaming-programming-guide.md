@@ -837,10 +837,10 @@ Spark Streaming 也支持 *windowed computations (窗口计算) *, 它允许你�
 
 如上图显示, 窗口在源 DStream 上 *slides (滑动) *, 合并和操作落入窗内的源 RDDs, 产生窗口化的 DStream 的 RDDs.在这个具体的例子中, 程序在三个时间单元的数据上进行窗口操作, 并且每两个时间单元滑动一次. 这说明, 任何一个窗口操作都需要指定两个参数.
 
- * <i>window length (窗口长度) </i> - 窗口的持续时间 (图 3) .
- * <i>sliding interval (滑动间隔) </i> - 执行窗口操作的间隔 (图 2) .
+ * <i>window length (窗口长度) </i> - 窗口的持续时间 (图例中该值为3) .
+ * <i>sliding interval (滑动间隔) </i> - 执行窗口操作的间隔 (图例中该值为2) .
 
-这两个参数必须是 source DStream 的 batch interval (批间隔) 的倍数 (图 1) .  
+这两个参数必须是 source DStream 的 batch interval (批间隔) 的倍数 (图例中该值为1) .  
 
 让我们举例以说明窗口操作.
 例如, 你想扩展前面的例子用来计算过去 30 秒的词频, 间隔时间是 10 秒.
