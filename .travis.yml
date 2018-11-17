@@ -3,8 +3,7 @@ rvm:
   - 2.5
 
 install:
-  - gem install jekyll
-  - gem install pygments.rb
+  - gem install jekyll jekyll-redirect-from pygments.rb
 
 script:
   - cd doc/zh
