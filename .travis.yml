@@ -4,6 +4,7 @@ rvm:
 
 install:
   - gem install jekyll
+  - gem install pygments.rb
 
 script:
   - cd doc/zh
