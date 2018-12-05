@@ -27,4 +27,5 @@
     +   [构建 Spark](docs/27.md)
     +   [其它](docs/28.md)
 +   [外部资源](docs/29.md)
++   [Spark RDD（Resilient Distributed Datasets）论文](docs/paper.md)
 +   [翻译进度](docs/30.md)
