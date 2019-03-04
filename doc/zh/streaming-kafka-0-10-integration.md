@@ -1,21 +1,21 @@
 ---
 layout: global
-title: Spark Streaming + Kafka Integration Guide (Kafka broker version 0.10.0 or higher)
+title: Spark Streaming + Kafka 集成指南 (Kafka版本0.10.0或更高版本)
 ---
 
-The Spark Streaming integration for Kafka 0.10 is similar in design to the 0.8 [Direct Stream approach](streaming-kafka-0-8-integration.html#approach-2-direct-approach-no-receivers).  It provides simple parallelism,  1:1 correspondence between Kafka partitions and Spark partitions, and access to offsets and metadata. However, because the newer integration uses the [new Kafka consumer API](http://kafka.apache.org/documentation.html#newconsumerapi) instead of the simple API, there are notable differences in usage. This version of the integration is marked as experimental, so the API is potentially subject to change.
+Kafka 0.10的Spark Streaming集成在设计上类似于0.8 [Direct Stream approach](streaming-kafka-0-8-integration.html#approach-2-direct-approach-no-receivers)。 它提供简单的并行性，Kafka分区和Spark分区之间的1：1对应，以及访问偏移和元数据。 然而，因为新的集成使用了 [新的Kafka消费者API](http://kafka.apache.org/documentation.html#newconsumerapi) 而不是简单的API，所以在使用上有显着的差异。 此版本的集成被标记为实验性的，因此API可能会更改。
 
-### Linking
-For Scala/Java applications using SBT/Maven project definitions, link your streaming application with the following artifact (see [Linking section](streaming-programming-guide.html#linking) in the main programming guide for further information).
+### 链接
+对于使用SBT/Maven项目定义的Scala/Java应用程序，将流应用程序与以下artifact链接 (有关详细信息，请参阅主编程指南中的[链接部分](streaming-programming-guide.html#linking))。
 
 	groupId = org.apache.spark
 	artifactId = spark-streaming-kafka-0-10_{{site.SCALA_BINARY_VERSION}}
 	version = {{site.SPARK_VERSION_SHORT}}
 
-**Do not** manually add dependencies on `org.apache.kafka` artifacts (e.g. `kafka-clients`).  The `spark-streaming-kafka-0-10` artifact has the appropriate transitive dependencies already, and different versions may be incompatible in hard to diagnose ways.
+**不要** 在org.apache.kafka artifact上手动添加依赖项（例如kafka-clients）。 spark-streaming-kafka-0-10 artifact已经具有适当的传递依赖性，不同的版本可能在难以诊断的方式上不兼容。
 
-### Creating a Direct Stream
- Note that the namespace for the import includes the version, org.apache.spark.streaming.kafka010
+### 创建 Direct Stream
+ 请注意，导入的命名空间包括版本org.apache.spark.streaming.kafka010
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -82,31 +82,31 @@ stream.mapToPair(record -> new Tuple2<>(record.key(), record.value()));
 </div>
 </div>
 
-For possible kafkaParams, see [Kafka consumer config docs](http://kafka.apache.org/documentation.html#newconsumerconfigs).
-If your Spark batch duration is larger than the default Kafka heartbeat session timeout (30 seconds), increase heartbeat.interval.ms and session.timeout.ms appropriately.  For batches larger than 5 minutes, this will require changing group.max.session.timeout.ms on the broker.
-Note that the example sets enable.auto.commit to false, for discussion see [Storing Offsets](streaming-kafka-0-10-integration.html#storing-offsets) below.
+有关可能的kafkaParams，请参阅 [Kafka consumer配置文件]   (http://kafka.apache.org/documentation.html#newconsumerconfigs)。
+如果您的Spark批处理持续时间大于默认的Kafka心跳会话超时 (30 秒)，请适当增加 heartbeat.interval.ms 和 session.timeout.ms。 对于大于5分钟的批次，这将需要更改代理上的 group.max.session.timeout.ms。
+请注意，示例将enable.auto.commit设置为false， 有关讨论，请参阅下面的 [存储偏移](streaming-kafka-0-10-integration.html#storing-offsets) 。
 
 ### LocationStrategies
-The new Kafka consumer API will pre-fetch messages into buffers.  Therefore it is important for performance reasons that the Spark integration keep cached consumers on executors (rather than recreating them for each batch), and prefer to schedule partitions on the host locations that have the appropriate consumers.
+新的Kafka consumer API会将消息预取到缓冲区中。因此，出于性能原因，Spark集成保持缓存消费者对执行者（而不是为每个批次重新创建它们）是重要的，并且更喜欢在具有适当消费者的主机位置上调度分区。   
 
-In most cases, you should use `LocationStrategies.PreferConsistent` as shown above.  This will distribute partitions evenly across available executors.  If your executors are on the same hosts as your Kafka brokers, use `PreferBrokers`, which will prefer to schedule partitions on the Kafka leader for that partition.  Finally, if you have a significant skew in load among partitions, use `PreferFixed`. This allows you to specify an explicit mapping of partitions to hosts (any unspecified partitions will use a consistent location).
+在大多数情况下，您应该使用  `LocationStrategies.PreferConsistent`如上所示。 这将在可用的执行器之间均匀分配分区。  如果您的执行程序与Kafka代理所在的主机相同，请使用 `PreferBrokers`，这将更喜欢在该分区的Kafka leader上安排分区。 最后，如果您在分区之间的负载有显着偏差，请使用  `PreferFixed`。这允许您指定分区到主机的显式映射 (任何未指定的分区将使用一致的位置)。
 
-The cache for consumers has a default maximum size of 64.  If you expect to be handling more than (64 * number of executors) Kafka partitions, you can change this setting via `spark.streaming.kafka.consumer.cache.maxCapacity`.
+消费者的缓存的默认最大大小为64。 如果您希望处理超过 (64 * 执行程序数) Kafka分区，则可以通过以下方式更改此设置 `spark.streaming.kafka.consumer.cache.maxCapacity`.
 
-If you would like to disable the caching for Kafka consumers, you can set `spark.streaming.kafka.consumer.cache.enabled` to `false`. Disabling the cache may be needed to workaround the problem described in SPARK-19185. This property may be removed in later versions of Spark, once SPARK-19185 is resolved.
+如果您想禁用Kafka使用者的缓存，则可以将`spark.streaming.kafka.consumer.cache.enabled` 设置为 `false`。 可能需要禁用缓存来解决SPARK-19185中描述的问题。 SPARK-19185解决后，该属性可能会在更高版本的Spark中删除。
 
-The cache is keyed by topicpartition and group.id, so use a **separate** `group.id` for each call to `createDirectStream`.
+缓存由topicpartition和group.id键入， 因此对每个调用者使用一个 **单独** `group.id` 进行 `createDirectStream`.
 
 
 ### ConsumerStrategies
-The new Kafka consumer API has a number of different ways to specify topics, some of which require considerable post-object-instantiation setup.  `ConsumerStrategies` provides an abstraction that allows Spark to obtain properly configured consumers even after restart from checkpoint.
+新的Kafka consumer API有许多不同的方式来指定主题，其中一些需要相当多的post-object-instantiation设置。 `ConsumerStrategies` 提供了一种抽象，允许Spark即使在从检查点重新启动后也能获得正确配置的消费者。
 
-`ConsumerStrategies.Subscribe`, as shown above, allows you to subscribe to a fixed collection of topics. `SubscribePattern` allows you to use a regex to specify topics of interest. Note that unlike the 0.8 integration, using `Subscribe` or `SubscribePattern` should respond to adding partitions during a running stream. Finally, `Assign` allows you to specify a fixed collection of partitions.  All three strategies have overloaded constructors that allow you to specify the starting offset for a particular partition.
+`ConsumerStrategies.Subscribe`，如上所示，允许您订阅固定的主题集合。 `SubscribePattern`允许您使用正则表达式来指定感兴趣的主题。 注意，与0.8集成不同，在运行流期间使用 `Subscribe` 或  `SubscribePattern` 应该响应添加分区。 最后， `Assign` 允许您指定固定的分区集合。 所有三个策略都有重载的构造函数，允许您指定特定分区的起始偏移量。
 
-If you have specific consumer setup needs that are not met by the options above, `ConsumerStrategy` is a public class that you can extend.
+如果您具有上述选项不满足的特定用户设置需求，则 `ConsumerStrategy` 是可以扩展的公共类。
 
-### Creating an RDD
-If you have a use case that is better suited to batch processing, you can create an RDD for a defined range of offsets.
+### 创建RDD
+如果您有一个更适合批处理的用例，则可以为定义的偏移量范围创建RDD。
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -142,9 +142,9 @@ JavaRDD<ConsumerRecord<String, String>> rdd = KafkaUtils.createRDD(
 </div>
 </div>
 
-Note that you cannot use `PreferBrokers`, because without the stream there is not a driver-side consumer to automatically look up broker metadata for you.  Use `PreferFixed` with your own metadata lookups if necessary.
+注意，你不能使用 `PreferBrokers`，因为没有流没有驱动程序端消费者为你自动查找代理元数据。 如果需要，请使用 `PreferFixed` 查找自己的元数据。
 
-### Obtaining Offsets
+### 获取偏移量
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -172,16 +172,16 @@ stream.foreachRDD(rdd -> {
 </div>
 </div>
 
-Note that the typecast to `HasOffsetRanges` will only succeed if it is done in the first method called on the result of `createDirectStream`, not later down a chain of methods. Be aware that the one-to-one mapping between RDD partition and Kafka partition does not remain after any methods that shuffle or repartition, e.g. reduceByKey() or window().
+注意类型转换 `HasOffsetRanges` 只会成功，如果是在第一个方法中调用的结果 `createDirectStream`，不是后来一系列的方法。 请注意，RDD分区和Kafka分区之间的一对一映射在任何随机或重新分区的方法后不会保留， 例如 reduceByKey() 或 window()。
 
-### Storing Offsets
-Kafka delivery semantics in the case of failure depend on how and when offsets are stored.  Spark output operations are [at-least-once](streaming-programming-guide.html#semantics-of-output-operations).  So if you want the equivalent of exactly-once semantics, you must either store offsets after an idempotent output, or store offsets in an atomic transaction alongside output. With this integration, you have 3 options, in order of increasing reliability (and code complexity), for how to store offsets.
+### 存储偏移量
+在失败的情况下的Kafka交付语义取决于如何和何时存储偏移。 Spark 输出操作是 [at-least-once](streaming-programming-guide.html#semantics-of-output-operations)。 因此，如果你想要一个完全一次的语义的等价物，你必须在一个等幂输出之后存储偏移，或者在一个原子事务中存储偏移和输出。使用这种集成，您有3个选项，按照可靠性 (和代码复杂性)的增加，如何存储偏移。
 
-#### Checkpoints
-If you enable Spark [checkpointing](streaming-programming-guide.html#checkpointing), offsets will be stored in the checkpoint.  This is easy to enable, but there are drawbacks. Your output operation must be idempotent, since you will get repeated outputs; transactions are not an option.  Furthermore, you cannot recover from a checkpoint if your application code has changed.  For planned upgrades, you can mitigate this by running the new code at the same time as the old code (since outputs need to be idempotent anyway, they should not clash).  But for unplanned failures that require code changes, you will lose data unless you have another way to identify known good starting offsets.
+#### 检查点
+如果启用Spark [checkpointing](streaming-programming-guide.html#checkpointing)，偏移将存储在检查点中。 这很容易实现，但有缺点。你的输出操作必须是幂等的，因为你会得到重复的输出; 事务不是一个选项。此外，如果应用程序代码已更改，您将无法从检查点恢复。 对于计划升级，您可以通过与旧代码同时运行新代码来缓解这种情况 (因为输出必须是幂等的，它们不应该冲突)。但对于需要更改代码的意外故障，您将丢失数据，除非您有其他方法来识别已知的良好起始偏移。
 
-#### Kafka itself
-Kafka has an offset commit API that stores offsets in a special Kafka topic.  By default, the new consumer will periodically auto-commit offsets. This is almost certainly not what you want, because messages successfully polled by the consumer may not yet have resulted in a Spark output operation, resulting in undefined semantics. This is why the stream example above sets "enable.auto.commit" to false.  However, you can commit offsets to Kafka after you know your output has been stored, using the `commitAsync` API. The benefit as compared to checkpoints is that Kafka is a durable store regardless of changes to your application code.  However, Kafka is not transactional, so your outputs must still be idempotent.
+#### kafka
+Kafka有一个偏移提交API，将偏移存储在特殊的Kafka主题中。 默认情况下，新消费者将定期自动提交偏移量。 这几乎肯定不是你想要的，因为消费者成功轮询的消息可能还没有导致Spark输出操作，导致未定义的语义。这就是为什么上面的流示例将 "enable.auto.commit" 设置为false的原因。但是，您可以在使用 `commitAsync` 存储了输出后，向Kafka提交偏移量。与检查点相比，Kafka是一个耐用的存储，而不管您的应用程序代码的更改。 然而，Kafka不是事务性的，所以你的输出必须仍然是幂等的。
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -207,8 +207,8 @@ stream.foreachRDD(rdd -> {
 </div>
 </div>
 
-#### Your own data store
-For data stores that support transactions, saving offsets in the same transaction as the results can keep the two in sync, even in failure situations.  If you're careful about detecting repeated or skipped offset ranges, rolling back the transaction prevents duplicated or lost messages from affecting results.  This gives the equivalent of exactly-once semantics.  It is also possible to use this tactic even for outputs that result from aggregations, which are typically hard to make idempotent.
+#### 自己的数据存储
+对于支持事务的数据存储，即使在故障情况下，也可以在同一事务中保存偏移量作为结果，以保持两者同步。如果您仔细检查重复或跳过的偏移范围，则回滚事务可防止重复或丢失的邮件影响结果。这给出了恰好一次语义的等价物。也可以使用这种策略甚至对于聚合产生的输出，聚合通常很难使幂等。
 
 <div class="codetabs">
 <div data-lang="scala" markdown="1">
@@ -275,7 +275,7 @@ stream.foreachRDD(rdd -> {
 </div>
 
 ### SSL / TLS
-The new Kafka consumer [supports SSL](http://kafka.apache.org/documentation.html#security_ssl).  To enable it, set kafkaParams appropriately before passing to `createDirectStream` / `createRDD`.  Note that this only applies to communication between Spark and Kafka brokers; you are still responsible for separately [securing](security.html) Spark inter-node communication.
+新的Kafka消费者 [支持 SSL](http://kafka.apache.org/documentation.html#security_ssl)。要启用它，请在传递到 `createDirectStream` / `createRDD` 之前适当地设置kafkaParams。注意，这只适用于Spark和Kafka代理之间的通信; 您仍然有责任单独保证 Spark [securing](security.html)节点间通信。
 
 
 <div class="codetabs">
@@ -306,9 +306,9 @@ kafkaParams.put("ssl.key.password", "test1234");
 </div>
 </div>
 
-### Deploying
+### 部署
 
-As with any Spark applications, `spark-submit` is used to launch your application.
+与任何Spark应用程序一样， `spark-submit`用于启动应用程序。
 
-For Scala and Java applications, if you are using SBT or Maven for project management, then package `spark-streaming-kafka-0-10_{{site.SCALA_BINARY_VERSION}}` and its dependencies into the application JAR. Make sure `spark-core_{{site.SCALA_BINARY_VERSION}}` and `spark-streaming_{{site.SCALA_BINARY_VERSION}}` are marked as `provided` dependencies as those are already present in a Spark installation. Then use `spark-submit` to launch your application (see [Deploying section](streaming-programming-guide.html#deploying-applications) in the main programming guide).
+对于Scala和Java应用程序，如果您使用SBT或Maven进行项目管理，则将程序包 `spark-streaming-kafka-0-10_{{site.SCALA_BINARY_VERSION}}` 及其依赖项包含到应用程序JAR中。 确保 `spark-core_{{site.SCALA_BINARY_VERSION}}` 和 `spark-streaming_{{site.SCALA_BINARY_VERSION}}` 被标记为 `provided` 依赖关系，因为它们已经存在于Spark安装中。 然后使用`spark-submit` 启动应用程序 (参阅主程序指南中的 [Deploying section](streaming-programming-guide.html#deploying-applications)).
 

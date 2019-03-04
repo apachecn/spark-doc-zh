@@ -15,6 +15,8 @@ github: <https://github.com/apachecn/spark-doc-zh/>
 ## 历史版本
 [Apache Spark 2.0.2 官方文档中文版](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2883613): [http://cwiki.apachecn.org/pages/viewpage.action?pageId=2883613](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2883613)
 
+[Spark 2.0.2 中文文档 EPUB 格式](https://github.com/apachecn/spark-doc-zh/raw/dl/Spark%202.0.2%20%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3.epub)
+
 ## 参与翻译 & 发现错误
     1. 在 github 上 fork 该 repository.
     2. 翻译 doc/zh 下面的 md 文件即可, 例如, index.md.
