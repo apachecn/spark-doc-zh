@@ -17,7 +17,7 @@ description: Tuning and performance optimization guide for Spark SPARK_VERSION_S
 序列化在任何分布式应用程序的性能中起着重要的作用。
 很慢的将对象序列化成某种格式或消费大量字节的数据将会大大降低计算速度。
 通常，这可能是您优化 Spark 应用程序的第一件事。
- Spark 宗旨在于方便和性能之间取得一个平衡（允许您使用操作中的任何 Java 类型）。 它提供了两种序列化库：
+ Spark 宗旨在于便利和性能之间取得一个平衡（允许您使用操作中的任何 Java 类型）。 它提供了两种序列化库：
 
 * [Java serialization](http://docs.oracle.com/javase/6/docs/api/java/io/Serializable.html):
   默认情况下，Spark 使用 Java `ObjectOutputStream` 框架序列化对象，并且可以与您创建的任何实现 [`java.io.Serializable`](http://docs.oracle.com/javase/6/docs/api/java/io/Serializable.html) 的类一起使用。
@@ -42,13 +42,13 @@ val sc = new SparkContext(conf)
 
 如果您的对象很大，您可能还需要增加 `spark.kryoserializer.buffer` [配置](configuration.html#compression-and-serialization)。该值需要足够大才能容纳您将序列化的大对象。
 
-最后，如果您没有注册自定义类， Kryo 仍然可以工作，但它必须存储每个对象的完整类名称，这是浪费的。
+最后，如果您没有注册自定义类， Kryo 仍然可以工作，但它必须存储每个对象的完整类名称，这是相当浪费资源的。
 
 # 内存调优
 
 在调整内存的使用时有三个方面的考虑：你的对象所使用的内存量（你可能希望你的整个数据集都可以放在在内存中），访问这些对象*成本*，*垃圾收集*的开销（如果在某种对象上有更高的周转率）。
 
-默认情况下， Java 对象可以快速访问，但可以轻松地消耗比其字段中的 "raw" 数据多2-5倍的空间。这是由于以下几个原因：
+默认情况下， Java 对象可以快速访问，但经常需要地消耗比其字段中的 "raw" 数据多2-5倍的空间。这是由于以下几个原因：
 
 * 每个不同的 Java 对象都有一个 "object header" ，它大约是16个字节，包含一个指向它的类的指针。对于一个数据很少的对象（比如说一个`Int`字段），这些额外的信息比数据大。
 * Java `String` 在原始字符串数据上具有大约40字节的开销（因为它们存储在 `Char` 数组中并保留额外的数据，例如长度），并且由于 UTF-16 的内部将每个字符存储为*两个*字节 `String` 编码。因此，一个10个字符的字符串可以容易地消耗60个字节。
