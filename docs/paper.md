@@ -95,19 +95,19 @@ errors.persist()
 到目前为止，集群上还没有真正的触发计算.然而，用户可以对RDD进行action操作，比如对错误信息的计数:
 
 ```
-errors.count（） 
+errors.count()
 ```
 
 用户也可以继续对 RDD 进行 transformations 操作，然后计算其结果，比如:
 
 ```
 //对错误中含有 ”MySQL” 单词的数据进行计数
-errors.filters(_.contains("MySQL"））.count(）
+errors.filters(_.contains("MySQL")).count()
 
 //返回错误信息中含有 "HDFS" 字样的信息中的时间字段的值（假设每行数据的字段是以 tab 来切分的，时间字段是第 3 个字段）
 errors.filter(_.contains("HDFS"))
         .map(_.split("\t")(3))
-        .collect() 
+        .collect()
 ```
 
 在对 errors 第一次做 action 操作的后，spark 会将 errors 的所有分区的数据存储在内存中，这样后面对 errors 的计算速度会有很大的提升.需要注意的是，像 lines 这种基础数据的 RDD 是不会存储在内存中的.因为包含错误信息的数据可能只是整个日志数据的一小部分，所以将包含错误数据的日志放在内存中是比较合理的.
@@ -283,7 +283,7 @@ Spark 在持久化 RDDs 的时候提供了 3 种存储选：存在内存中的�
 
 一般来说，checkpointing 对具有很长的血缘关系链且包含了宽依赖的 RDDs 是非常有用的，比如我们在 3.2.2 小节中提到的 PageRank 的例子。在这些场景下，集群中的某个节点的失败会导致每一个父亲 RDD 的一些数据的丢失，进而需要重新所有的计算。与此相反的，对于存储在稳定存储系统中且是窄依赖的 RDDs （比如 3.2.1 小节中线性回归例子中的 points 和 PageRank 中的 link 列表数据），checkpointing 可能一点用都没有。如果一个节点失败了，我们可以在其他的节点中并行的重新计算出丢失了数据的分区，这个成本只是备份整个 RDD 的成本的一点点而已.
 
-spark 目前提供了一个 checkpointing 的 api （ persist 中的标识为 REPLICATE，还有 checkpoint （）），但是需要将哪些数据需要 checkpointing 的决定权留给了用户。然而，我们也在调查怎么样自动的 checkpoing，因为我们的调度系统知道数据集的大小以及第一次计算这个数据集花的时间，所以有必要选择一些最佳的 RDDs 来进行 checkpointing，来达到最小化恢复时间
+spark 目前提供了一个 checkpointing 的 api （ persist 中的标识为 REPLICATE，还有 checkpoint()），但是需要将哪些数据需要 checkpointing 的决定权留给了用户。然而，我们也在调查怎么样自动的 checkpoing，因为我们的调度系统知道数据集的大小以及第一次计算这个数据集花的时间，所以有必要选择一些最佳的 RDDs 来进行 checkpointing，来达到最小化恢复时间
 
 最后，需要知道的事 RDDs 天生的只读的特性使的他们比一般的共享内存系统做 checkpointing 更简单了。因为不用考虑数据的一致性，我们可以不终止程序或者 take 快照，然后在后台将 RDDs 的数据写入到存储系统中.
 
