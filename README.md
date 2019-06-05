@@ -20,7 +20,7 @@ Apache Spark? 是一个快速的，用于海量数据处理的通用引擎。
 
 ## 负责人
 
-* [@wangyangting](https://github.com/wangyangting)（那伊抹微笑）
+* [@aloserman](https://github.com/aloserman)
 
 ## 贡献者
 
