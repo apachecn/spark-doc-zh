@@ -8,7 +8,6 @@ Apache Spark? 是一个快速的，用于海量数据处理的通用引擎。
 
 + [在线阅读](http://spark.apachecn.org)
 + [Github](https://github.com/apachecn/spark-doc-zh/)
-+ [ApacheCN 机器学习交流群 629470233](http://shang.qq.com/wpa/qunwpa?idkey=30e5f1123a79867570f665aa3a483ca404b1c3f77737bc01ec520ed5f078ddef)
 + [ApacheCN 学习资源](http://www.apachecn.org/)
 
 ## 历史版本
