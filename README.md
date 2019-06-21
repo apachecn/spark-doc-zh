@@ -14,6 +14,22 @@ Apache Spark? 是一个快速的，用于海量数据处理的通用引擎。
 +   [Apache Spark 2.0.2 官方文档中文版](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2883613)
     +   [中文文档 EPUB 格式](https://github.com/apachecn/spark-doc-zh/raw/dl/Spark%202.0.2%20%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3.epub)
 
+## 翻译进度
+
+[**贡献指南**](CONTRIBUTING.md)
+
+> 翻译 Spark 2.0.2
+
+* 贡献者: 记得留言和更新翻译进度
+* 地址: https://github.com/apachecn/spark-doc-zh/issues/189
+
+## 项目看板
+
+> 项目 Spark 2.0.2 看板
+
+* 负责人: 记得更新和优化
+* 地址: https://github.com/apachecn/spark-doc-zh/projects/1
+
 ## 贡献指南
 
 [请见这里](CONTRIBUTING.md)
