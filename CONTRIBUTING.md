@@ -1,30 +1,52 @@
 # 贡献指南
 
-为了使项目更加便于维护，我们将文档格式全部转换成了 Markdown，同时更换了页面生成器。后续维护工作将完全在 Markdown 上进行。
+> 请您勇敢地去翻译和改进翻译。虽然我们追求卓越，但我们并不要求您做到十全十美，因此请不要担心因为翻译上犯错——在大部分情况下，我们的服务器已经记录所有的翻译，因此您不必担心会因为您的失误遭到无法挽回的破坏。（改编自维基百科）
 
-小部分格式仍然存在问题，主要是链接和表格。需要大家帮忙找到，并提 PullRequest 来修复。
+* 为了使项目更加便于维护，我们将文档格式全部转换成了 Markdown，同时更换了页面生成器。后续维护工作将完全在 Markdown 上进行。
+* 小部分格式仍然存在问题，主要是链接和表格。需要大家帮忙找到，并提 PullRequest 来修复。
 
-## 参与翻译 & 发现错误
+可能有用的链接：
 
-1. 在 github 上 fork 该 repository。
-2. 翻译 doc/zh 下面的 md 文件即可，例如，index.md。
-3. 然后，在你的 github 发起 New pull request 请求。
-4. 工具使用，可参考下面的内容。
+* [2.0.2 中文版](http://spark.apachecn.org)
+* [历史版本: Apache Spark 2.0.2 官方文档中文版](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2883613)
 
-## 工具使用（针对新手）
+负责人：
 
-工欲善其事，必先利其器 ...  
-工具随意，能达到效果就好。  
-我这里使用的是 `VSCode` 编辑器。  
-简易的使用指南请参阅：[VSCode Windows 平台入门使用指南](help/vscode-windows-usage.md)，介绍了 `VSCode` 与 `github` 一起搭配的简易使用的方法。  
-如果要将 VSCode 的 Markdown 预览风格切换为 github 的风格，请参阅：[VSCode 修改 markdown 的预览风格为 github 的风格](help/vscode-markdown-preview-github-style.md)。
+* [@965](https://github.com/wangweitong): 1097828409
 
-## 角色分配
+## 章节列表
 
-目前有如下可分配的角色：
++ xxx
+  + xxx
++ xxx
+  + xxx
 
-* 翻译：负责文章内容的翻译。
-* 校验：负责文章内容的校验，比如格式，正确度之类的。
-* 负责人：负责整个 Projcet，不至于让该 Project 成为垃圾项目，需要在 Spark 方面经验稍微丰富点。
 
-有兴趣参与的朋友，可以看看最后的联系方式。
+## 流程
+
+### 一、认领
+
+首先查看[整体进度](https://github.com/apachecn/spark-doc-zh/issues/189)，确认没有人认领了你想认领的章节。
+ 
+然后回复 ISSUE，注明“章节 + QQ 号”（一定要留 QQ）。
+
+### 二、翻译
+
+可以合理利用翻译引擎（例如[谷歌](https://translate.google.cn/)），但一定要把它变得可读！
+
+可以参照之前版本的中文文档，如果有用的话。
+
+如果遇到格式问题，请随手把它改正。
+
+### 三、提交
+
+**提交的时候不要改动文件名称，即使它跟章节标题不一样也不要改，因为文件名和原文的链接是对应的！！！**
+
++   `fork` Github 项目
++   将译文放在`docs/2.0.2`文件夹下
++   `push`
++   `pull request`
+
+请见 [Github 入门指南](https://github.com/apachecn/kaggle/blob/master/docs/GitHub)。
+
+
