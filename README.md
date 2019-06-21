@@ -2,7 +2,7 @@
 
 ![](docs/img/spark-logo-hd.png)   
 
-Apache Spark? 是一个快速的, 用于海量数据处理的通用引擎.
+Apache Spark? 是一个快速的，用于海量数据处理的通用引擎。
 
 ## 维护地址
 
@@ -20,11 +20,11 @@ Apache Spark? 是一个快速的, 用于海量数据处理的通用引擎.
 
 ## 负责人
 
-* [@wangyangting](https://github.com/wangyangting)（那伊抹微笑）
+* [@aloserman](https://github.com/aloserman)
 
 ## 贡献者
 
-贡献者可自行编辑如下内容.
+贡献者可自行编辑如下内容。
 
 ### 2.2.0
 
@@ -41,13 +41,13 @@ Apache Spark? 是一个快速的, 用于海量数据处理的通用引擎.
 
 ### 2.0.2
 
-请参阅: [http://cwiki.apachecn.org/pages/viewpage.action?pageId=2887089](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2887089)
+请参阅：[http://cwiki.apachecn.org/pages/viewpage.action?pageId=2887089](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2887089)
 
 ## 联系方式
 
-有任何建议反馈, 或想参与文档翻译, 麻烦联系下面的企鹅:
+有任何建议反馈，或想参与文档翻译，麻烦联系下面的企鹅:
 
-* 企鹅: 1042658081
+* 企鹅：1042658081
 
 
 ## 赞助我们
@@ -60,7 +60,7 @@ GPL-3.0 © [ApacheCN](https://github.com/apachecn)
 
 ## Organization
 
-* ApacheCN 组织资源: <https://github.com/apachecn/home>
+* ApacheCN 组织资源：<https://github.com/apachecn/home>
 
 > 欢迎任何人参与和完善：一个人可以走的很快，但是一群人却可以走的更远
 
