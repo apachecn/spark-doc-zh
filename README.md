@@ -29,7 +29,6 @@ Apache Spark? 是一个快速的，用于海量数据处理的通用引擎。
 
 > 第二期 (2018-12-05)
 
-* [@aloserman](https://github.com/aloserman)
 * [@wangyangting](https://github.com/wangyangting)（那伊抹微笑）
 * [@jiangzhonglian](https://github.com/jiangzhonglian)（片刻）
 * [@chenyyx](https://github.com/chenyyx)（Joy yx）
@@ -44,6 +43,7 @@ Apache Spark? 是一个快速的，用于海量数据处理的通用引擎。
 > 第三期 (2019-06-21)
 
 * [@965](https://github.com/wangweitong): 1097828409
+* [@loserman](https://github.com/aloserman): 1015818189
 
 -- 负责人要求: (欢迎一起为 `SPark 中文版本` 做贡献)
 
