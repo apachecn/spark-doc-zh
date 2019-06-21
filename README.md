@@ -1,33 +1,36 @@
-# Apache Spark 官方文档中文版
+# <center>Apache Spark 官方文档中文版</center>
 
 ![](docs/img/spark-logo-hd.png)   
 
 Apache Spark? 是一个快速的，用于海量数据处理的通用引擎。
 
-## 维护地址
+> 欢迎任何人参与和完善：一个人可以走的很快，但是一群人却可以走的更远。
 
-+   [Github](https://github.com/apachecn/spark-doc-zh/)
-+   [在线阅读](http://spark.apachecn.org)
++ [在线阅读](http://spark.apachecn.org)
++ [Github](https://github.com/apachecn/spark-doc-zh/)
++ [ApacheCN 机器学习交流群 629470233](http://shang.qq.com/wpa/qunwpa?idkey=30e5f1123a79867570f665aa3a483ca404b1c3f77737bc01ec520ed5f078ddef)
++ [ApacheCN 学习资源](http://www.apachecn.org/)
 
 ## 历史版本
 
-+   [Apache Spark 2.0.2 官方文档中文版](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2883613)
-    +   [中文文档 EPUB 格式](https://github.com/apachecn/spark-doc-zh/raw/dl/Spark%202.0.2%20%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3.epub)
++ [Apache Spark 2.0.2 官方文档中文版](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2883613)
+    + [中文文档 EPUB 格式](https://github.com/apachecn/spark-doc-zh/raw/dl/Spark%202.0.2%20%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3.epub)
 
 ## 贡献指南
 
-[请见这里](CONTRIBUTING.md)
+* [请见这里](CONTRIBUTING.md)
 
-## 负责人
+## 项目负责人
+
+格式: GitHub + QQ
+
+> 第一期 (2016-10-31)
+
+* 贡献者名单：[http://cwiki.apachecn.org/pages/viewpage.action?pageId=2887089](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2887089)
+
+> 第二期 (2018-12-05)
 
 * [@aloserman](https://github.com/aloserman)
-
-## 贡献者
-
-贡献者可自行编辑如下内容。
-
-### 2.2.0
-
 * [@wangyangting](https://github.com/wangyangting)（那伊抹微笑）
 * [@jiangzhonglian](https://github.com/jiangzhonglian)（片刻）
 * [@chenyyx](https://github.com/chenyyx)（Joy yx）
@@ -39,28 +42,34 @@ Apache Spark? 是一个快速的，用于海量数据处理的通用引擎。
 * [@windyqinchaofeng](https://github.com/windyqinchaofeng)（qinchaofeng）
 * [@stealthsMrs](https://github.com/stealthsMrs)（stealthsMrs）
 
-### 2.0.2
+> 第三期 (2019-06-21)
 
-请参阅：[http://cwiki.apachecn.org/pages/viewpage.action?pageId=2887089](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2887089)
+* [@965](https://github.com/wangweitong): 1097828409
+
+-- 负责人要求: (欢迎一起为 `SPark 中文版本` 做贡献)
+
+* 热爱开源，喜欢装逼
+* 长期使用 Spark(至少0.5年)
+* 能够有时间及时优化页面bug和用户issues
+* 试用期: 2个月
+* 欢迎联系: [@965](https://github.com/wangweitong): 1097828409
 
 ## 联系方式
 
 有任何建议反馈，或想参与文档翻译，麻烦联系下面的企鹅:
 
-* 企鹅：1042658081
+* 企鹅：1097828409
 
+## 建议反馈
 
-## 赞助我们
-
-<img src="http://data.apachecn.org/img/about/donate.jpg" alt="微信&支付宝" />
+* 在我们的 [apachecn/spark-doc-zh](https://github.com/apachecn/spark-doc-zh) github 上提 issue.
+* 发邮件到 Email: `apachecn@163.com`.
+* 在我们的 [QQ群-搜索: 交流方式](https://github.com/apachecn/home) 中联系群主/管理员即可.
 
 ## License
 
 GPL-3.0 © [ApacheCN](https://github.com/apachecn)
 
-## Organization
+## 赞助我们
 
-* ApacheCN 组织资源：<https://github.com/apachecn/home>
-
-> 欢迎任何人参与和完善：一个人可以走的很快，但是一群人却可以走的更远
-
+<img src="http://data.apachecn.org/img/about/donate.jpg" alt="微信&支付宝" />
