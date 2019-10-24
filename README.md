@@ -19,14 +19,14 @@ Apache Spark? 是一个快速的，用于海量数据处理的通用引擎。
 
 [**贡献指南**](CONTRIBUTING.md)
 
-> 翻译 Spark 2.2.0
+> 翻译 Spark 2.4.4
 
 * 贡献者: 记得留言和更新翻译进度
 * 地址: https://github.com/apachecn/spark-doc-zh/issues/189
 
 ## 项目看板
 
-> 项目 Spark 2.2.0 看板
+> 项目 Spark 2.4.4 看板
 
 * 负责人: 记得更新和优化
 * 地址: https://github.com/apachecn/spark-doc-zh/projects/1
