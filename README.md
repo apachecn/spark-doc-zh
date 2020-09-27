@@ -87,6 +87,14 @@ GPL-3.0 © [ApacheCN](https://github.com/apachecn)
 
 ## 下载
 
+### PYPI
+
+```
+pip install spark-doc-zh
+spark-doc-zh <port>
+# 访问 http://localhost:{port} 查看文档
+```
+
 ### NPM
 
 ```
