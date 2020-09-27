@@ -85,6 +85,16 @@ Apache Spark? 是一个快速的，用于海量数据处理的通用引擎。
 
 GPL-3.0 © [ApacheCN](https://github.com/apachecn)
 
+## 下载
+
+### NPM
+
+```
+npm install -g spark-doc-zh
+spark-doc-zh <port>
+# 访问 http://localhost:{port} 查看文档
+```
+
 ## 赞助我们
 
 <img src="http://data.apachecn.org/img/about/donate.jpg" alt="微信&支付宝" />
