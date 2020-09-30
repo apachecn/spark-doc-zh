@@ -87,6 +87,14 @@ GPL-3.0 © [ApacheCN](https://github.com/apachecn)
 
 ## 下载
 
+### Docker
+
+```
+docker pull apachecn0/spark-doc-zh
+docker run -tid -p <port>:80 apachecn0/spark-doc-zh
+# 访问 http://localhost:{port} 查看文档
+```
+
 ### PYPI
 
 ```
