@@ -4,7 +4,7 @@
 
 Apache Spark? 是一个快速的，用于海量数据处理的通用引擎。
 
-> 欢迎任何人参与和完善：一个人可以走的很快，但是一群人却可以走的更远。
+> 任何一个傻瓜都会写能够让机器理解的代码，只有好的程序员才能写出人类可以理解的代码。——Martin Fowler
 
 + [在线阅读](http://spark.apachecn.org)
 + [在线阅读（Gitee）](https://apachecn.gitee.io/spark-doc-zh/)
